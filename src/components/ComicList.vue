@@ -2,7 +2,7 @@
     <div class="hello">
         <h1>comic list</h1>
         <div id="comic-list" v-for="comic in comics">
-            <a v-bind:href="'/comic/'+ comic.id">{{comic.title}}</a>
+            <a v-bind:href="'/comic/'+ comic.id">{{ comic.title }}</a>
         </div>
     </div>
 </template>
