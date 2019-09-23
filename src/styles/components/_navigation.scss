@@ -1,0 +1,46 @@
+@import "../settings/all";
+@import "../tools/all";
+@import "../helpers/all";
+@import "../helpers/typography";
+
+@include exports("styles/component/navigation") {
+  $nav-background: colour("grey-4");
+
+  .nav {
+    @include focusable-fill;
+
+    background: $nav-background;
+  }
+
+  .nav__meta {
+    @include font($size: 16);
+
+    padding: spacing(1) 0;
+
+    @include mq ($from: tablet) {
+      text-align: right;
+    }
+
+    ul {
+      margin: 0;
+      padding: 0;
+      font-size: small;
+    }
+  }
+
+  .nav__item {
+    &::after {
+      content: " | ";
+      color: inherit;
+      white-space: pre-wrap;
+      text-align: center;
+      display: inline-block;
+    }
+
+    &:last-child {
+      &::after {
+        display: none;
+      }
+    }
+  }
+}

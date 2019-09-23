@@ -1,8 +1,8 @@
 <template>
     <div class="hello">
-        <h1>comic list</h1>
-        <div id="comic-list" v-for="comic in comics">
-            <a v-bind:href="'/comic/'+ comic.id">{{ comic.title }}</a>
+        <h2>comic list</h2>
+        <div v-bind:id="'comic-' + comic.id" v-for="comic in comics" v-bind:key="comic">
+            <a v-bind:href="'/comic/' + comic.id">{{ comic.title }}</a>
         </div>
     </div>
 </template>
@@ -15,23 +15,21 @@
                 comics: null,
                 loading: true,
                 errored: false
-            }
+            };
         },
         mounted() {
             this.$api
-                .get('http://localhost:8001/comics')
+                .get("http://localhost:8001/comics")
                 .then(response => (this.comics = response.data))
                 .catch(error => {
-                    console.log(error)
+                    console.log(error);
                     this.errored = true;
                 })
-                .finally(() => (this.loading = false))
+                .finally(() => (this.loading = false));
         }
-    }
+    };
 </script>
 
-<style scoped>
-
+<style lang="scss">
+    @import "../styles/styles.scss";
 </style>
-
-

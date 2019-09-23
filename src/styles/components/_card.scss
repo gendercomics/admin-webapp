@@ -1,0 +1,145 @@
+@import "../settings/all";
+@import "../tools/all";
+@import "../helpers/all";
+
+@include exports("styles/component/card") {
+  $card-background: colour("white");
+  $card-image-background: colour("grey-4");
+  $card-border-colour: $border-colour;
+  $card-border-colour-hover: $brand-colour;
+  $card-height: 64px;
+  $card-border: $border-radius;
+
+  .card {
+    @include responsive-margin(3, "bottom");
+
+    position: relative;
+    border: $card-border solid $card-border-colour;
+    transition: all 300ms cubic-bezier(0.2, 1, 0.22, 1);
+
+    &:hover {
+      border-color: $card-border-colour-hover;
+    }
+  }
+
+  .card__image {
+    position: relative;
+    padding: 0;
+    margin: 0;
+    line-height: 0;
+    min-height: 160px;
+    background-color: $card-image-background;
+
+    img {
+      max-width: 100%;
+    }
+
+    .button--card {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+    }
+  }
+
+  .card__content {
+    @include responsive-padding(4, "all");
+
+    background: rgba($card-background, 0.6);
+
+    p {
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .card__footer {
+    background: rgba($card-border-colour, 0.6);
+    transition: background-color 300ms cubic-bezier(0.2, 1, 0.22, 1);
+    margin-top: 1px;
+
+    @include responsive-padding(2, "all");
+
+    @supports (display: flex) {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+  }
+
+  .card__action {
+    @include responsive-padding(2, "all");
+
+    color: inherit;
+  }
+
+  .card--link {
+    min-height: $card-height;
+    text-align: center;
+    text-decoration: none;
+
+    @include typography-weight-bold;
+
+    @include mq ($from: tablet) {
+      min-height: calc(#{$card-height} * 2);
+    }
+
+    @supports (display: flex) {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    background: rgba($brand-colour, 1);
+    transition: background 300ms cubic-bezier(0.2, 1, 0.22, 1);
+
+    .card__background {
+      opacity: 0.5;
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      top: 0;
+      left: 0;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .card__content,
+    .button--card {
+      background-color: transparent;
+    }
+
+    .card__content {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      position: absolute;
+      z-index: 1;
+      color: colour("white");
+
+      @supports (display: flex) {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+      }
+
+      > * {
+        @include responsive-padding(4, "top");
+
+        @supports (display: flex) {
+          padding-top: 0;
+        }
+      }
+    }
+
+    &:hover {
+      .card__content {
+        background: rgba($link-hover-colour, 1);
+      }
+    }
+
+    &:focus {
+      background: rgba($link-hover-colour, 1);
+    }
+  }
+}

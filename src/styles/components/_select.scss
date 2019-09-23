@@ -1,0 +1,32 @@
+@import "../settings/all";
+@import "../tools/all";
+@import "../helpers/all";
+@import "error-message";
+@import "hint";
+@import "label";
+
+@include exports("styles/component/select") {
+  .select {
+    @include font($size: 19, $line-height: 1.25);
+    @include focusable;
+
+    box-sizing: border-box; // should this be global?
+    max-width: 100%;
+    width: 100%;
+    height: 40px;
+    border-radius: 0;
+    padding: spacing(1); // was 5px 4px 4px - size of it should be adjusted to match other form elements
+    border: $border-width-form-element solid $input-border-colour;
+  }
+
+  .select option:active,
+  .select option:checked,
+  .select:focus::-ms-value {
+    color: colour("white");
+    background-color: colour("blue");
+  }
+
+  .select--error {
+    border: $border-width-form-element-error solid $error-colour;
+  }
+}

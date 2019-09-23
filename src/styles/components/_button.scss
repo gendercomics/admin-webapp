@@ -1,0 +1,280 @@
+@import "../settings/all";
+@import "../tools/all";
+@import "../helpers/all";
+
+@include exports("styles/component/button") {
+
+  $button-colour: colour("blue");
+  $button-hover-colour: darken($button-colour, 5%);
+  $button-shadow-colour: darken($button-colour, 15%);
+  $button-start-colour: colour("brand");
+  $button-start-hover-colour: darken($button-start-colour, 5%);
+  $button-start-shadow-colour: darken($button-start-colour, 15%);
+  $button-text-colour: colour("white");
+  $button-card-size: 64px;
+  // Because the shadow (s0) is visually 'part of' the button, we need to reduce
+  // the height of the button to compensate by adjusting its padding (s1) and
+  // increase the bottom margin to include it (s2).
+  $button-shadow-size: $border-width-form-element;
+
+  button > * {
+    pointer-events: none;
+  }
+
+  .button {
+    @include font($size: 19, $line-height: 19px);
+    @include focusable;
+    @include responsive-margin(4, "bottom", $adjustment: $button-shadow-size); // s2
+
+    box-sizing: border-box;
+    border-radius: $border-radius;
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    margin-top: 0;
+    padding: (spacing(2) - $border-width-form-element - ($button-shadow-size / 2)) spacing(2); // s1
+    border: $border-width-form-element solid transparent;
+    color: $button-text-colour;
+    background-color: $button-colour;
+    box-shadow: 0 $button-shadow-size 0 $button-shadow-colour; // s0
+    text-align: center;
+    vertical-align: top;
+    cursor: pointer;
+    -webkit-appearance: none;
+    transition: background-color 200ms cubic-bezier(1, 0, 0, 1);
+
+    @include media-query($from: tablet) {
+      width: auto;
+    }
+
+    // Ensure that any global link styles are overridden
+    &:link,
+    &:visited,
+    &:active,
+    &:hover {
+      color: $button-text-colour;
+      text-decoration: none;
+    }
+
+    // alphagov/_template includes a specific a:link:focus selector
+    // designed to make unvisited links a slightly darker blue when focussed, so
+    // we need to override the text colour for that combination of selectors so
+    // so that unvisited links styled as buttons do not end up with dark blue
+    // text when focussed.
+
+    @include compatibility(_template) {
+      &:link:focus {
+        color: $button-text-colour;
+      }
+    }
+
+    // Fix unwanted button padding in Firefox
+    &::-moz-focus-inner {
+      padding: 0;
+      border: 0;
+    }
+
+    &:hover,
+    &:focus {
+      background-color: $button-hover-colour;
+    }
+
+    &:active {
+      box-shadow: none;
+    }
+
+    // The following adjustments do not work for <input type="button"> as
+    // non-container elements cannot include pseudo elements (i.e. ::before).
+
+    // Use a pseudo element to expand the click target area to include the
+    // button's shadow as well, in case users try to click it.
+    &::before {
+      content: "";
+      display: block;
+      position: absolute;
+      top: -$border-width-form-element;
+      right: -$border-width-form-element;
+      bottom: -($border-width-form-element + $button-shadow-size);
+      left: -$border-width-form-element;
+      background: transparent;
+    }
+
+    // When the button is active it is shifted down by $button-shadow-size to
+    // denote a 'pressed' state. If the user happened to click at the very top
+    // of the button, their mouse is no longer over the button (because it has
+    // 'moved beneath them') and so the click event is not fired.
+    //
+    // This corrects that by shifting the top of the pseudo element so that it
+    // continues to cover the area that the user originally clicked, which means
+    // the click event is still fired.
+    //
+    &:active::before {
+      top: -($border-width-form-element + $button-shadow-size);
+    }
+  }
+
+  .button--disabled,
+  .button[disabled="disabled"],
+  .button[disabled] {
+    opacity: (0.5);
+    background: $button-colour;
+
+    &:hover {
+      background-color: $button-colour;
+      cursor: default;
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &:active {
+      top: 0;
+      box-shadow: 0 $button-shadow-size 0 $button-shadow-colour; // s0
+    }
+  }
+
+  .button--transparent {
+    background-color: transparent;
+    box-shadow: none;
+    border-radius: 0;
+    color: $button-start-colour;
+
+    // Ensure that any global link styles are overridden
+    &:link,
+    &:visited,
+    &:active,
+    &:hover {
+      color: $button-start-colour;
+      text-decoration: none;
+    }
+
+    &:hover,
+    &:focus {
+      color: $button-text-colour;
+    }
+
+    > [class*=" icon-"],
+    > [class^=icon-] {
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+
+  .button--social {
+    &.google {
+      background-color: colour("google");
+      box-shadow: 0 $button-shadow-size 0 darken(colour("google"), 15%); // s0
+      &:hover,
+      &:focus {
+        background-color: darken(colour("google"), 15%);
+      }
+    }
+
+    &.facebook {
+      background-color: colour("facebook");
+      box-shadow: 0 $button-shadow-size 0 darken(colour("facebook"), 15%); // s0
+      &:hover,
+      &:focus {
+        background-color: darken(colour("facebook"), 15%);
+      }
+    }
+
+    &.twitter {
+      background-color: colour("twitter");
+      box-shadow: 0 $button-shadow-size 0 darken(colour("twitter"), 15%); // s0
+      &:hover,
+      &:focus {
+        background-color: darken(colour("twitter"), 15%);
+      }
+    }
+
+    &.twitch {
+      background-color: colour("twitch");
+      box-shadow: 0 $button-shadow-size 0 darken(colour("twitch"), 15%); // s0
+      &:hover,
+      &:focus {
+        background-color: darken(colour("twitch"), 15%);
+      }
+    }
+  }
+
+  .button--start {
+    @include typography-weight-bold;
+    @include typography-responsive($size: 24, $override-line-height: 1);
+
+    background-color: $button-start-colour;
+    box-shadow: 0 $button-shadow-size 0 $button-start-shadow-colour; // s0
+    min-height: auto;
+    padding-top: spacing(3) - $border-width-form-element;
+    padding-right: spacing(8);
+    padding-bottom: spacing(3) - $border-width-form-element;
+    padding-left: spacing(6);
+    background-image: image-url("Icon-pointer.png");
+    background-repeat: no-repeat;
+    background-position: 100% 50%;
+
+    @include device-pixel-ratio {
+      background-image: image-url("Icon-pointer-2x.png");
+      background-size: 30px 19px;
+    }
+
+    &:hover,
+    &:focus {
+      background-color: $button-start-hover-colour;
+    }
+  }
+
+  .button--card {
+    @include typography-weight-bold;
+
+    background-color: rgba(colour("black"), 0.6);
+    box-shadow: none;
+    border-radius: 0;
+    margin: 0;
+    min-width: $button-card-size;
+    height: $button-card-size;
+
+    &::after {
+      width: 0;
+      height: 0;
+      display: block;
+      content: "";
+      position: absolute;
+      border-top: 1em solid transparent;
+      border-bottom: 1em solid transparent;
+      border-left: 1.7em solid #fff;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  .button-backtotop {
+    position: fixed;
+    cursor: pointer;
+    bottom: 0;
+    right: 1rem;
+    left: auto;
+    border-radius: 100px;
+    max-width: 160px;
+    background-color: $button-start-colour;
+    border-color: $button-start-colour;
+    box-shadow: 0 2px 4px 0 rgba($button-start-shadow-colour, 0.5);
+    opacity: 0;
+    transition: opacity 0.5s linear;
+
+    @include responsive-padding(3, "left");
+    @include responsive-padding(3, "right");
+
+    > * {
+      top: -2px;
+      position: relative;
+    }
+
+    &.active,
+    &:focus {
+      opacity: 1;
+    }
+  }
+}

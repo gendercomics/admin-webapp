@@ -1,0 +1,26 @@
+@include exports("styles/core/links") {
+  %link {
+    @include link-common;
+    @include link-style-default;
+    @include link-print-friendly;
+  }
+
+  .link {
+    @extend %link;
+  }
+
+  // Variant classes should always be used in conjunction with the .link
+  // class, so we do not need the common link styles as they will be inherited.
+
+  .link--muted {
+    @include link-style-muted;
+  }
+
+  .link--text-colour {
+    @include link-style-text;
+  }
+
+  .link--no-visited-state {
+    @include link-style-no-visited-state;
+  }
+}

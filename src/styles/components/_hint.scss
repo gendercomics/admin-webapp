@@ -1,0 +1,48 @@
+@import "../settings/all";
+@import "../tools/all";
+@import "../helpers/all";
+
+@include exports("styles/component/hint") {
+  .hint {
+    @include font($size: 16);
+
+    color: $secondary-text-colour;
+    display: block;
+    margin-top: spacing(1);
+    margin-bottom: spacing(3);
+  }
+
+  // Reduces margin-bottom of hint when used after the default label (no class)
+  // or label--s for better vertical alignment.
+
+  // This adjustment will not work when the label is inside the <h1>, however it
+  // is unlikely that the default or label--s class would be used in this
+  // case.
+
+  // This adjustment will not work in browsers that do not support :not().
+  // Users with these browsers will see the default size margin (5px larger).
+
+  .label:not(.label--m):not(.label--l):not(.label--xl) + .hint {
+    margin-bottom: spacing(2);
+  }
+
+  // Reduces margin-bottom of hint when used after the default legend (no class)
+  // or fieldset__legend--s for better vertical alignment.
+
+  // This adjustment will not work when the legend is outside the <h1>, however
+  // it is unlikely that the default or fieldset__legend--s class would be
+  // used in this case.
+
+  // This adjustment will not work in browsers that do not support :not().
+  // Users with these browsers will see the default size margin (5px larger).
+
+  .fieldset__legend:not(.fieldset__legend--m):not(.fieldset__legend--l):not(.fieldset__legend--xl) + .hint {
+    margin-bottom: spacing(2);
+  }
+
+  // Reduces visual spacing of legend when there is a hint
+
+  .fieldset__legend + .hint {
+    margin-top: -(spacing(1));
+  }
+}

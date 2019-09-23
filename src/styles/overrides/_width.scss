@@ -1,0 +1,45 @@
+@include exports("styles/overrides/width") {
+  .override-\!-width-full {
+    width: 100% !important;
+  }
+
+  .override-\!-width-three-quarters {
+    width: 100% !important;
+
+    @include media-query($from: tablet) {
+      width: 75% !important;
+    }
+  }
+
+  .override-\!-width-two-thirds {
+    width: 100% !important;
+
+    @include media-query($from: tablet) {
+      width: 66.66% !important;
+    }
+  }
+
+  .override-\!-width-one-half {
+    width: 100% !important;
+
+    @include media-query($from: tablet) {
+      width: 50% !important;
+    }
+  }
+
+  .override-\!-width-one-third {
+    width: 100% !important;
+
+    @include media-query($from: tablet) {
+      width: 33.33% !important;
+    }
+  }
+
+  .override-\!-width-one-quarter {
+    width: 100% !important;
+
+    @include media-query($from: tablet) {
+      width: 25% !important;
+    }
+  }
+}

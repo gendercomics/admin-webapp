@@ -1,0 +1,102 @@
+////
+/// @group settings/measurements
+////
+// =========================================================
+// Page layout
+// =========================================================
+
+/// Width of main container
+///
+/// @type Number
+/// @access public
+
+$page-width: 1200px !default;
+
+/// Map of grid column widths
+///
+/// @type Map
+/// @access public
+
+$grid-widths: (
+  one-sixth: 16.6666%,
+  one-quarter: 25%,
+  one-third: 33.3333%,
+  one-half: 50%,
+  two-thirds: 66.6666%,
+  three-quarters: 75%,
+  full: 100%
+) !default;
+
+/// Width of gutter between grid columns
+///
+/// @type Number
+/// @access public
+
+$gutter: 30px !default;
+
+/// Width of half the gutter between grid columns
+///
+/// @type Number
+/// @access public
+
+$gutter-half: $gutter / 2;
+
+// =========================================================
+// Borders
+// =========================================================
+
+/// Standard border width
+///
+/// @type Number
+/// @access public
+
+$border-width: 5px !default;
+
+/// Wide border width
+///
+/// @type Number
+/// @access public
+
+$border-width-wide: 10px !default;
+
+/// Border width on mobile
+///
+/// @type Number
+/// @access public
+
+$border-width-mobile: 2px !default;
+
+/// Form control border width
+///
+/// @type Number
+/// @access public
+
+$border-width-form-element: 1px !default;
+
+/// Form control border width when in error state
+///
+/// @type Number
+/// @access public
+
+$border-width-form-element-error: 2px !default;
+
+/// Form group border width when in error state
+///
+/// @type Number
+/// @access public
+
+$border-width-form-group-error: $border-width !default;
+
+/// Border width of focus outline
+///
+/// @type Number
+/// @access public
+
+$focus-width: 3px !default;
+
+/// Border radius
+///
+/// @type Number
+/// @access public
+
+$border-radius: 5px !default;

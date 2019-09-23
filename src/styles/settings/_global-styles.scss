@@ -1,0 +1,13 @@
+////
+/// @group settings/global-styles
+////
+
+/// Include 'global' styles
+///
+/// Whether to style paragraphs (`<p>`) and links (`<a>`) without explicitly
+/// having to apply the `body` and `link` classes.
+///
+/// @type Boolean
+/// @access public
+
+$global-styles: true !default;

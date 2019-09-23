@@ -1,0 +1,18 @@
+@import "links";
+@import "typography";
+
+@mixin global-styles {
+  a {
+    @extend %link;
+  }
+
+  p {
+    @extend %body-m;
+  }
+}
+
+@include exports("styles/core/global-styles") {
+  @if $global-styles == true {
+    @include global-styles;
+  }
+}

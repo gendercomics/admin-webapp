@@ -1,0 +1,13 @@
+@include exports("styles/overrides/display") {
+  .override-\!-display-inline {
+    display: inline !important;
+  }
+
+  .override-\!-display-inline-block {
+    display: inline-block !important;
+  }
+
+  .override-\!-display-block {
+    display: block !important;
+  }
+}

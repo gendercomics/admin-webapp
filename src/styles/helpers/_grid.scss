@@ -1,0 +1,113 @@
+////
+/// @group helpers
+////
+
+/// Grid width percentage
+///
+/// @param {String} $key - Name of grid width (e.g. two-thirds)
+/// @return {Number} Percentage width
+/// @throw if `$key` is not a valid grid width
+/// @access public
+
+@function grid-width($key) {
+  @if map-has-key($grid-widths, $key) {
+    @return map-get($grid-widths, $key);
+  }
+
+  @error "Unknown grid width `#{$key}`";
+}
+
+/// Grid width percentage (alias)
+///
+/// @alias grid-width
+/// @deprecated To be removed in v3.0, replaced by grid-width
+@function _grid-width($key) {
+  @return grid-width($key);
+}
+
+/// Generate grid row styles
+///
+/// Creates a grid row class with a standardised margin.
+///
+/// @param {String} $class [grid-row] CSS class name
+///
+/// @example scss - Default
+///   @include grid-row;
+///
+/// @example scss - Customising the class name
+///   @include grid-row("app-grid");
+///
+/// @access public
+/// @deprecated To be removed in v3.0, replaced by the grid-row class
+
+@mixin grid-row($class: "grid-row") {
+  .#{$class} {
+    @include clearfix;
+
+    margin-right: - ($gutter-half);
+    margin-left: - ($gutter-half);
+  }
+}
+
+/// Generate grid column styles
+///
+/// Creates a grid column with standard gutter between the columns.
+///
+/// If a `$class` is provided (which is the default, but deprecated behaviour),
+/// the generated rules will be wrapped in a predefined selector in the format
+/// `$class-$width` (e.g. `grid-column-full`). This behaviour is
+/// deprecated and will be removed in v3.0
+///
+/// Grid widths are defined in the `$grid-widths` map.
+///
+/// By default the column width changes from 100% to specified width at the
+/// 'tablet' breakpoint, but other breakpoints can be specified using the `$at`
+/// parameter.
+///
+/// @param {String} $width [full] name of a grid width from $grid-widths
+/// @param {String} $float [left] left | right
+/// @param {String} $at [tablet] - mobile | tablet | desktop | any custom breakpoint
+/// @param {String} $class [grid-column] CSS class name (deprecated)
+///
+/// @example scss - Default
+///   .grid-column-two-thirds {
+///     @include grid-column(two-thirds, $class: false)
+///   }
+///
+/// @example scss - Customising the breakpoint where width percentage is applied
+///   .grid-column-one-half-at-desktop {
+///     @include grid-column(one-half, $at: desktop);
+///   }
+///
+/// @example scss - Customising the float direction
+///   .grid-column-one-half-right {
+///     @include grid-column(two-thirds, $float: right, $class: false);
+///   }
+///
+/// @example scss - Customising the class name (deprecated)
+///   @include grid-column(one-half, $class: "test-column");
+///
+/// @access public
+
+@mixin grid-column($width: full, $float: left, $at: tablet, $class: "grid-column") {
+  @if ($class) {
+    .#{$class}-#{$width} {
+      @include grid-column($width, $float, $at, $class: false);
+    }
+  }
+
+  @else {
+    box-sizing: border-box;
+
+    @if $at != desktop {
+      width: 100%;
+    }
+
+    padding: 0 $gutter-half;
+
+    @include media-query($from: $at) {
+      width: grid-width($width);
+      float: $float;
+    }
+  }
+}

@@ -1,0 +1,37 @@
+////
+/// @group settings/colours
+////
+
+/// Colour palette
+///
+/// @type Map
+///
+/// @prop $colour - Representation for the given $colour, where $colour is the
+///   friendly name for the colour (e.g. "red": #ff0000);
+///
+/// @access public
+
+$colours: (
+  "pink": #ff00cf,
+  "light-pink": #ff55e7,
+  "red": #bb0a0a,
+  "purple": #606,
+  "orange": #ff5600,
+  "yellow": #ffbf47,
+  "green": #006435,
+  "blue": #096dd0,
+  "dark-blue": #003569,
+  "brand": #036,
+  "google": #dd4b39,
+  "youtube": #f00,
+  "facebook": #3b5998,
+  "twitter": #1da1f2,
+  "twitch": #6441a5,
+  "black": #0b0c0c,
+  "grey-1": #191919,
+  "grey-2": #696969,
+  "grey-3": #d0d0d0,
+  "grey-4": #e6e6e6,
+  "grey-5": #fafafa,
+  "white": #fff
+) !default;

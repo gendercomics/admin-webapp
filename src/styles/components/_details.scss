@@ -1,0 +1,68 @@
+@import "../settings/all";
+@import "../tools/all";
+@import "../helpers/all";
+
+@include exports("styles/component/details") {
+  $summary-border-width: 1px;
+  $summary-border-color: colour("grey-4");
+  $summary-background: colour("white");
+
+  .details,
+  details {
+    &:active,
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  .details__summary,
+  summary {
+    @include focusable;
+    @include responsive-padding(4);
+    @include typography-weight-bold;
+
+    cursor: pointer;
+    background-color: $summary-background;
+  }
+
+  .details__content {
+    @include responsive-padding(4);
+
+    position: relative;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: $summary-border-width;
+      background-color: $summary-border-color;
+
+      @include responsive-margin(2, "right");
+    }
+  }
+
+  .details__actions {
+    display: block;
+    position: absolute;
+    z-index: 1;
+    top: 5px;
+    right: 5px;
+    min-height: 55px;
+
+    @supports (display: flex) {
+      display: flex;
+      align-items: center;
+      flex-wrap: nowrap;
+    }
+
+    & > * {
+      margin-bottom: 0;
+    }
+
+    a {
+      @include responsive-margin(2, "right");
+    }
+  }
+}

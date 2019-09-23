@@ -1,0 +1,27 @@
+@include exports("styles/objects/grid") {
+  .grid-row {
+    @include clearfix;
+
+    margin-right: - ($gutter-half);
+    margin-left: - ($gutter-half);
+
+    @supports (display: flex) {
+      display: flex;
+      flex-wrap: wrap;
+    }
+  }
+
+  @each $width in map-keys($grid-widths) {
+    .grid-column-#{$width} {
+      @include grid-column($width, $class: false);
+    }
+  }
+  // These *must* be defined in a separate loop as they have the same
+  // specificity as the non-breakpoint specific classes, so need to appear after
+  // them in the outputted CSS
+  @each $width in map-keys($grid-widths) {
+    .grid-column-#{$width}-from-desktop {
+      @include grid-column($width, $at: desktop, $class: false);
+    }
+  }
+}

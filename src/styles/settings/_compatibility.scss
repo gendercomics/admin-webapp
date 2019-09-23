@@ -1,0 +1,49 @@
+////
+/// Compatibility with legacy repos (_elements, _frontend_tookkit and
+/// _template) settings
+///
+/// We default these settings to `true` so that if they are missed we opt for a
+/// mild performance hit over a potential broken experience for the end-user.
+///
+/// @group settings/compatibility
+////
+/// Compatibility Mode: alphagov/_frontend_toolkit
+///
+/// True if used in a project that also includes alphagov/_frontend_toolkit.
+///
+/// @type Boolean
+/// @access public
+
+$compatibility-frontendtoolkit: false !default;
+
+/// Compatibility Mode: alphagov/_template
+///
+/// True if used in a project that also includes alphagov/_template.
+///
+/// @type Boolean
+/// @access public
+
+$compatibility-template: false !default;
+
+/// Compatibility Mode: alphagov/_elements
+///
+/// True if used in a project that also includes alphagov/_elements.
+///
+/// @type Boolean
+/// @access public
+
+$compatibility-elements: false !default;
+
+/// Compatibility Product Map
+///
+/// Maps product names to their settings that we can use to lookup states from
+/// within the `@compatibility` mixin.
+///
+/// @type Map
+/// @access private
+
+$_compatibility: (
+  _frontend_toolkit: $compatibility-frontendtoolkit,
+  _template: $compatibility-template,
+  _elements: $compatibility-elements,
+);

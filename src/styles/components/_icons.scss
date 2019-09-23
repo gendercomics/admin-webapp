@@ -1,0 +1,51 @@
+@import "../settings/all";
+@import "../tools/all";
+@import "../helpers/all";
+
+@include exports("styles/component/icons") {
+  [class*=" icon-"],
+  [class^=icon-] {
+    font-family: able, sans-serif !important;
+    speak: none;
+    font-style: normal;
+    font-weight: 400;
+    -webkit-font-feature-settings: normal;
+    font-feature-settings: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    position: relative;
+    top: 2px;
+    stroke-width: 0;
+    stroke: currentColor;
+    fill: currentColor;
+
+    & + *:not(.visually-hidden) {
+      @include responsive-margin(1, "left");
+    }
+  }
+
+  & .left {
+    transform: rotate(180deg);
+  }
+
+  & .up {
+    transform: rotate(270deg);
+  }
+
+  & .down {
+    transform: rotate(90deg);
+  }
+
+  *:not(.visually-hidden) {
+    & + [class*=" icon-"],
+    & + [class^=icon-] {
+      @include responsive-margin(1, "left");
+    }
+  }
+}

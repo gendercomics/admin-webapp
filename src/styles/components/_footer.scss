@@ -1,0 +1,166 @@
+@import "../settings/all";
+@import "../tools/all";
+@import "../helpers/all";
+@import "../helpers/typography";
+
+@include exports("styles/component/footer") {
+
+  $footer-background: colour("grey-4");
+  $footer-border-top: colour("grey-3");
+  $footer-border: colour("grey-3");
+  $footer-text: colour("grey-1");
+  $footer-link: $footer-text;
+  $footer-link-hover: #171819;
+
+  .footer {
+    @include font($size: 16);
+    @include responsive-padding(4, "top");
+    @include responsive-padding(4, "bottom");
+
+    border-top: 1px solid $footer-border-top;
+    color: $footer-text;
+    background: $footer-background;
+  }
+
+  .footer a {
+    @include focusable-fill;
+
+    &:link,
+    &:visited {
+      color: $footer-link;
+    }
+
+    &:hover,
+    &:active {
+      color: $footer-link-hover;
+    }
+
+    // When focussed, the text colour needs to be darker to ensure that colour
+    // contrast is still acceptable
+    &:focus {
+      color: $focus-text-colour;
+    }
+
+    // alphagov/_template includes a specific a:link:focus selector
+    // designed to make unvisited links a slightly darker blue when focussed, so
+    // we need to override the text colour for that combination of selectors.
+
+    @include compatibility(_template) {
+      &:link:focus {
+        @include text-colour;
+      }
+    }
+  }
+
+  .footer__meta {
+    display: flex; // Support: Flexbox
+    margin-right: -$gutter-half;
+    margin-left: -$gutter-half;
+    flex-wrap: wrap; // Support: Flexbox
+    align-items: flex-end; // Support: Flexbox
+    justify-content: center; // Support: Flexbox
+  }
+
+  .footer__meta-item {
+    margin-right: $gutter-half;
+    margin-bottom: spacing(5);
+    margin-left: $gutter-half;
+  }
+
+  .footer__meta-item--grow {
+    flex: 1; // Support: Flexbox
+
+    @include mq ($until: tablet) {
+      flex-basis: 320px; // Support: Flexbox
+    }
+  }
+
+  .footer__inline-list {
+    margin-top: 0;
+    margin-bottom: spacing(3);
+    padding: 0;
+  }
+
+  .footer__inline-list-item {
+    display: inline-block;
+    margin-right: spacing(3);
+    margin-bottom: spacing(1);
+  }
+
+  .footer__heading {
+    @extend %heading-m;
+
+    color: $footer-text;
+
+    @include responsive-margin(2, "bottom");
+
+    padding-bottom: spacing(2);
+
+    @include mq ($until: tablet) {
+      padding-bottom: spacing(2);
+    }
+  }
+
+  .footer__navigation {
+    display: flex; // Support: Flexbox
+    margin-right: -$gutter-half;
+    margin-left: -$gutter-half;
+    flex-wrap: wrap; // Support: Flexbox
+  }
+
+  .footer__section {
+    display: inline-block;
+    margin-right: $gutter-half;
+    margin-left: $gutter-half;
+    vertical-align: top;
+    // Ensure columns take up equal width (typically one-half:one-half)
+    flex-grow: 1; // Support: Flexbox
+    flex-shrink: 1; // Support: Flexbox
+
+    @include mq ($until: desktop) {
+      // Make sure columns do not drop below 200px in width
+      // Will typically result in wrapping, and end up in a single column on smaller screens.
+      flex-basis: 200px; // Support: Flexbox
+    }
+  }
+
+  // Sections two-third:one-third on desktop
+  @include mq ($from: desktop) {
+    .footer__section:first-child {
+      flex-grow: 2; // Support: Flexbox
+    }
+  }
+
+  .footer__section-break {
+    margin: 0; // Reset `<hr>` default margins
+    border: 0; // Reset `<hr>` default borders
+    border-bottom: 1px solid $footer-border;
+
+    @include responsive-margin(8, "bottom");
+  }
+
+  .footer__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    column-gap: $gutter; // Support: Columns
+  }
+
+  @include mq ($from: desktop) {
+    .footer__list--columns-2 {
+      column-count: 2; // Support: Columns
+    }
+
+    .footer__list--columns-3 {
+      column-count: 3; // Support: Columns
+    }
+  }
+
+  .footer__list-item {
+    @include responsive-margin(4, "bottom");
+  }
+
+  .footer__list-item:last-child {
+    margin-bottom: 0;
+  }
+}

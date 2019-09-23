@@ -1,0 +1,51 @@
+@import "../settings/all";
+@import "../tools/all";
+@import "../helpers/all";
+
+@include exports("styles/component/breadcrumbs") {
+
+  $breadcrumbs__link--inverse: colour("white");
+  $breadcrumbs__link--focus: colour("black");
+
+  .breadcrumbs__list {
+    @include font($size: 16);
+    @include responsive-padding(4, "top");
+    @include responsive-padding(4, "bottom");
+  }
+
+  .breadcrumbs__list-item {
+    display: inline-block;
+
+    &::after {
+      content: " / ";
+      color: $breadcrumbs__link--inverse;
+      white-space: pre-wrap;
+      text-align: center;
+      display: inline-block;
+    }
+
+    &:last-child {
+      &::after {
+        content: "";
+      }
+    }
+  }
+
+  .breadcrumbs__link {
+    &[aria-current=page] {
+      font-weight: 700;
+      text-decoration: none;
+    }
+  }
+
+  // inverse
+  .breadcrumbs--inverse {
+    .breadcrumbs__link {
+      color: $breadcrumbs__link--inverse;
+
+      &:focus {
+        color: $breadcrumbs__link--focus;
+      }
+    }
+  }
+}

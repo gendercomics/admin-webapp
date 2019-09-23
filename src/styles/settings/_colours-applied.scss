@@ -1,0 +1,136 @@
+////
+/// @group settings/colours
+////
+
+@import "../helpers/colour";
+
+// =========================================================
+// Generic
+// =========================================================
+
+/// Brand colour
+///
+/// @type Colour
+/// @access public
+
+$brand-colour: colour("dark-blue") !default;
+
+/// Text colour
+///
+/// @type Colour
+/// @access public
+
+$text-colour: colour("black") !default;
+
+/// Canvas background colour
+///
+/// Used by the footer component and template to give the illusion of a long footer.
+///
+/// @type Colour
+/// @access public
+
+$canvas-background-colour: colour("grey-5") !default;
+
+/// Body background colour
+///
+/// @type Colour
+/// @access public
+
+$body-background-colour: colour("grey-4") !default;
+
+/// Text colour for print media
+///
+/// Use 'true black' to avoid printers using colour ink to print body text
+///
+/// @type Colour
+/// @access public
+
+$print-text-colour: #000 !default;
+
+/// Secondary text colour
+///
+/// Used for 'muted' text, help text, etc.
+///
+/// @type Colour
+/// @access public
+
+$secondary-text-colour: colour("grey-2") !default;
+
+/// Focus colour
+///
+/// Used for outline (and background, where appropriate) when interactive
+/// elements (links, form controls) have keyboard focus.
+///
+/// @type Colour
+/// @access public
+
+$focus-colour: colour("yellow") !default;
+
+/// Focused text colour
+///
+/// Ensure that the contrast between the text and background colour passes
+/// WCAG Level AA contrast requirements.
+///
+/// @type Colour
+/// @access public
+
+$focus-text-colour: colour("black") !default;
+
+/// Error colour
+///
+/// Used to highlight error messages and form controls in an error state
+///
+/// @type Colour
+/// @access public
+
+$error-colour: colour("red") !default;
+
+/// Border colour
+///
+/// Used for borders, separators, rules, keylines etc.
+///
+/// @type Colour
+/// @access public
+
+$border-colour: colour("grey-4") !default;
+
+/// Input border colour
+///
+/// Used for form inputs and controls
+///
+/// @type Colour
+/// @access public
+
+$input-border-colour: colour("grey-3") !default;
+
+// =============================================================================
+// Links
+// =============================================================================
+
+/// Link colour
+///
+/// @type Colour
+/// @access public
+
+$link-colour: colour("blue") !default;
+
+/// Visited link colour
+///
+/// @type Colour
+/// @access public
+
+$link-visited-colour: colour("purple") !default;
+
+/// Link hover colour
+///
+/// @type Colour
+/// @access public
+
+$link-hover-colour: lighten(colour("blue"), 10%) !default;
+
+/// Active link colour
+///
+/// @type Colour
+/// @access public
+
+$link-active-colour: lighten(colour("blue"), 10%) !default;
