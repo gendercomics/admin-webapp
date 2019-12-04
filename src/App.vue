@@ -1,12 +1,5 @@
 <template>
     <div id="app">
-        <header>
-            <div id="nav">
-                <router-link to="/">Home</router-link> |
-                <router-link to="/comic/5d28e161a5bc3106f9809d6f">1st comic</router-link> |
-                <router-link to="/about">About</router-link>
-            </div>
-        </header>
         <main id="main" class="main-wrapper main-wrapper--full">
             <router-view/>
         </main>

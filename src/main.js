@@ -4,14 +4,17 @@ import router from "./router";
 import axios from "axios";
 import * as Keycloak from "keycloak-js";
 import VueLogger from 'vuejs-logger';
+import BootstrapVue from 'bootstrap-vue'
+import './styles/styles.scss'
 
 Vue.config.productionTip = false;
 
 let initOptions = {
-    url: 'http://0.0.0.0:9090/auth', realm: 'gendercomics', clientId: 'gendercomics-admin-app', onLoad: 'login-required'
+    url: 'http://0.0.0.0:81/auth', realm: 'gendercomics', clientId: 'gendercomics-admin', onLoad: 'login-required'
 };
 
 let keycloak = Keycloak(initOptions);
+
 
 Vue.use({
     install(Vue) {
@@ -32,6 +35,7 @@ const options = {
 };
 
 Vue.use(VueLogger, options);
+Vue.use(BootstrapVue);
 
 keycloak.init({onLoad: initOptions.onLoad}).success((auth) => {
 

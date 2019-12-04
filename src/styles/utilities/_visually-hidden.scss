@@ -1,9 +1,0 @@
-@include exports("styles/utilities/visually-hidden") {
-  .visually-hidden {
-    @include visually-hidden;
-  }
-
-  .visually-hidden-focusable {
-    @include visually-hidden-focusable;
-  }
-}
