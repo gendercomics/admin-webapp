@@ -1,107 +1,127 @@
 <template>
-    <section id="form-section" class="width-container">
-        <div class="width-container">
-            <form class="form">
-                <header class="form__header">
-                    <span class="heading-s">bibliographical data</span>
-                </header>
-                <!-- ID -->
-                <div class="visually-hidden">comicId: {{ $route.params.id }}</div>
-                <section class="form__section">
-                    <div class="form-group">
-                        <!-- title -->
-                        <label class="label" for="title">title</label>
-                        <input class="input" type="text" id="title" name="title" v-model="form.title" placeholder="title"/>
-                    </div>
-                    <!-- creators -->
-                    <div class="form-group">
-                        <label class="label" for="creator">author(s)</label>
-                        <fieldset class="fieldset">
-                            <div class="grid-row">
-                                <div class="grid-column-one-half">
-                                    <input class="input" id="creator" name="creator" v-model="form.authors" placeholder="name"/>
-                                </div>
-                                <div class="grid-column-one-half">
-                                    <select class="select" id="creator-role" name="cretor-role">
-                                        <option>- select role</option>
-                                        <option>artist</option>
-                                        <option>colorist</option>
-                                        <option>contributor</option>
-                                        <option>coverArtist</option>
-                                        <option>creator</option>
-                                        <option>inker</option>
-                                        <option>letterer</option>
-                                        <option>penciller</option>
-                                        <option>writer</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
+    <div class="text-left">
+        <Header/>
 
-                    <!-- in -->
-                    <div class="form-group">
-                        <label class="label" for="in">in</label>
-                        <input class="input" type="text" id="in" name="in" v-model="form.in" placeholder="in"/>
-                    </div>
-
-                    <!-- pages -->
-                    <div class="form-group">
-                        <label class="label" for="pages">pages</label>
-                        <input class="input" type="text" id="pages" name="pages" v-model="form.pages" placeholder="pages"/>
-                    </div>
-
-                    <!-- pages -->
-                    <div class="form-group">
-                        <label class="label" for="place-of-publication">place of publication</label>
-                        <input class="input" type="text" id="place-of-publication" name="place-of-publication" v-model="form.placeOfPublication" placeholder="place of publication"/>
-                    </div>
-
-                    <!-- pages -->
-                    <div class="form-group">
-                        <label class="label" for="publisher">publisher</label>
-                        <input class="input" type="text" id="publisher" name="publisher" v-model="form.publisher" placeholder="publisher"/>
-                    </div>
-
-                    <!-- year -->
-                    <div class="form-group">
-                        <label class="label" for="year">year</label>
-                        <input class="input" type="text" id="year" name="year" v-model="form.year" placeholder="year"/>
-                    </div>
-
-                </section>
-
-                <footer class="form__footer">
-                    <div class="grid-row">
-                        <div class="grid-column-one-half">
-                            <button class="button button--start" type="button" name="save-button">save</button>
-                        </div>
-                        <div class="grid-column-one-half">
-                            <button class="button button--start" type="button" name="cancel-button">cancel</button>
-                        </div>
-                    </div>
-                </footer>
-
-            </form>
+        <div class="ml-1 p-2 text-primary">
+            <h2>new comic ...</h2>
         </div>
-    </section>
+
+        <b-container fluid>
+            <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+                <b-form-group
+                        id="input-group-1"
+                        label="title:"
+                        label-for="input-1"
+                        :state="titleState"
+                >
+                    <b-form-input
+                            id="input-1"
+                            v-model="form.title"
+                            required
+                            placeholder="Enter title"
+                            :state="titleState"
+                    ></b-form-input>
+                    <b-form-invalid-feedback>Enter at least 4 characters</b-form-invalid-feedback>
+                </b-form-group>
+
+                <b-form-group
+                        id="input-group-2"
+                        label="subtitle:"
+                        label-for="input-2"
+                >
+                    <b-form-input
+                            id="input-2"
+                            v-model="form.subtitle"
+                            placeholder="Enter subtitle"
+                    ></b-form-input>
+                </b-form-group>
+
+                <b-form-group id="input-group-3" label="creator(s):" label-for="input-3">
+                    <b-form-input
+                            id="input-3"
+                            v-model="form.creator"
+                            required
+                            placeholder="Enter creator name"
+                    ></b-form-input>
+                </b-form-group>
+
+                <b-form-group id="input-group-4" label="Food:" label-for="input-4">
+                    <b-form-select
+                            id="input-4"
+                            v-model="form.food"
+                            :options="foods"
+                            required
+                    ></b-form-select>
+                </b-form-group>
+
+                <b-form-group id="input-group-5" label="status:">
+                    <b-form-radio-group v-model="form.status" id="radiobuttons-5">
+                        <b-form-radio value="draft">draft</b-form-radio>
+                        <b-form-radio value="review">review</b-form-radio>
+                        <b-form-radio value="final">final</b-form-radio>
+                    </b-form-radio-group>
+                </b-form-group>
+
+                <b-button type="submit" variant="primary">save</b-button>
+                <b-button type="reset" variant="danger">reset</b-button>
+
+            </b-form>
+
+            <b-card class="mt-3" header="Form Data Result">
+                <pre class="m-0">{{ form }}</pre>
+            </b-card>
+
+
+        </b-container>
+    </div>
+
 </template>
 
 <script>
+    import Header from "@/components/Header";
+
     export default {
         name: "ComicForm",
+        components: {
+            Header
+        },
+        computed: {
+            titleState() {
+                return this.form.title.length >= 4 ? true : false
+            },
+        },
         data() {
             return {
                 form: {
-                    title: "",
-                    authors: [],
-                    in: "",
-                    pages: "",
-                    placeOfPublication: "",
-                    publisher: "",
-                    year: ""
-                }
-            };
+                    title: '',
+                    subtitle: '',
+                    name: '',
+                    food: null,
+                    status: 'draft'
+                },
+                foods: [{text: 'Select One', value: null}, 'Carrots', 'Beans', 'Tomatoes', 'Corn'],
+                show: true
+            }
+        },
+        methods: {
+            onSubmit(evt) {
+                evt.preventDefault()
+                alert(JSON.stringify(this.form))
+            },
+            onReset(evt) {
+                evt.preventDefault()
+                // Reset our form values
+                this.form.title = ''
+                this.form.subtitle = ''
+                this.form.name = ''
+                this.form.food = null
+                this.form.statur = ''
+                // Trick to reset/clear native browser form validation state
+                this.show = false
+                this.$nextTick(() => {
+                    this.show = true
+                })
+            }
         }
     };
 </script>
