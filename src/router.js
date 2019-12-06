@@ -23,7 +23,7 @@ export default new Router({
                 import(/* webpackChunkName: "about" */ "./views/About.vue")
         },
         {
-            path: "/comic/:id",
+            path: "/comics/:id",
             name: "comic",
             component: ComicForm
         },

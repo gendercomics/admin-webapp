@@ -80,7 +80,7 @@
         >
 
             <template v-slot:cell(actions)="row">
-                <b-button size="sm" @click="edit()" class="mr-1">
+                <b-button size="sm" @click="edit(row.item, $event.target)" class="mr-1">
                     edit
                 </b-button>
             </template>
@@ -90,8 +90,6 @@
 </template>
 
 <script>
-    import router from "../router";
-
     export default {
         name: "ComicList",
         data() {
@@ -122,8 +120,9 @@
                 .finally(() => (this.loading = false));
         },
         methods: {
-            edit() {
-                console.log('edit clicked');
+            edit(item, button) {
+                console.log('edit item: ' + item.id);
+                this.$router.push("/comics/" + item.id);
             },
             onFiltered(filteredItems) {
                 // Trigger pagination to update the number of buttons/pages due to filtering
