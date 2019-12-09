@@ -76,7 +76,6 @@
                 <pre class="m-0">{{ comic }}</pre>
             </b-card>
 
-
         </b-container>
     </div>
 
@@ -108,7 +107,13 @@
                     subTitle: '',
                     name: '',
                     food: null,
-                    status: 'draft'
+                    metadata : {
+                        createdOn: null,
+                        createdBy: null,
+                        changedOn: null,
+                        changedBy: null,
+                        status: 'draft'
+                    },
                 },
                 foods: [{text: 'Select One', value: null}, 'Carrots', 'Beans', 'Tomatoes', 'Corn'],
                 show: true,
@@ -118,17 +123,24 @@
         },
         methods: {
             onSubmit(evt) {
-                evt.preventDefault()
-                alert(JSON.stringify(this.comic))
+                evt.preventDefault();
+                alert(JSON.stringify(this.comic));
+                this.$api
+                    .patch("/comics/" + this.comic.id, this.comic)
+                    .then(response => (this.comic = response.data))
+                    .catch(error => {
+                        console.log(error);
+                        this.errored = true;
+                    })
+                    .finally(() => (this.loading = false));
             },
             onReset(evt) {
                 evt.preventDefault()
                 // Reset our form values
                 this.comic.title = ''
                 this.comic.subTitle = ''
-                this.comic.name = ''
                 this.comic.food = null
-                this.comic.statur = ''
+                this.comic.metadata.status = ''
                 // Trick to reset/clear native browser form validation state
                 this.show = false
                 this.$nextTick(() => {

@@ -7,7 +7,7 @@
 
             <b-collapse id="nav-collapse" is-nav>
                 <b-navbar-nav>
-                    <b-nav-item to="comics">Comics</b-nav-item>
+                    <b-nav-item to="/comics">Comics</b-nav-item>
                     <b-nav-item href="#" disabled>Creators</b-nav-item>
                     <b-nav-item href="#" disabled>Publishers</b-nav-item>
                 </b-navbar-nav>

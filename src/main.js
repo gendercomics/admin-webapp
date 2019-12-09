@@ -16,13 +16,23 @@ let initOptions = {
 let keycloak = Keycloak(initOptions);
 
 
+/** Auth token interceptors */
+const authInterceptor = config => {
+    const token = localStorage.getItem('access-token');
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+};
+
 Vue.use({
     install(Vue) {
-        Vue.prototype.$api = axios.create({
-            baseURL: "http://localhost:8001/"
-        });
+        Vue.prototype.$api = axios.create({baseURL: "http://localhost:8001/"});
     }
 });
+
+/** Adding the request interceptors */
+Vue.prototype.$api.interceptors.request.use(authInterceptor);
 
 const options = {
     isEnabled: true,
