@@ -111,7 +111,7 @@
         },
         mounted() {
             this.$api
-                .get("http://localhost:8001/comics")
+                .get("/comics")
                 .then(response => (this.comics = response.data, this.totalRows = this.comics.length))
                 .catch(error => {
                     console.log(error);

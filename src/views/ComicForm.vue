@@ -7,12 +7,11 @@
         </div>
 
         <b-container fluid>
-            <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+            <b-form @submit="onSubmit" v-if="show">
                 <b-form-group
                         id="input-group-1"
                         label="title:"
                         label-for="input-1"
-                        :state="titleState"
                 >
                     <b-form-input
                             id="input-1"
@@ -47,19 +46,61 @@
                     ></b-form-input>
                 </b-form-group>
 
-                <b-form-group id="input-group-4" label="Food:" label-for="input-4">
+                <b-form-group id="input-group-4" label="publisher:" label-for="input-4">
                     <b-form-select
                             id="input-4"
-                            v-model="comic.food"
-                            :options="foods"
+                            v-model="comic.publisher"
+                            :options="publishers"
                     ></b-form-select>
                 </b-form-group>
 
+                <!-- location -->
                 <b-form-group
                         id="input-group-5"
+                        label="location:"
+                        label-for="input-5"
+                >
+                    <b-form-input
+                            id="input-5"
+                            v-model="comic.location"
+                            placeholder="Enter location"
+                    ></b-form-input>
+                </b-form-group>
+
+                <!-- year -->
+                <b-form-group
+                        id="input-group-6"
+                        label="year:"
+                        label-for="input-6"
+                >
+                    <b-form-input
+                            id="input-6"
+                            type="number"
+                            v-model="comic.year"
+                            :state="yearState"
+                            placeholder="Enter year"
+                    ></b-form-input>
+                    <b-form-invalid-feedback>Are you sure about the year?</b-form-invalid-feedback>
+                </b-form-group>
+
+                <!-- edition -->
+                <b-form-group
+                        id="input-group-7"
+                        label="edition:"
+                        label-for="input-7"
+                >
+                    <b-form-input
+                            id="input-7"
+                            v-model="comic.edition"
+                            placeholder="Enter edition"
+                    ></b-form-input>
+                </b-form-group>
+
+                <b-form-group
+                        id="input-group-99"
                         label="status:"
                 >
-                    <b-form-radio-group v-model="comic.status" id="radiobuttons-5">
+                    <b-form-radio-group v-model="comic.status" id="radiobuttons-99">
                         <b-form-radio value="draft">draft</b-form-radio>
                         <b-form-radio value="review">review</b-form-radio>
                         <b-form-radio value="final">final</b-form-radio>
@@ -67,7 +108,6 @@
                 </b-form-group>
 
                 <b-button class="m-1" type="submit" variant="primary">save</b-button>
-                <b-button class="m-1" type="reset" variant="danger">clear form</b-button>
                 <b-button to="/comics" class="m-1" type="reset" variant="outline-danger">cancel</b-button>
 
             </b-form>
@@ -98,6 +138,9 @@
                     return 'edit comic ...';
                 }
                 return 'new comic ...';
+            },
+            yearState() {
+                return (this.comic.year == null || this.comic.year == '') ||(this.comic.year > 1950 && this.comic.year < 2099)
             }
         },
         data() {
@@ -105,16 +148,19 @@
                 comic: {
                     title: '',
                     subTitle: '',
-                    name: '',
-                    food: null,
-                    metadata : {
+                    creator: '',
+                    publisher: null,
+                    location: '',
+                    year: null,
+                    edition: '',
+                    metadata: {
                         createdOn: null,
                         createdBy: null,
                         changedOn: null,
                         changedBy: null
                     },
                 },
-                foods: [{text: 'Select One', value: null}, 'Carrots', 'Beans', 'Tomatoes', 'Corn'],
+                publishers: [{text: 'Select One', value: null}, 'avant-Verlag', 'Carlsen', 'Reprodukt'],
                 status: 'draft',
                 show: true,
                 loading: true,
@@ -133,19 +179,6 @@
                         this.errored = true;
                     })
                     .finally(() => (this.loading = false));
-            },
-            onReset(evt) {
-                evt.preventDefault()
-                // Reset our form values
-                this.comic.title = ''
-                this.comic.subTitle = ''
-                this.comic.food = null
-                this.comic.status = ''
-                // Trick to reset/clear native browser form validation state
-                this.show = false
-                this.$nextTick(() => {
-                    this.show = true
-                })
             }
         },
         mounted() {
