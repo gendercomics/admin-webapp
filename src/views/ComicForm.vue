@@ -111,11 +111,11 @@
                         createdOn: null,
                         createdBy: null,
                         changedOn: null,
-                        changedBy: null,
-                        status: 'draft'
+                        changedBy: null
                     },
                 },
                 foods: [{text: 'Select One', value: null}, 'Carrots', 'Beans', 'Tomatoes', 'Corn'],
+                status: 'draft',
                 show: true,
                 loading: true,
                 errored: false
@@ -124,7 +124,7 @@
         methods: {
             onSubmit(evt) {
                 evt.preventDefault();
-                alert(JSON.stringify(this.comic));
+                //alert(JSON.stringify(this.comic));
                 this.$api
                     .patch("/comics/" + this.comic.id, this.comic)
                     .then(response => (this.comic = response.data))
@@ -140,7 +140,7 @@
                 this.comic.title = ''
                 this.comic.subTitle = ''
                 this.comic.food = null
-                this.comic.metadata.status = ''
+                this.comic.status = ''
                 // Trick to reset/clear native browser form validation state
                 this.show = false
                 this.$nextTick(() => {
