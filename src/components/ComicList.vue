@@ -96,7 +96,9 @@
             return {
                 fields: [
                     {key: 'actions', label: 'Actions'},
-                    {key: 'title'}
+                    {key: 'title'},
+                    {key: 'metaData.changedOn', label: 'modified on'},
+                    {key: 'metaData.changedBy', label: 'modified by'}
                 ],
                 comics: null,
                 loading: true,
