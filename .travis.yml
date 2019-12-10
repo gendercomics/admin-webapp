@@ -1,0 +1,59 @@
+language: node_js
+
+node_js:
+  - node
+
+dist: trusty
+sudo: false
+
+addons:
+  ssh_known_hosts: gendercomics.net
+
+cache:
+  directories:
+    - node_modules
+
+before_install:
+  - openssl aes-256-cbc -K $encrypted_ac25a508ad54_key -iv $encrypted_ac25a508ad54_iv -in deploy-key.enc -out deploy-key -d
+
+before_script:
+  - VERSION=$(node -p -e "require('./package.json').version")
+
+script:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker build -t gendercomics/admin-webapp .
+  - docker tag gendercomics/admin-webapp gendercomics/admin-webapp:latest
+  - docker tag gendercomics/admin-webapp gendercomics/admin-webapp:$VERSION
+  - docker images
+  - docker push gendercomics/admin-webapp:latest
+  - docker push gendercomics/admin-webapp:$VERSION
+
+#before_deploy:
+#  - openssl aes-256-cbc -K $encrypted_ac25a508ad54_key -iv $encrypted_ac25a508ad54_iv -in deploy-key.enc -out deploy-key -d
+#  - eval "$(ssh-agent -s)"
+#  - chmod 600 deploy-key
+#  - ssh-add deploy-key
+#  - scp -r ./docker-compose.yml deploy@gendercomics.net:/var/gendercomics/website
+
+#deploy:
+#  - provider: script
+#    skip_cleanup: true
+#    script: ssh deploy@gendercomics.net 'docker pull gendercomics/admin-webapp:latest && cd /var/gendercomics/admin-webapp && docker-compose up -d gendercomics-admin-webapp-stage'
+#    on:
+#      all_branches: true
+#  - provider: script
+#    skip_cleanup: true
+#    script: ssh deploy@gendercomics.net 'docker pull gendercomics/admin-webapp:$VERSION && cd /var/gendercomics/admin-webapp && docker-compose up -d gendercomics-admin-webapp'
+#    on:
+#      branch: master
+
+notifications:
+#  slack:
+#    rooms:
+#      - visualitiesofgender:3zAI6z6JJXLeEIaBU49O0Wkr#datenbank
+#    on_success: change # default: always
+  email:
+    recipients:
+      - michael.litschauer@gmail.com
+    on_success: always
+    on_failure: always
