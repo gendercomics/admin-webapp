@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-container fluid>
+        <b-container fluid class="mt-4">
             <b-row>
                 <b-col lg="6" class="my-1">
                     <b-form-group
@@ -64,6 +64,7 @@
 
 
         <b-table
+                class="mt-4"
                 show-empty
                 small
                 striped
