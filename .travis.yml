@@ -1,20 +1,25 @@
 language: node_js
 
 node_js:
-  - node
+- node
 
 dist: trusty
 sudo: false
+
+env:
+  global:
+    secure: biPO6fpEbI1nxFF270fcf28mIsCbtzrLCpYEnS9riQqSnSpYV5vOcWaRqiK7uLCETbvX3N+XZJFNuANhpRRulRj15VKukyw+pkpPlm8HjJjfuSqotdyTj4z3BTsZEFSfuEHKI01r/ervGpo2Nu9xT3QzE/4vkrxW/AwjmRBPObgJV9yP4KREkG8HeIPXlj2aMmLxSZtuA/tG4UNuFOsCjYwOpdbxLTrAFiqsGJJcMbg5ZWc/xn9EH8EjDuIY7997d6kV6CruznnBnfLfYMZ6mvGeJUF2NIMNr0qARQ+nEMxcW3EvWKKZIhwHh60oLyaA5hhtEfWEjy9VxcoBdl3ttu98xGtOALixzflcNfr+xcOTmjzXRLUa5c5ecUoqn8LI9O1o2Zytgq4uCwsgpJkMTqxEda5oTJ7ou/tYldDe+ycdRXv+glP0ALR4gJYe8cf28kEXgJkRI+fKegBEcsVJQdqhUPY1vLlS2ZkLlTMw24z+HKlJHCMTqJ3KSoqKoMQ/0dNCOKdWU6K6kA6jomQff2s7UtlFaRGAgD0td2QXn8Y5Pdftt+7ssw8AyICIFW0TF6jzPeGMEepjuMskEEMA0qUow1uwq+YhDPZUspkUhzYEGLeZj+JiqjLoBTgt9UKDBKl4xYEFzBwedLmxFWFLIhikNW7SPkuPYBfqBhYhPdM=
 
 addons:
   ssh_known_hosts: gendercomics.net
 
 cache:
   directories:
-    - node_modules
+  - node_modules
 
 before_install:
-  - openssl aes-256-cbc -K $encrypted_ac25a508ad54_key -iv $encrypted_ac25a508ad54_iv -in deploy-key.enc -out deploy-key -d
+  - openssl aes-256-cbc -K $encrypted_ac25a508ad54_key -iv $encrypted_ac25a508ad54_iv
+  -in deploy-key.enc -out deploy-key -d
 
 before_script:
   - VERSION=$(node -p -e "require('./package.json').version")
@@ -54,6 +59,6 @@ notifications:
 #    on_success: change # default: always
   email:
     recipients:
-      - michael.litschauer@gmail.com
+    - michael.litschauer@gmail.com
     on_success: always
     on_failure: always
