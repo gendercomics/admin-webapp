@@ -1,25 +1,24 @@
 language: node_js
 
 node_js:
-- node
+  - node
 
 dist: trusty
 sudo: false
 
 env:
   global:
-    secure: biPO6fpEbI1nxFF270fcf28mIsCbtzrLCpYEnS9riQqSnSpYV5vOcWaRqiK7uLCETbvX3N+XZJFNuANhpRRulRj15VKukyw+pkpPlm8HjJjfuSqotdyTj4z3BTsZEFSfuEHKI01r/ervGpo2Nu9xT3QzE/4vkrxW/AwjmRBPObgJV9yP4KREkG8HeIPXlj2aMmLxSZtuA/tG4UNuFOsCjYwOpdbxLTrAFiqsGJJcMbg5ZWc/xn9EH8EjDuIY7997d6kV6CruznnBnfLfYMZ6mvGeJUF2NIMNr0qARQ+nEMxcW3EvWKKZIhwHh60oLyaA5hhtEfWEjy9VxcoBdl3ttu98xGtOALixzflcNfr+xcOTmjzXRLUa5c5ecUoqn8LI9O1o2Zytgq4uCwsgpJkMTqxEda5oTJ7ou/tYldDe+ycdRXv+glP0ALR4gJYe8cf28kEXgJkRI+fKegBEcsVJQdqhUPY1vLlS2ZkLlTMw24z+HKlJHCMTqJ3KSoqKoMQ/0dNCOKdWU6K6kA6jomQff2s7UtlFaRGAgD0td2QXn8Y5Pdftt+7ssw8AyICIFW0TF6jzPeGMEepjuMskEEMA0qUow1uwq+YhDPZUspkUhzYEGLeZj+JiqjLoBTgt9UKDBKl4xYEFzBwedLmxFWFLIhikNW7SPkuPYBfqBhYhPdM=
+    secure: C0jlgExCOgzzbu9gJwGLIxyZqVWhMqxoGo90BkrF1JN317ysMOjKYz3ThiQh7d4EbYSDpR7u2TJl3TGFR2qKfBjfDRSpCW3bjdn07eBPo92FtbTmOG1rHriPNgvLJcCzO6WiB92wAlupi0TJP6KW0y5IvAYwxF3q2vSzEDlAZF5kghNQBhxu9fkXcHQDbCpEe1caA01UUd3DAplbrvOlkY1rK+ClGDCK2fkFuPc6A9Vjg/KQavtOX6xr2PeFNHs4Ge9G2XGpjY/sjOW01j/BmzdPSIh3F4qLy1u/NutUXZ+UyjNF2M2UY7htYRTSokGsTxX5SAmSxsT8s4c5+ZjVKUbbGSvK/sYt/AJacCnxYrutkbB7T72dnhXXqDP2EzXcpRKISDesiAfb6TUoayiGGutGyAYBWHvvBTMq6qxMCZ14HvCKzG7ELiw1SwZHyEhCN/lG8dBlJ4whpSkfhFJN64brW2N6ThGCt/LiIHOgGg3LHz2jDBsPub66D1LRWxvNR71Bw9vT8g07KGM3TLsy+PSs2EdVeKWv29uD5/5iI+oVcFcscxMIB0UPXQitJ6GdNyvyzsfO+pysLA/gBLxnSWyX/kHXS/VwwpHSys0gYaEUevSlhjSo+KjJMO3ltjV6NFTMWzX1syqM36vSzxtIcc03lTdwU0blJR61rdlyoxs=
 
 addons:
   ssh_known_hosts: gendercomics.net
 
 cache:
   directories:
-  - node_modules
+    - node_modules
 
 before_install:
-  - openssl aes-256-cbc -K $encrypted_ac25a508ad54_key -iv $encrypted_ac25a508ad54_iv
-  -in deploy-key.enc -out deploy-key -d
+  - openssl aes-256-cbc -K $encrypted_c82131f2301a_key -iv $encrypted_c82131f2301a_iv -in deploy-key.enc -out deploy-key -d
 
 before_script:
   - VERSION=$(node -p -e "require('./package.json').version")
@@ -34,11 +33,10 @@ script:
   - docker push gendercomics/admin-webapp:$VERSION
 
 #before_deploy:
-#  - openssl aes-256-cbc -K $encrypted_ac25a508ad54_key -iv $encrypted_ac25a508ad54_iv -in deploy-key.enc -out deploy-key -d
 #  - eval "$(ssh-agent -s)"
 #  - chmod 600 deploy-key
 #  - ssh-add deploy-key
-#  - scp -r ./docker-compose.yml deploy@gendercomics.net:/var/gendercomics/website
+#  - scp -r ./docker-compose.yml deploy@gendercomics.net:/var/gendercomics/admin-webapp
 
 #deploy:
 #  - provider: script
@@ -55,10 +53,11 @@ script:
 notifications:
 #  slack:
 #    rooms:
-#      - visualitiesofgender:3zAI6z6JJXLeEIaBU49O0Wkr#datenbank
-#    on_success: change # default: always
+#     - visualitiesofgender:3zAI6z6JJXLeEIaBU49O0Wkr#datenbank
+#    on_success: change
   email:
     recipients:
-    - michael.litschauer@gmail.com
+      - michael.litschauer@gmail.com
     on_success: always
     on_failure: always
+
