@@ -10,11 +10,11 @@ import './styles/styles.scss'
 Vue.config.productionTip = false;
 
 let initOptions = {
-    url: 'https://sso.gendercomics.net/auth', realm: 'gendercomics-stage', clientId: 'gendercomics-admin', onLoad: 'login-required'
+    //url: 'https://sso.gendercomics.net/auth', realm: 'gendercomics-stage', clientId: 'gendercomics-admin', onLoad: 'login-required'
+    url: 'http://localhost:81/auth/', realm: 'gendercomics', clientId: 'gendercomics-admin', onLoad: 'login-required'
 };
 
 let keycloak = Keycloak(initOptions);
-
 
 /** Auth token interceptors */
 const authInterceptor = config => {
@@ -27,7 +27,8 @@ const authInterceptor = config => {
 
 Vue.use({
     install(Vue) {
-        Vue.prototype.$api = axios.create({baseURL: "https://api.gendercomics.net/"});
+        //Vue.prototype.$api = axios.create({baseURL: 'https://api.gendercomics.net/'});
+        Vue.prototype.$api = axios.create({baseURL: 'http://localhost:8001/'});
     }
 });
 

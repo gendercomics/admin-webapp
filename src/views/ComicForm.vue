@@ -2,57 +2,76 @@
     <div class="text-left">
         <Header/>
 
-        <div class="ml-1 p-2 text-primary">
-            <h2>{{ headerText }}</h2>
-        </div>
+        <b-container class="mt-3" fluid>
+            <b-row>
+                <b-col id="button-col" cols="1">
+                    <b-button-group vertical>
+                        <b-button disabled>title</b-button>
+                        <b-button :variant="subtitleBtnVariant" @click="addSubtitle" :disabled="showSubtitle">subtitle</b-button>
+                        <b-button variant="outline-dark" @click="addCreator">creator+</b-button>
+                        <b-button :variant="publisherBtnVariant" @click="addPublisher" :disabled="showPublisher">publisher</b-button>
+                        <b-button :variant="locationBtnVariant" @click="addLocation" :disabled="showLocation">location</b-button>
+                        <b-button :variant="yearBtnVariant" @click="addYear" :disabled="showYear">year</b-button>
+                        <b-button :variant="editionBtnVariant" @click="addEdition" :disabled="showYear">edition</b-button>
+                    </b-button-group>
+                </b-col>
 
-        <b-container fluid>
-            <b-form @submit="onSubmit" v-if="show">
-                <b-form-group
-                        id="input-group-1"
-                        label="title:"
-                        label-for="input-1"
-                >
-                    <b-form-input
-                            id="input-1"
-                            v-model="comic.title"
-                            required
-                            placeholder="Enter title"
-                            :state="titleState"
-                    ></b-form-input>
-                    <b-form-invalid-feedback>Enter at least 4 characters</b-form-invalid-feedback>
-                </b-form-group>
+                <b-col id="form-col">
 
-                <b-form-group
-                        id="input-group-2"
-                        label="subtitle:"
-                        label-for="input-2"
-                >
-                    <b-form-input
-                            id="input-2"
-                            v-model="comic.subTitle"
-                            placeholder="Enter subtitle"
-                    ></b-form-input>
-                </b-form-group>
+                    <b-form @submit="onSubmit" v-if="show">
+                        <b-input-group
+                                prepend="title"
+                                id="input-group-title"
+                                label-for="input-title"
+                                size="lg"
+                        >
+                            <b-form-input
+                                    id="input-title"
+                                    v-model="comic.title"
+                                    required
+                                    placeholder="Enter title"
+                                    :state="titleState"
+                            ></b-form-input>
+                            <b-form-invalid-feedback>Enter at least 4 characters</b-form-invalid-feedback>
+                        </b-input-group>
 
-                <b-form-group
-                        id="input-group-3"
-                        label="creator(s):"
-                        label-for="input-3">
-                    <b-form-input
-                            id="input-3"
-                            v-model="comic.creator"
-                            placeholder="Enter creator name"
-                    ></b-form-input>
-                </b-form-group>
+                        <b-input-group
+                                id="input-group-subtitle"
+                                class="pt-2"
+                                prepend="subtitle"
+                                label-for="input-subtitle"
+                                v-if="showSubtitle"
+                        >
+                            <b-form-input
+                                    id="input-subtitle"
+                                    v-model="comic.subTitle"
+                                    placeholder="Enter subtitle"
+                            ></b-form-input>
+                        </b-input-group>
 
-                <b-form-group id="input-group-4" label="publisher:" label-for="input-4">
-                    <b-form-select
-                            id="input-4"
-                            v-model="comic.publisher"
-                            :options="publishers"
-                    ></b-form-select>
-                </b-form-group>
+                        <!-- creators -->
+                        <ComicCreator v-bind:persons="persons"/>
+                        <ComicCreator v-bind:persons="persons"/>
+
+                        <!-- publisher -->
+                        <b-input-group
+                                id="input-group-4"
+                                class="pt-2"
+                                prepend="publisher"
+                                v-if="showPublisher"
+                        >
+
+                            <b-form-input
+                                    list="list-input-publishers"
+                                    id="input-4"
+                                    v-model="comic.publisher"
+                                    placeholder="Enter publisher name"
+
+                            ></b-form-input>
+                            <datalist id="list-input-publishers">
+                                <option v-for="publisher in publishers" v-bind:key="publisher.id">{{ publisher.name }}</option>
+                            </datalist>
+                        </b-input-group>
 
                 <!-- location -->
                 <b-form-group
@@ -110,12 +129,16 @@
                 <b-button class="m-1" type="submit" variant="primary">save</b-button>
                 <b-button to="/comics" class="m-1" type="reset" variant="outline-danger">cancel</b-button>
 
-            </b-form>
+                    </b-form>
 
-            <b-card class="mt-3" header="Form Data Result">
-                <pre class="m-0">{{ comic }}</pre>
-            </b-card>
+                </b-col>
 
+                <b-col id="json-col">
+                    <b-card header="comic.json">
+                        <pre class="m-0">{{ $data }}</pre>
+                    </b-card>
+                </b-col>
+            </b-row>
         </b-container>
     </div>
 
@@ -123,11 +146,13 @@
 
 <script>
     import Header from "@/components/Header";
+    import ComicCreator from "@/components/ComicCreator";
 
     export default {
         name: "ComicForm",
         components: {
-            Header
+            Header,
+            ComicCreator
         },
         computed: {
             titleState() {
@@ -135,7 +160,7 @@
             },
             headerText() {
                 if (this.comic.id != 'new') {
-                    return 'edit comic ...';
+                    return 'edit comic: ';
                 }
                 return 'new comic ...';
             },
@@ -164,7 +189,12 @@
                 status: 'draft',
                 show: true,
                 loading: true,
-                errored: false
+                errored: false,
+                showSubtitle: false,
+                showPublisher: false,
+                showLocation: false,
+                showYear: false,
+                showEdition: false
             }
         },
         methods: {
@@ -172,13 +202,31 @@
                 evt.preventDefault();
                 //alert(JSON.stringify(this.comic));
                 this.$api
-                    .patch("/comics/" + this.comic.id, this.comic)
+                    .put("/comics/" + this.comic.id, this.comic)
                     .then(response => (this.comic = response.data))
                     .catch(error => {
                         console.log(error);
                         this.errored = true;
                     })
                     .finally(() => (this.loading = false));
+            },
+            addSubtitle() {
+                this.showSubtitle = true;
+            },
+            addCreator() {
+                console.log("TODO: add creator");
+            },
+            addPublisher() {
+                this.showPublisher = true;
+            },
+            addLocation() {
+                this.showLocation = true;
+            },
+            addYear() {
+                this.showYear = true;
+            },
+            addEdition() {
+                this.showEdition = true;
             }
         },
         mounted() {
