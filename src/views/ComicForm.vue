@@ -7,12 +7,12 @@
                 <b-col id="button-col" cols="1">
                     <b-button-group vertical>
                         <b-button disabled>title</b-button>
-                        <b-button :variant="subtitleBtnVariant" @click="addSubtitle" :disabled="showSubtitle">subtitle</b-button>
+                        <b-button :variant="subtitleBtnVariant" @click="addSubtitle" :disabled="this.showSubtitle">subtitle</b-button>
                         <b-button variant="outline-dark" @click="addCreator">creator+</b-button>
-                        <b-button :variant="publisherBtnVariant" @click="addPublisher" :disabled="showPublisher">publisher</b-button>
-                        <b-button :variant="locationBtnVariant" @click="addLocation" :disabled="showLocation">location</b-button>
-                        <b-button :variant="yearBtnVariant" @click="addYear" :disabled="showYear">year</b-button>
-                        <b-button :variant="editionBtnVariant" @click="addEdition" :disabled="showYear">edition</b-button>
+                        <b-button :variant="publisherBtnVariant" @click="addPublisher" :disabled="this.showPublisher">publisher</b-button>
+                        <b-button :variant="locationBtnVariant" @click="addLocation" :disabled="this.showLocation">location</b-button>
+                        <b-button :variant="yearBtnVariant" @click="addYear" :disabled="this.showYear">year</b-button>
+                        <b-button :variant="editionBtnVariant" @click="addEdition" :disabled="this.showEdition">edition</b-button>
                     </b-button-group>
                 </b-col>
 
@@ -31,7 +31,7 @@
                                     required
                                     placeholder="Enter title"
                                     :state="titleState"
-                            ></b-form-input>
+                            />
                             <b-form-invalid-feedback>Enter at least 4 characters</b-form-invalid-feedback>
                         </b-input-group>
 
@@ -46,12 +46,13 @@
                                     id="input-subtitle"
                                     v-model="comic.subTitle"
                                     placeholder="Enter subtitle"
-                            ></b-form-input>
+                            />
                         </b-input-group>
 
                         <!-- creators -->
-                        <ComicCreator v-bind:persons="persons"/>
-                        <ComicCreator v-bind:persons="persons"/>
+                        <div v-for="creator in comic.creators">
+                            <ComicCreator v-bind:persons="persons"/>
+                        </div>
 
                         <!-- publisher -->
                         <b-input-group
@@ -67,7 +68,7 @@
                                     v-model="comic.publisher"
                                     placeholder="Enter publisher name"
 
-                            ></b-form-input>
+                            />
                             <datalist id="list-input-publishers">
                                 <option v-for="publisher in publishers" v-bind:key="publisher.id">{{ publisher.name }}</option>
                             </datalist>
@@ -156,17 +157,53 @@
         },
         computed: {
             titleState() {
-                return this.comic.title.length >= 4 ? true : false
+                return this.comic.title.length >= 4
             },
             headerText() {
-                if (this.comic.id != 'new') {
+                if (this.comic.id !== 'new') {
                     return 'edit comic: ';
                 }
                 return 'new comic ...';
             },
             yearState() {
-                return (this.comic.year == null || this.comic.year == '') ||(this.comic.year > 1950 && this.comic.year < 2099)
+                return (this.comic.year == null || this.comic.year === '') || (this.comic.year > 1950 && this.comic.year < 2099)
+            },
+            subtitleBtnVariant() {
+                if (!this.showSubtitle) return 'outline-dark';
+                return 'dark';
+            },
+            publisherBtnVariant() {
+                if (!this.showPublisher) return 'outline-dark';
+                return 'dark';
+            },
+            locationBtnVariant() {
+                if (!this.showLocation) return 'outline-dark';
+                return 'dark';
+            },
+            yearBtnVariant() {
+                if (!this.showYear) return 'outline-dark';
+                return 'dark';
+            },
+            editionBtnVariant() {
+                if (!this.showEdition) return 'outline-dark';
+                return 'dark';
+            },
+            showSubtitle() {
+                return this.comic.subTitle != null;
+            },
+            showPublisher() {
+                return this.comic.publisher != null;
+            },
+            showLocation() {
+                return this.comic.location != null;
+            },
+            showYear() {
+                return this.comic.year != null;
+            },
+            showEdition() {
+                return this.comic.edition != null;
             }
+
         },
         data() {
             return {
@@ -175,9 +212,9 @@
                     subTitle: '',
                     creator: '',
                     publisher: null,
-                    location: '',
+                    location: null,
                     year: null,
-                    edition: '',
+                    edition: null,
                     metadata: {
                         createdOn: null,
                         createdBy: null,
@@ -189,12 +226,7 @@
                 status: 'draft',
                 show: true,
                 loading: true,
-                errored: false,
-                showSubtitle: false,
-                showPublisher: false,
-                showLocation: false,
-                showYear: false,
-                showEdition: false
+                errored: false
             }
         },
         methods: {
@@ -211,22 +243,22 @@
                     .finally(() => (this.loading = false));
             },
             addSubtitle() {
-                this.showSubtitle = true;
+                this.comic.subTitle = '';
             },
             addCreator() {
                 console.log("TODO: add creator");
             },
             addPublisher() {
-                this.showPublisher = true;
+                this.comic.publisher = '';
             },
             addLocation() {
-                this.showLocation = true;
+                this.comic.location = ''
             },
             addYear() {
-                this.showYear = true;
+                this.comic.year = '';
             },
             addEdition() {
-                this.showEdition = true;
+                this.comic.edition = '';
             }
         },
         mounted() {
