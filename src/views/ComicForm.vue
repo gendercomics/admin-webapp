@@ -74,61 +74,55 @@
                             </datalist>
                         </b-input-group>
 
-                <!-- location -->
-                <b-form-group
-                        id="input-group-5"
-                        label="location:"
-                        label-for="input-5"
-                >
-                    <b-form-input
-                            id="input-5"
-                            v-model="comic.location"
-                            placeholder="Enter location"
-                    ></b-form-input>
-                </b-form-group>
+                        <!-- location -->
+                        <b-input-group
+                                id="input-group-5"
+                                class="pt-2"
+                                prepend="location"
+                                v-if="this.showLocation"
+                        >
+                            <b-form-input
+                                    id="input-5"
+                                    v-model="comic.location"
+                                    placeholder="Enter location"
+                            />
+                        </b-input-group>
 
-                <!-- year -->
-                <b-form-group
-                        id="input-group-6"
-                        label="year:"
-                        label-for="input-6"
-                >
-                    <b-form-input
-                            id="input-6"
-                            type="number"
-                            v-model="comic.year"
-                            :state="yearState"
-                            placeholder="Enter year"
-                    ></b-form-input>
-                    <b-form-invalid-feedback>Are you sure about the year?</b-form-invalid-feedback>
-                </b-form-group>
+                        <!-- year -->
+                        <b-input-group
+                                id="input-group-6"
+                                class="pt-2"
+                                prepend="year"
+                                v-if="showYear"
+                        >
+                            <b-form-input
+                                    id="input-6"
+                                    type="number"
+                                    v-model="comic.year"
+                                    :state="yearState"
+                                    placeholder="Enter year"
+                            />
+                            <b-form-invalid-feedback>Are you sure about the year?</b-form-invalid-feedback>
+                        </b-input-group>
 
-                <!-- edition -->
-                <b-form-group
-                        id="input-group-7"
-                        label="edition:"
-                        label-for="input-7"
-                >
-                    <b-form-input
-                            id="input-7"
-                            v-model="comic.edition"
-                            placeholder="Enter edition"
-                    ></b-form-input>
-                </b-form-group>
+                        <!-- edition -->
+                        <b-input-group
+                                id="input-group-7"
+                                class="pt-2"
+                                prepend="edition"
+                                v-if="showEdition"
+                        >
+                            <b-form-input
+                                    id="input-7"
+                                    v-model="comic.edition"
+                                    placeholder="Enter edition"
+                            />
+                        </b-input-group>
 
-                <b-form-group
-                        id="input-group-99"
-                        label="status:"
-                >
-                    <b-form-radio-group v-model="comic.status" id="radiobuttons-99">
-                        <b-form-radio value="draft">draft</b-form-radio>
-                        <b-form-radio value="review">review</b-form-radio>
-                        <b-form-radio value="final">final</b-form-radio>
-                    </b-form-radio-group>
-                </b-form-group>
-
-                <b-button class="m-1" type="submit" variant="primary">save</b-button>
-                <b-button to="/comics" class="m-1" type="reset" variant="outline-danger">cancel</b-button>
+                        <b-button-group class="mt-3 float-right">
+                            <b-button type="submit" variant="primary">save</b-button>
+                            <b-button to="/comics" type="reset" variant="outline-danger">cancel</b-button>
+                        </b-button-group>
 
                     </b-form>
 
@@ -209,8 +203,8 @@
             return {
                 comic: {
                     title: '',
-                    subTitle: '',
-                    creator: '',
+                    subTitle: null,
+                    creators: [],
                     publisher: null,
                     location: null,
                     year: null,
@@ -222,8 +216,8 @@
                         changedBy: null
                     },
                 },
-                publishers: [{text: 'Select One', value: null}, 'avant-Verlag', 'Carlsen', 'Reprodukt'],
-                status: 'draft',
+                persons: null,
+                publishers: null,
                 show: true,
                 loading: true,
                 errored: false
@@ -262,10 +256,27 @@
             }
         },
         mounted() {
-            console.log("route: " + this.$route.path);
+            // get comic
             this.$api
-                .get("http://localhost:8001" + this.$route.path)
+                .get(this.$route.path)
                 .then(response => (this.comic = response.data))
+                .catch(error => {
+                    console.log(error);
+                    this.errored = true;
+                })
+                .finally(() => (this.loading = false));
+            // get persons
+            this.$api
+                .get("/persons")
+                .then(response => (this.persons = response.data))
+                .catch(error => {
+                    console.log(error);
+                    this.errored = true;
+                })
+                .finally(() => (this.loading = false));
+            this.$api
+                .get("/publishers")
+                .then(response => (this.publishers = response.data))
                 .catch(error => {
                     console.log(error);
                     this.errored = true;
