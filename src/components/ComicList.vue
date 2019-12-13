@@ -25,7 +25,7 @@
                     </b-form-group>
                 </b-col>
                 <b-col lg="6" class="my-1">
-                    <b-button to="comic/new" variant="outline-primary">new comic</b-button>
+                    <b-button to="comics/new" variant="outline-primary">new comic</b-button>
                 </b-col>
             </b-row>
             <b-row>
