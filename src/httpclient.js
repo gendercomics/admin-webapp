@@ -2,7 +2,8 @@ import axios from 'axios';
 
 /** Default config for axios instance */
 let config = {
-    baseURL: "http://localhost:8001/"
+    //baseURL: "http://localhost:8001/"
+    baseURL: "https://api.gendercomics.net/"
 };
 
 /** Creating the instance for axios */
