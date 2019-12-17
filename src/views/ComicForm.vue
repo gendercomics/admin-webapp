@@ -14,6 +14,10 @@
                         <b-button :variant="yearBtnVariant" @click="addYear" :disabled="this.showYear">year</b-button>
                         <b-button :variant="editionBtnVariant" @click="addEdition" :disabled="this.showEdition">edition</b-button>
                     </b-button-group>
+                    
+                    <b-button-group vertical class="mt-2">
+                        <b-button variant="outline-dark">...</b-button>
+                    </b-button-group>
                 </b-col>
 
                 <b-col id="form-col">
@@ -61,7 +65,6 @@
                                 prepend="publisher"
                                 v-if="showPublisher"
                         >
-
                             <b-form-input
                                     list="list-input-publishers"
                                     id="input-4"
@@ -127,10 +130,12 @@
                     </b-form>
 
                 </b-col>
+            </b-row>
 
+            <b-row class="mt-4">
                 <b-col id="json-col">
                     <b-card header="comic.json">
-                        <pre class="m-0">{{ $data }}</pre>
+                        <pre class="mt-0">{{ $data }}</pre>
                     </b-card>
                 </b-col>
             </b-row>
@@ -152,12 +157,6 @@
         computed: {
             titleState() {
                 return this.comic.title.length >= 4
-            },
-            headerText() {
-                if (this.comic.id !== 'new') {
-                    return 'edit comic: ';
-                }
-                return 'new comic ...';
             },
             yearState() {
                 return (this.comic.year == null || this.comic.year === '') || (this.comic.year > 1950 && this.comic.year < 2099)
@@ -205,7 +204,10 @@
                     title: '',
                     subTitle: null,
                     creators: [],
-                    publisher: null,
+                    publisher: {
+                        id: null,
+                        name: null,
+                    },
                     location: null,
                     year: null,
                     edition: null,
@@ -227,20 +229,31 @@
             onSubmit(evt) {
                 evt.preventDefault();
                 //alert(JSON.stringify(this.comic));
-                this.$api
-                    .put("/comics/" + this.comic.id, this.comic)
-                    .then(response => (this.comic = response.data))
-                    .catch(error => {
-                        console.log(error);
-                        this.errored = true;
-                    })
-                    .finally(() => (this.loading = false));
+                if (this.$route.path.endsWith("new")) {
+                    this.$api
+                        .post("/comics/", this.comic)
+                        .then(response => (this.comic = response.data))
+                        .catch(error => {
+                            console.log(error);
+                            this.errored = true;
+                        })
+                        .finally(() => (this.loading = false));
+                } else {
+                    this.$api
+                        .put("/comics/" + this.comic.id, this.comic)
+                        .then(response => (this.comic = response.data))
+                        .catch(error => {
+                            console.log(error);
+                            this.errored = true;
+                        })
+                        .finally(() => (this.loading = false));
+                }
             },
             addSubtitle() {
                 this.comic.subTitle = '';
             },
-            addCreator() {
-                console.log("TODO: add creator");
+            addCreator(person, role) {
+                console.log("add creator: " + person.id, role);
             },
             addPublisher() {
                 this.comic.publisher = '';
@@ -257,14 +270,16 @@
         },
         mounted() {
             // get comic
-            this.$api
-                .get(this.$route.path)
-                .then(response => (this.comic = response.data))
-                .catch(error => {
-                    console.log(error);
-                    this.errored = true;
-                })
-                .finally(() => (this.loading = false));
+            if (!this.$route.path.endsWith("new")) {
+                this.$api
+                    .get(this.$route.path)
+                    .then(response => (this.comic = response.data))
+                    .catch(error => {
+                        console.log(error);
+                        this.errored = true;
+                    })
+                    .finally(() => (this.loading = false));
+            }
             // get persons
             this.$api
                 .get("/persons")
