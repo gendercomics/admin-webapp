@@ -107,8 +107,9 @@
         data() {
             return {
                 fields: [
-                    {key: 'actions', label: 'Actions'},
+                    {key: 'actions', label: 'actions'},
                     {key: 'title'},
+                    {key: 'creators', label: "creator(s)"},
                     {key: 'metaData.changedOn', label: 'created/modified'},
                     {key: 'metaData.changedBy', label: 'by'}
                 ],
