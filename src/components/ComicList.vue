@@ -86,6 +86,16 @@
                 </b-button>
             </template>
 
+            <template v-slot:cell(metaData.changedOn)="data">
+                <span v-if="moment(data.item.metaData.changedOn).isValid()">{{ moment(data.item.metaData.changedOn).format('DD.MM.YYYY HH:mm') }}</span>
+                <span v-else>{{ moment(data.item.metaData.createdOn).format('DD.MM.YYYY HH:mm') }}</span>
+            </template>
+
+            <template v-slot:cell(metaData.changedBy)="data">
+                <span v-if="data.item.metaData.changedBy == null">{{ data.item.metaData.createdBy }}</span>
+                <span v-else>{{ data.item.metaData.changedBy }}</span>
+            </template>
+
         </b-table>
     </div>
 </template>
@@ -93,13 +103,14 @@
 <script>
     export default {
         name: "ComicList",
+
         data() {
             return {
                 fields: [
                     {key: 'actions', label: 'Actions'},
                     {key: 'title'},
-                    {key: 'metaData.changedOn', label: 'modified on'},
-                    {key: 'metaData.changedBy', label: 'modified by'}
+                    {key: 'metaData.changedOn', label: 'created/modified'},
+                    {key: 'metaData.changedBy', label: 'by'}
                 ],
                 comics: null,
                 loading: true,
@@ -129,7 +140,7 @@
             },
             onFiltered(filteredItems) {
                 // Trigger pagination to update the number of buttons/pages due to filtering
-                this.totalRows = filteredItems.length
+                this.totalRows = filteredItems.length;
                 this.currentPage = 1
             }
         }

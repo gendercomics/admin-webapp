@@ -4,8 +4,9 @@ import router from "./router";
 import axios from "axios";
 import * as Keycloak from "keycloak-js";
 import VueLogger from 'vuejs-logger';
-import BootstrapVue from 'bootstrap-vue'
+import BootstrapVue from 'bootstrap-vue';
 import './styles/styles.scss'
+import moment from 'moment';
 
 Vue.config.productionTip = false;
 
@@ -33,6 +34,8 @@ Vue.use({
         //Vue.prototype.$api = axios.create({baseURL: process.env.API_URL});
     }
 });
+
+Vue.prototype.moment = moment;
 
 /** Adding the request interceptors */
 Vue.prototype.$api.interceptors.request.use(authInterceptor);
