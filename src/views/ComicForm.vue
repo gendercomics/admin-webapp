@@ -204,10 +204,7 @@
                     title: '',
                     subTitle: null,
                     creators: [],
-                    publisher: {
-                        id: null,
-                        name: null,
-                    },
+                    publisher: null,
                     location: null,
                     year: null,
                     edition: null,
