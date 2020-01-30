@@ -10,6 +10,7 @@
                     <b-nav-item to="/comics">Comics</b-nav-item>
                     <b-nav-item href="#" disabled>Persons</b-nav-item>
                     <b-nav-item href="#" disabled>Publishers</b-nav-item>
+                    <b-nav-item href="#" disabled>Roles</b-nav-item>
                 </b-navbar-nav>
 
                 <!-- Right aligned nav items -->
