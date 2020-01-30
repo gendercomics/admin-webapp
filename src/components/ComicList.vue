@@ -86,6 +86,10 @@
                 </b-button>
             </template>
 
+            <template v-slot:cell(creators)="data">
+                <span>{{ fullNames(data.item.creators) }}</span>
+            </template>
+
             <template v-slot:cell(metaData.changedOn)="data">
                 <span v-if="moment(data.item.metaData.changedOn).isValid()">{{ moment(data.item.metaData.changedOn).format('DD.MM.YYYY HH:mm') }}</span>
                 <span v-else>{{ moment(data.item.metaData.createdOn).format('DD.MM.YYYY HH:mm') }}</span>
@@ -117,7 +121,7 @@
                 loading: true,
                 errored: false,
                 filter: null,
-                filterOn: ['title'],
+                filterOn: ['title', 'creators'],
                 totalRows: 1,
                 currentPage: 1,
                 perPage: 10,
@@ -143,6 +147,18 @@
                 // Trigger pagination to update the number of buttons/pages due to filtering
                 this.totalRows = filteredItems.length;
                 this.currentPage = 1
+            },
+            fullNames(creators) {
+                let fullNames = '';
+                console.log(creators);
+                if (creators != null) {
+                    creators.forEach(creator => {
+                        if (creator.person != null) {
+                            return fullNames += creator.person.firstName + ' ' + creator.person.lastName;
+                        }
+                    });
+                }
+                return fullNames;
             }
         }
     };
