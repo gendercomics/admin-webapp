@@ -59,7 +59,7 @@
 
                         <!-- creators -->
                         <div v-for="creator in comic.creators">
-                            <ComicCreator v-bind:persons="persons"/>
+                            <ComicCreator v-bind:key="creator.id" v-bind:persons="persons" v-on:input="updateValue($event.target.value)"/>
                         </div>
 
                         <!-- publisher -->
@@ -320,6 +320,8 @@
             },
             addCreator(person, role) {
                 console.log("add creator: " + person.id, role);
+                console.log("creators=" + this.comic.creators)
+                this.comic.creators.push({creator: {}});
             },
             addPublisher() {
                 this.comic.publisher = '';
