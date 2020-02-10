@@ -13,6 +13,8 @@
                         <b-button :variant="locationBtnVariant" @click="addLocation" :disabled="this.showLocation">location</b-button>
                         <b-button :variant="yearBtnVariant" @click="addYear" :disabled="this.showYear">year</b-button>
                         <b-button :variant="editionBtnVariant" @click="addEdition" :disabled="this.showEdition">edition</b-button>
+                        <b-button :variant="linkBtnVariant" @click="addLink" :disabled="this.showLink">link</b-button>
+                        <b-button :variant="isbnBtnVariant" @click="addIsbn" :disabled="this.showIsbn">isbn</b-button>
                     </b-button-group>
                     
                     <b-button-group vertical class="mt-2">
@@ -23,6 +25,7 @@
                 <b-col id="form-col">
 
                     <b-form @submit="onSubmit" v-if="show">
+                        <!-- title -->
                         <b-input-group
                                 prepend="title"
                                 id="input-group-title"
@@ -39,6 +42,7 @@
                             <b-form-invalid-feedback>Enter at least 4 characters</b-form-invalid-feedback>
                         </b-input-group>
 
+                        <!-- subtitle -->
                         <b-input-group
                                 id="input-group-subtitle"
                                 class="pt-2"
@@ -68,12 +72,15 @@
                             <b-form-input
                                     list="list-input-publishers"
                                     id="input-4"
-                                    v-model="comic.publisher"
+                                    v-bind:value="comic.publisher.name"
                                     placeholder="Enter publisher name"
-
+                                    @change="changePublisher()"
                             />
                             <datalist id="list-input-publishers">
-                                <option v-for="publisher in publishers" v-bind:key="publisher.id">{{ publisher.name }}</option>
+                                <!-- <option v-for="publisher in publishers" v-bind:key="publisher.id">{{ publisher.name }}</option> -->
+
+
+                                <option v-for="publisher in publishers" v-bind:value="publisher.id"  v-bind:label="publisher.name"></option>
                             </datalist>
                         </b-input-group>
 
@@ -122,6 +129,36 @@
                             />
                         </b-input-group>
 
+                        <!-- isbn -->
+                        <b-input-group
+                                id="input-group-link"
+                                class="pt-2"
+                                prepend="link"
+                                label-for="input-link"
+                                v-if="showLink"
+                        >
+                            <b-form-input
+                                    id="input-link"
+                                    v-model="comic.link"
+                                    placeholder="Enter link"
+                            />
+                        </b-input-group>
+
+                        <!-- isbn -->
+                        <b-input-group
+                                id="input-group-isbn"
+                                class="pt-2"
+                                prepend="isbn"
+                                label-for="input-isbn"
+                                v-if="showIsbn"
+                        >
+                            <b-form-input
+                                    id="input-isbn"
+                                    v-model="comic.isbn"
+                                    placeholder="Enter ISBN"
+                            />
+                        </b-input-group>
+
                         <b-button-group class="mt-3 float-right">
                             <b-button type="submit" variant="primary">save</b-button>
                             <b-button to="/comics" type="reset" variant="outline-danger">cancel</b-button>
@@ -133,12 +170,29 @@
             </b-row>
 
             <b-row class="mt-4">
-                <b-col id="json-col">
+                <b-col id="json-comic">
                     <b-card header="comic.json">
-                        <pre class="mt-0">{{ $data }}</pre>
+                        <pre class="mt-0">{{ $data.comic }}</pre>
                     </b-card>
                 </b-col>
             </b-row>
+
+            <b-row class="mt-4">
+                <b-col id="json-persons">
+                    <b-card header="persons">
+                        <pre class="mt-0">{{ $data.persons }}</pre>
+                    </b-card>
+                </b-col>
+            </b-row>
+
+            <b-row class="mt-4">
+                <b-col id="json-publishers">
+                    <b-card header="publishers">
+                        <pre class="mt-0">{{ $data.publishers }}</pre>
+                    </b-card>
+                </b-col>
+            </b-row>
+
         </b-container>
     </div>
 
@@ -181,6 +235,14 @@
                 if (!this.showEdition) return 'outline-dark';
                 return 'dark';
             },
+            linkBtnVariant() {
+                if (!this.showLink) return 'outline-dark';
+                return 'dark';
+            },
+            isbnBtnVariant() {
+                if (!this.showIsbn) return 'outline-dark';
+                return 'dark';
+            },
             showSubtitle() {
                 return this.comic.subTitle != null;
             },
@@ -195,8 +257,13 @@
             },
             showEdition() {
                 return this.comic.edition != null;
+            },
+            showLink() {
+                return this.comic.link != null;
+            },
+            showIsbn() {
+                return this.comic.isbn != null;
             }
-
         },
         data() {
             return {
@@ -208,6 +275,8 @@
                     location: null,
                     year: null,
                     edition: null,
+                    link: null,
+                    isbn: null,
                     metadata: {
                         createdOn: null,
                         createdBy: null,
@@ -263,6 +332,15 @@
             },
             addEdition() {
                 this.comic.edition = '';
+            },
+            addLink() {
+                this.comic.link = '';
+            },
+            addIsbn() {
+                this.comic.isbn = '';
+            },
+            changePublisher(publisher) {
+                console.log(publisher.name);
             }
         },
         mounted() {
