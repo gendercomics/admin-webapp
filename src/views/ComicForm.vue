@@ -171,7 +171,7 @@
 
             <b-row class="mt-4">
                 <b-col id="json-comic">
-                    <b-card header="comic.json">
+                    <b-card header="comic">
                         <pre class="mt-0">{{ $data.comic }}</pre>
                     </b-card>
                 </b-col>
