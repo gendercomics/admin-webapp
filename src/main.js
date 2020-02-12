@@ -10,10 +10,26 @@ import moment from "moment";
 
 Vue.config.productionTip = false;
 
+const options = {
+  isEnabled: true,
+  logLevel: Vue.config.productionTip ? "error" : "debug",
+  stringifyArguments: false,
+  showLogLevel: true,
+  showMethodName: true,
+  separator: "|",
+  showConsoleColors: true
+};
+
+Vue.use(VueLogger, options);
+
+let keycloakUrl = process.env.VUE_APP_KEYCLOAK_AUTH_URL;
+let keycloakRealm = process.env.VUE_APP_KEYCLOAK_REALM;
+let apiUrl = process.env.VUE_APP_API_URL;
+
 let initOptions = {
-    url: 'https://sso.gendercomics.net/auth/', realm: 'gendercomics-stage', clientId: 'gendercomics-admin', onLoad: 'login-required'
-    //url: 'http://localhost:81/auth/', realm: 'gendercomics', clientId: 'gendercomics-admin', onLoad: 'login-required'
-    //url: process.env.KEYCLOACK_AUTH_URL, realm: process.env.KEYCLOAK_REALM, clientId: 'gendercomics-admin', onLoad: 'login-required'
+  //url: 'https://sso.gendercomics.net/auth/', realm: 'gendercomics-stage', clientId: 'gendercomics-admin', onLoad: 'login-required'
+  //url: 'http://localhost:81/auth/', realm: 'gendercomics', clientId: 'gendercomics-admin', onLoad: 'login-required'
+  url: keycloakUrl, realm: keycloakRealm, clientId: "gendercomics-admin", onLoad: "login-required"
 };
 
 let keycloak = Keycloak(initOptions);
@@ -62,11 +78,11 @@ axios.interceptors.response.use(function(response) {
 });
 
 Vue.use({
-    install(Vue) {
-        Vue.prototype.$api = axios.create({baseURL: 'https://api.gendercomics.net/'});
-        //Vue.prototype.$api = axios.create({baseURL: 'http://localhost:8001/'});
-        //Vue.prototype.$api = axios.create({baseURL: process.env.API_URL});
-    }
+  install(Vue) {
+    //Vue.prototype.$api = axios.create({baseURL: 'https://api.gendercomics.net/'});
+    //Vue.prototype.$api = axios.create({baseURL: 'http://localhost:8001/'});
+    Vue.prototype.$api = axios.create({ baseURL: apiUrl });
+  }
 });
 
 Vue.prototype.moment = moment;
