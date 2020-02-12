@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import Home from './views/Home.vue';
 import ComicForm from './views/ComicForm';
 import Comics from './views/Comics';
+import Roles from "./views/Roles";
 
 Vue.use(Router);
 
@@ -33,8 +34,15 @@ export default new Router({
             component: Comics
         },
         {
+            path: '/roles',
+            name: 'roles',
+            component: Roles
+        },
+        {
             path: '/logout',
-            beforeEnter() {location.href = 'http://localhost:81/auth/realms/gendercomics/protocol/openid-connect/logout?redirect_uri=http%3A%2F%2Flocalhost%3A8080'}
+            beforeEnter() {
+                location.href = 'http://localhost:81/auth/realms/gendercomics/protocol/openid-connect/logout?redirect_uri=http%3A%2F%2Flocalhost%3A8080'
+            }
         },
     ]
 });
