@@ -103,8 +103,8 @@
                     </template>
 
                     <template v-slot:cell(metaData.changedOn)="data">
-                        <span v-if="moment(data.item.metaData.changedOn).isValid()">{{moment(data.item.metaData.changedOn).format('DD.MM.YYYY HH:mm')}}</span>
-                        <span v-else>{{moment(data.item.metaData.createdOn).format('DD.MM.YYYY HH:mm')}}</span>
+                        <span v-if="moment(data.item.metaData.changedOn).isValid()">{{moment(data.item.metaData.changedOn).format("DD.MM.YYYY HH:mm")}}</span>
+                        <span v-else>{{moment(data.item.metaData.createdOn).format("DD.MM.YYYY HH:mm")}}</span>
                     </template>
 
                     <template v-slot:cell(metaData.changedBy)="data">
@@ -118,68 +118,63 @@
 </template>
 
 <script>
-    export default {
-        name: 'ComicList',
+  export default {
+    name: "ComicList",
 
-        data() {
-            return {
-                fields: [
-                    {key: 'actions', label: 'actions'},
-                    {key: 'title'},
-                    {key: 'creators', label: 'creator(s)'},
-                    {key: 'metaData.changedOn', label: 'created/modified'},
-                    {key: 'metaData.changedBy', label: 'by'},
-                ],
-                comics: null,
-                loading: true,
-                errored: false,
-                filter: null,
-                filterOn: ['title', 'creators'],
-                totalRows: 1,
-                currentPage: 1,
-                perPage: 10,
-                pageOptions: [10, 20, 50],
-            };
-        },
-        mounted() {
-            this.$api
-                .get('/comics')
-                .then(
-                    response => (
-                        (this.comics = response.data),
-                            (this.totalRows = this.comics.length)
-                    )
-                )
-                .catch(error => {
-                    console.log(error);
-                    this.errored = true;
-                })
-                .finally(() => (this.loading = false));
-        },
-        methods: {
-            edit(item) {
-                console.log('edit item: ' + item.id);
-                this.$router.push('/comics/' + item.id);
-            },
-            onFiltered(filteredItems) {
-                // Trigger pagination to update the number of buttons/pages due to filtering
-                this.totalRows = filteredItems.length;
-                this.currentPage = 1;
-            },
-            fullNames(creators) {
-                let fullNames = '';
-                console.log(creators);
-                if (creators != null) {
-                    creators.forEach(creator => {
-                        if (creator.person != null) {
-                            fullNames += creator.person.firstName + ' ' + creator.person.lastName + '\n';
-                        }
-                    });
-                }
-                return fullNames;
-            },
-        },
-    };
+    data() {
+      return {
+        fields: [
+          { key: "actions", label: "actions" },
+          { key: "title" },
+          { key: "creators", label: "creator(s)" },
+          { key: "metaData.changedOn", label: "created/modified" },
+          { key: "metaData.changedBy", label: "by" }
+        ],
+        comics: null,
+        loading: true,
+        errored: false,
+        filter: null,
+        filterOn: ["title", "creators"],
+        totalRows: 1,
+        currentPage: 1,
+        perPage: 10,
+        pageOptions: [10, 20, 50]
+      };
+    },
+    mounted() {
+      this.$api
+        .get("/comics")
+        .then(response => ((this.comics = response.data), this.totalRows = this.comics.length))
+        .catch(error => {
+          console.log(error);
+          this.errored = true;
+        })
+        .finally(() => (this.loading = false));
+    },
+    methods: {
+      edit(item) {
+        console.log("edit item: " + item.id);
+        this.$router.push("/comics/" + item.id);
+      },
+      onFiltered(filteredItems) {
+        // Trigger pagination to update the number of buttons/pages due to filtering
+        this.totalRows = filteredItems.length;
+        this.currentPage = 1;
+      },
+      fullNames(creators) {
+        let fullNames = "";
+        console.log(creators);
+        if (creators != null) {
+          creators.forEach(creator => {
+            if (creator.person != null) {
+              fullNames += creator.person.firstName + " " + creator.person.lastName + "\n";
+            }
+          });
+        }
+        return fullNames;
+      }
+    }
+  };
 </script>
 
 <style lang="scss">

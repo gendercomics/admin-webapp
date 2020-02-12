@@ -7,7 +7,7 @@
                 <b-col id="button-col" cols="1">
                     <b-button-group vertical>
                         <b-button disabled>title</b-button>
-                        <b-button :variant="subtitleBtnVariant" @click="addSubtitle" :disabled="this.showSubtitle">subtitle</b-button>
+                        <b-button :variant="subtitleBtnVariant" @click="addSubtitle" :disabled="showSubtitle">subtitle</b-button>
                         <b-button variant="outline-dark" @click="addCreator">creator+</b-button>
                         <b-button :variant="publisherBtnVariant" @click="addPublisher" :disabled="this.showPublisher">publisher</b-button>
                         <b-button :variant="locationBtnVariant" @click="addLocation" :disabled="this.showLocation">location</b-button>
@@ -341,7 +341,7 @@
       changePublisher() {
         console.log(this.selectedPublisher);
         this.publishers.forEach(publisher => {
-          if (this.selectedPublisher == publisher.id) {
+          if (this.selectedPublisher === publisher.id) {
             this.comic.publisher = publisher;
           }
         });
