@@ -16,7 +16,7 @@
                         <b-button :variant="linkBtnVariant" @click="addLink" :disabled="this.showLink">link</b-button>
                         <b-button :variant="isbnBtnVariant" @click="addIsbn" :disabled="this.showIsbn">isbn</b-button>
                     </b-button-group>
-                    
+
                     <b-button-group vertical class="mt-2">
                         <b-button variant="outline-dark">...</b-button>
                     </b-button-group>
@@ -64,24 +64,20 @@
 
                         <!-- publisher -->
                         <b-input-group
-                                id="input-group-4"
+                                id="input-group-publisher"
                                 class="pt-2"
                                 prepend="publisher"
                                 v-if="showPublisher"
                         >
-                            <b-form-input
-                                    list="list-input-publishers"
-                                    id="input-4"
-                                    v-bind:value="comic.publisher.name"
-                                    placeholder="Enter publisher name"
+
+                            <b-form-select
+                                    id="input-publisher"
+                                    :options="publishers"
+                                    value-field="id"
+                                    text-field="name"
+                                    v-model="selectedPublisher"
                                     @change="changePublisher()"
                             />
-                            <datalist id="list-input-publishers">
-                                <!-- <option v-for="publisher in publishers" v-bind:key="publisher.id">{{ publisher.name }}</option> -->
-
-
-                                <option v-for="publisher in publishers" v-bind:value="publisher.id"  v-bind:label="publisher.name"></option>
-                            </datalist>
                         </b-input-group>
 
                         <!-- location -->
@@ -199,181 +195,193 @@
 </template>
 
 <script>
-    import Header from "@/components/Header";
-    import ComicCreator from "@/components/ComicCreator";
+  import Header from "@/components/Header";
+  import ComicCreator from "@/components/ComicCreator";
 
-    export default {
-        name: "ComicForm",
-        components: {
-            Header,
-            ComicCreator
+  export default {
+    name: "ComicForm",
+    components: {
+      Header,
+      ComicCreator
+    },
+    computed: {
+      titleState() {
+        return this.comic.title.length >= 4;
+      },
+      yearState() {
+        return (this.comic.year == null || this.comic.year === "") || (this.comic.year > 1950 && this.comic.year < 2099);
+      },
+      subtitleBtnVariant() {
+        if (!this.showSubtitle) return "outline-dark";
+        return "dark";
+      },
+      publisherBtnVariant() {
+        if (!this.showPublisher) return "outline-dark";
+        return "dark";
+      },
+      locationBtnVariant() {
+        if (!this.showLocation) return "outline-dark";
+        return "dark";
+      },
+      yearBtnVariant() {
+        if (!this.showYear) return "outline-dark";
+        return "dark";
+      },
+      editionBtnVariant() {
+        if (!this.showEdition) return "outline-dark";
+        return "dark";
+      },
+      linkBtnVariant() {
+        if (!this.showLink) return "outline-dark";
+        return "dark";
+      },
+      isbnBtnVariant() {
+        if (!this.showIsbn) return "outline-dark";
+        return "dark";
+      },
+      showSubtitle() {
+        return this.comic.subTitle != null;
+      },
+      showPublisher() {
+        return this.comic.publisher != null;
+      },
+      showLocation() {
+        return this.comic.location != null;
+      },
+      showYear() {
+        return this.comic.year != null;
+      },
+      showEdition() {
+        return this.comic.edition != null;
+      },
+      showLink() {
+        return this.comic.link != null;
+      },
+      showIsbn() {
+        return this.comic.isbn != null;
+      }
+    },
+    data() {
+      return {
+        comic: {
+          title: "",
+          subTitle: null,
+          creators: [],
+          publisher: null,
+          location: null,
+          year: null,
+          edition: null,
+          link: null,
+          isbn: null,
+          metadata: {
+            createdOn: null,
+            createdBy: null,
+            changedOn: null,
+            changedBy: null
+          }
         },
-        computed: {
-            titleState() {
-                return this.comic.title.length >= 4
-            },
-            yearState() {
-                return (this.comic.year == null || this.comic.year === '') || (this.comic.year > 1950 && this.comic.year < 2099)
-            },
-            subtitleBtnVariant() {
-                if (!this.showSubtitle) return 'outline-dark';
-                return 'dark';
-            },
-            publisherBtnVariant() {
-                if (!this.showPublisher) return 'outline-dark';
-                return 'dark';
-            },
-            locationBtnVariant() {
-                if (!this.showLocation) return 'outline-dark';
-                return 'dark';
-            },
-            yearBtnVariant() {
-                if (!this.showYear) return 'outline-dark';
-                return 'dark';
-            },
-            editionBtnVariant() {
-                if (!this.showEdition) return 'outline-dark';
-                return 'dark';
-            },
-            linkBtnVariant() {
-                if (!this.showLink) return 'outline-dark';
-                return 'dark';
-            },
-            isbnBtnVariant() {
-                if (!this.showIsbn) return 'outline-dark';
-                return 'dark';
-            },
-            showSubtitle() {
-                return this.comic.subTitle != null;
-            },
-            showPublisher() {
-                return this.comic.publisher != null;
-            },
-            showLocation() {
-                return this.comic.location != null;
-            },
-            showYear() {
-                return this.comic.year != null;
-            },
-            showEdition() {
-                return this.comic.edition != null;
-            },
-            showLink() {
-                return this.comic.link != null;
-            },
-            showIsbn() {
-                return this.comic.isbn != null;
-            }
-        },
-        data() {
-            return {
-                comic: {
-                    title: '',
-                    subTitle: null,
-                    creators: [],
-                    publisher: null,
-                    location: null,
-                    year: null,
-                    edition: null,
-                    link: null,
-                    isbn: null,
-                    metadata: {
-                        createdOn: null,
-                        createdBy: null,
-                        changedOn: null,
-                        changedBy: null
-                    },
-                },
-                persons: null,
-                publishers: null,
-                show: true,
-                loading: true,
-                errored: false
-            }
-        },
-        methods: {
-            onSubmit(evt) {
-                evt.preventDefault();
-                //alert(JSON.stringify(this.comic));
-                if (this.$route.path.endsWith("new")) {
-                    this.$api
-                        .post("/comics/", this.comic)
-                        .then(response => (this.comic = response.data))
-                        .catch(error => {
-                            console.log(error);
-                            this.errored = true;
-                        })
-                        .finally(() => (this.loading = false));
-                } else {
-                    this.$api
-                        .put("/comics/" + this.comic.id, this.comic)
-                        .then(response => (this.comic = response.data))
-                        .catch(error => {
-                            console.log(error);
-                            this.errored = true;
-                        })
-                        .finally(() => (this.loading = false));
-                }
-            },
-            addSubtitle() {
-                this.comic.subTitle = '';
-            },
-            addCreator(person, role) {
-                console.log("add creator: " + person.id, role);
-                console.log("creators=" + this.comic.creators)
-                this.comic.creators.push({creator: {}});
-            },
-            addPublisher() {
-                this.comic.publisher = '';
-            },
-            addLocation() {
-                this.comic.location = ''
-            },
-            addYear() {
-                this.comic.year = '';
-            },
-            addEdition() {
-                this.comic.edition = '';
-            },
-            addLink() {
-                this.comic.link = '';
-            },
-            addIsbn() {
-                this.comic.isbn = '';
-            },
-            changePublisher(publisher) {
-                console.log(publisher.name);
-            }
-        },
-        mounted() {
-            // get comic
-            if (!this.$route.path.endsWith("new")) {
-                this.$api
-                    .get(this.$route.path)
-                    .then(response => (this.comic = response.data))
-                    .catch(error => {
-                        console.log(error);
-                        this.errored = true;
-                    })
-                    .finally(() => (this.loading = false));
-            }
-            // get persons
-            this.$api
-                .get("/persons")
-                .then(response => (this.persons = response.data))
-                .catch(error => {
-                    console.log(error);
-                    this.errored = true;
-                })
-                .finally(() => (this.loading = false));
-            this.$api
-                .get("/publishers")
-                .then(response => (this.publishers = response.data))
-                .catch(error => {
-                    console.log(error);
-                    this.errored = true;
-                })
-                .finally(() => (this.loading = false));
+        persons: null,
+        publishers: null,
+        show: true,
+        loading: true,
+        errored: false,
+        selectedPublisher: null
+      };
+    },
+    methods: {
+      onSubmit(evt) {
+        evt.preventDefault();
+        //alert(JSON.stringify(this.comic));
+        if (this.$route.path.endsWith("new")) {
+          this.$api
+            .post("/comics/", this.comic)
+            .then(response => (this.comic = response.data))
+            .catch(error => {
+              console.log(error);
+              this.errored = true;
+            })
+            .finally(() => (this.loading = false));
+        } else {
+          this.$api
+            .put("/comics/" + this.comic.id, this.comic)
+            .then(response => (this.comic = response.data))
+            .catch(error => {
+              console.log(error);
+              this.errored = true;
+            })
+            .finally(() => (this.loading = false));
         }
-    };
+      },
+      addSubtitle() {
+        this.comic.subTitle = "";
+      },
+      addCreator(person, role) {
+        console.log("add creator: " + person.id, role);
+        console.log("creators=" + this.comic.creators);
+        this.comic.creators.push({ creator: {} });
+      },
+      addPublisher() {
+        this.comic.publisher = "";
+      },
+      addLocation() {
+        this.comic.location = "";
+      },
+      addYear() {
+        this.comic.year = "";
+      },
+      addEdition() {
+        this.comic.edition = "";
+      },
+      addLink() {
+        this.comic.link = "";
+      },
+      addIsbn() {
+        this.comic.isbn = "";
+      },
+      changePublisher() {
+        console.log(this.selectedPublisher);
+        this.publishers.forEach(publisher => {
+          if (this.selectedPublisher == publisher.id) {
+            this.comic.publisher = publisher;
+          }
+        });
+      }
+    },
+    mounted() {
+      // get comic
+      if (!this.$route.path.endsWith("new")) {
+        this.$api
+          .get(this.$route.path)
+          .then(response => {
+            this.comic = response.data;
+            if (this.comic.publisher != null) {
+              this.selectedPublisher = this.comic.publisher.id;
+            }
+          })
+          .catch(error => {
+            console.log(error);
+            this.errored = true;
+          })
+          .finally(() => (this.loading = false));
+      }
+      // get persons
+      this.$api
+        .get("/persons")
+        .then(response => (this.persons = response.data))
+        .catch(error => {
+          console.log(error);
+          this.errored = true;
+        })
+        .finally(() => (this.loading = false));
+      // get publishers
+      this.$api
+        .get("/publishers")
+        .then(response => (this.publishers = response.data))
+        .catch(error => {
+          console.log(error);
+          this.errored = true;
+        })
+        .finally(() => (this.loading = false));
+    }
+  };
 </script>
