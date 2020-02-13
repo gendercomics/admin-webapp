@@ -97,7 +97,7 @@
         },
         show: true,
         errored: false,
-        debug: true
+        debug: false
       };
     },
     mounted() {
