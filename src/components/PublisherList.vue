@@ -23,6 +23,10 @@
                         </b-button>
                     </template>
 
+                    <template v-slot:cell(url)="data">
+                        <b-link target="_blank" v-bind:href="data.item.url">{{ data.item.url }}</b-link>
+                    </template>
+
                     <template v-slot:cell(metaData.changedOn)="data">
                         <span v-if="moment(data.item.metaData.changedOn).isValid()">{{ moment(data.item.metaData.changedOn).format("DD.MM.YYYY HH:mm") }}</span>
                         <span v-else>{{ moment(data.item.metaData.createdOn).format("DD.MM.YYYY HH:mm") }}</span>

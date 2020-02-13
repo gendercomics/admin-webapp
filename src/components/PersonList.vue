@@ -98,7 +98,7 @@
                     </template>
 
                     <template v-slot:cell(wikiData)="data">
-                        <b-link target="_blank" :href="wikiDataLink(data.item.wikiData)">
+                        <b-link target="_blank" v-bind:href="wikiDataLink(data.item.wikiData)">
                             <span>{{ data.item.wikiData }}</span>
                         </b-link>
                     </template>
@@ -165,7 +165,6 @@
       },
       fullName(person) {
         let fullName = "";
-        console.log(person);
         return person.firstName + ' ' + person.lastName;
       },
       wikiDataLink(wikidata) {
