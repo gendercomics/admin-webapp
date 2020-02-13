@@ -7,6 +7,8 @@ import Roles from "./views/Roles";
 import RoleForm from "./views/RoleForm";
 import Publishers from "./views/Publishers";
 import PublisherForm from "./views/PublisherForm";
+import Persons from "./views/Persons";
+import PersonForm from "./views/PersonForm";
 
 Vue.use(Router);
 
@@ -35,6 +37,16 @@ export default new Router({
       path: "/comics/:id",
       name: "ComicForm",
       component: ComicForm
+    },
+    {
+      path: "/persons",
+      name: "persons",
+      component: Persons
+    },
+    {
+      path: "/persons/:id",
+      name: "PersonForm",
+      component: PersonForm
     },
     {
       path: "/publishers",
