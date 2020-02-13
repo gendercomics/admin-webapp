@@ -20,29 +20,6 @@
     components: {
       RolesList,
       Header
-    },
-    data() {
-      return {
-        role: {
-          name: null,
-          description: null
-        },
-        show: true,
-        errored: false,
-        debug: true
-      };
-    },
-    methods: {
-      onSubmit(evt) {
-        evt.preventDefault();
-        this.$api
-          .post("/roles/", this.role)
-          .then(response => (this.role = response.data))
-          .catch(error => {
-            console.log(error);
-            this.errored = true;
-          });
-      }
     }
   };
 </script>
