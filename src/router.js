@@ -4,6 +4,7 @@ import Home from './views/Home.vue';
 import ComicForm from './views/ComicForm';
 import Comics from './views/Comics';
 import Roles from "./views/Roles";
+import RoleForm from "./views/RoleForm";
 
 Vue.use(Router);
 
@@ -37,6 +38,11 @@ export default new Router({
             path: '/roles',
             name: 'roles',
             component: Roles
+        },
+        {
+            path: '/roles/:id',
+            name: 'roles',
+            component: RoleForm
         },
         {
             path: '/logout',
