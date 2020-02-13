@@ -8,8 +8,8 @@
             <b-collapse id="nav-collapse" is-nav>
                 <b-navbar-nav>
                     <b-nav-item to="/comics">Comics</b-nav-item>
-                    <b-nav-item href="#" disabled>Persons</b-nav-item>
-                    <b-nav-item href="#" disabled>Publishers</b-nav-item>
+                    <b-nav-item to="/persons" disabled>Persons</b-nav-item>
+                    <b-nav-item to="/publishers">Publishers</b-nav-item>
                     <b-nav-item to="/roles">Roles</b-nav-item>
                 </b-navbar-nav>
 
