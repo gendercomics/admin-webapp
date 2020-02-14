@@ -7,7 +7,7 @@
                 <b-col id="button-col" cols="1">
                     <b-button-group vertical>
                         <b-button disabled>title</b-button>
-                        <b-button :variant="subtitleBtnVariant" @click="addSubtitle" :disabled="showSubtitle">subtitle</b-button>
+                        <b-button :variant="subtitleBtnVariant" @click="addSubtitle" :disabled="this.showSubtitle">subtitle</b-button>
                         <b-button variant="outline-dark" @click="addCreator">creator+</b-button>
                         <b-button :variant="publisherBtnVariant" @click="addPublisher" :disabled="this.showPublisher">publisher</b-button>
                         <b-button :variant="locationBtnVariant" @click="addLocation" :disabled="this.showLocation">location</b-button>
@@ -58,8 +58,32 @@
                         </b-input-group>
 
                         <!-- creators -->
-                        <div v-for="creator in comic.creators">
-                            <ComicCreator v-bind:key="creator.id" v-bind:persons="persons" v-on:input="updateValue($event.target.value)"/>
+                        <div v-for="(creator, idx) in comic.creators" in v-bind:key="idx">
+                            <b-form-row class="pl-1 pr-1">
+                                <b-input-group
+                                        class="pt-2"
+                                        prepend="creator"
+                                        @change="setClickedIndex(idx)"
+                                >
+                                    <b-form-select
+                                            id="select-person"
+                                            @change="personUpdated"
+                                    >
+                                        <option v-for="person in persons" v-bind:key="person.id" :value="person.id">{{ person.firstName + " " + person.lastName}}</option>
+                                    </b-form-select>
+
+                                    <template v-slot:append>
+                                        <b-form-select
+                                                :options="roles"
+                                                value-field="id"
+                                                text-field="name"
+                                                @change="roleUpdated">
+                                            <!--<option value="" disabled>-- Please select a role --</option>-->
+                                        </b-form-select>
+                                    </template>
+
+                                </b-input-group>
+                            </b-form-row>
                         </div>
 
                         <!-- publisher -->
@@ -69,7 +93,6 @@
                                 prepend="publisher"
                                 v-if="showPublisher"
                         >
-
                             <b-form-select
                                     id="input-publisher"
                                     :options="publishers"
@@ -125,7 +148,7 @@
                             />
                         </b-input-group>
 
-                        <!-- isbn -->
+                        <!-- link -->
                         <b-input-group
                                 id="input-group-link"
                                 class="pt-2"
@@ -196,13 +219,11 @@
 
 <script>
   import Header from "@/components/Header";
-  import ComicCreator from "@/components/ComicCreator";
 
   export default {
     name: "ComicForm",
     components: {
-      Header,
-      ComicCreator
+      Header
     },
     computed: {
       titleState() {
@@ -281,11 +302,13 @@
           }
         },
         persons: null,
+        roles: null,
         publishers: null,
         show: true,
         loading: true,
         errored: false,
-        selectedPublisher: null
+        selectedPublisher: null,
+        clickedIndex: null
       };
     },
     methods: {
@@ -318,7 +341,10 @@
       addCreator(person, role) {
         console.log("add creator: " + person.id, role);
         console.log("creators=" + this.comic.creators);
-        this.comic.creators.push({ creator: {} });
+        if (this.comic.creators === null) {
+          this.comic.creators = [];
+        }
+        this.comic.creators.push({});
       },
       addPublisher() {
         this.comic.publisher = "";
@@ -343,6 +369,44 @@
         this.publishers.forEach(publisher => {
           if (this.selectedPublisher === publisher.id) {
             this.comic.publisher = publisher;
+          }
+        });
+      },
+      setClickedIndex(idx) {
+        console.log("setClickedIndex=" + idx);
+        this.clickedIndex = idx;
+      },
+      personUpdated(personId) {
+        console.log("personUpdated=" + personId);
+        let creator = this.comic.creators[this.clickedIndex];
+        if (creator == null) {
+          creator = {};
+        }
+        if (creator.person == null) {
+          creator.person = {};
+        }
+        this.persons.forEach(person => {
+          if (personId === person.id) {
+            creator.person = person;
+            this.comic.creators[this.clickedIndex] = creator;
+            this.comic.creators.push();
+          }
+        });
+      },
+      roleUpdated(roleId) {
+        console.log("roleUpdated=" + roleId);
+        let creator = this.comic.creators[this.clickedIndex];
+        if (creator == null) {
+          creator = {};
+        }
+        if (creator.role == null) {
+          creator.role = {};
+        }
+        this.roles.forEach(role => {
+          if (roleId === role.id) {
+            creator.role = role;
+            this.comic.creators[this.clickedIndex] = creator;
+            this.comic.creators.push();
           }
         });
       }
@@ -380,6 +444,13 @@
         .catch(error => {
           console.log(error);
           this.errored = true;
+        })
+        .finally(() => (this.loading = false));
+      this.$api
+        .get("/roles")
+        .then(response => (this.roles = response.data))
+        .catch(error => {
+          console.log(error);
         })
         .finally(() => (this.loading = false));
     }
