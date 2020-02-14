@@ -56,7 +56,7 @@
                                         >
                                             <b-form-input
                                                     id="wikidata"
-                                                    type="wikidata"
+                                                    type="text"
                                                     v-model="person.wikiData"
                                                     placeholder="enter wikidata id"
                                                     trim
