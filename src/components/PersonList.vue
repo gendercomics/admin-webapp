@@ -22,7 +22,8 @@
                                 <b-button
                                         :disabled="!filter"
                                         @click="filter = ''"
-                                >Clear</b-button>
+                                >Clear
+                                </b-button>
                             </b-input-group-append>
                         </b-input-group>
                     </b-form-group>
@@ -128,7 +129,7 @@
         fields: [
           { key: "actions", label: "actions" },
           { key: "name", label: "name" },
-          { key: "wikiData", label: "wikidata"},
+          { key: "wikiData", label: "wikidata" },
           { key: "metaData.changedOn", label: "created/modified" },
           { key: "metaData.changedBy", label: "by" }
         ],
@@ -164,8 +165,7 @@
         this.currentPage = 1;
       },
       fullName(person) {
-        let fullName = "";
-        return person.firstName + ' ' + person.lastName;
+        return person.firstName + " " + person.lastName;
       },
       wikiDataLink(wikidata) {
         return "https://www.wikidata.org/wiki/" + wikidata;

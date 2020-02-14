@@ -96,7 +96,9 @@
                     </template>
 
                     <template v-slot:cell(creators)="data">
-                        <span>{{ fullNames(data.item.creators) }}</span>
+                        <div v-for="creator in data.item.creators">
+                            <span>{{ fullName(creator) }}</span>
+                        </div>
                     </template>
 
                     <template v-slot:cell(metaData.changedOn)="data">
@@ -158,17 +160,11 @@
         this.totalRows = filteredItems.length;
         this.currentPage = 1;
       },
-      fullNames(creators) {
-        let fullNames = "";
-        console.log(creators);
-        if (creators != null) {
-          creators.forEach(creator => {
-            if (creator.person != null) {
-              fullNames += creator.person.firstName + " " + creator.person.lastName + "\n";
-            }
-          });
+      fullName(creator) {
+        console.log(creator);
+        if (creator != null) {
+          return creator.person.firstName + " " + creator.person.lastName;
         }
-        return fullNames;
       }
     }
   };

@@ -58,7 +58,7 @@
                         </b-input-group>
 
                         <!-- creators -->
-                        <div v-for="(creator, idx) in comic.creators" in v-bind:key="idx">
+                        <div v-for="(creator, idx) in comic.creators" v-bind:key="idx">
                             <b-form-row class="pl-1 pr-1">
                                 <b-input-group
                                         class="pt-2"
