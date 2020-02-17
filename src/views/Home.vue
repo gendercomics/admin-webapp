@@ -42,7 +42,7 @@
         },
         mounted() {
             this.$api
-                .get("http://localhost:8001/comics/count")
+                .get("/comics/count")
                 .then(response => (this.comicCount = response.data))
                 .catch(error => {
                     console.log(error);
