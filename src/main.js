@@ -27,7 +27,7 @@ Vue.use(VueLogger, options);
 //let apiUrl = process.env.VUE_APP_API_URL;
 
 let keycloakUrl = 'https://sso.gendercomics.net/auth/';
-let keycloakRealm = 'gendercomics-stage';
+let keycloakRealm = 'gendercomics';
 let apiUrl = 'https://api.gendercomics.net/';
 
 let initOptions = {
