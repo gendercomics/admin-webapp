@@ -12,6 +12,9 @@ import PersonForm from "./views/PersonForm";
 
 Vue.use(Router);
 
+let authServerUrl = "https://sso.gendercomics.net/";
+let redirectURI = "https://stage.gendercomics.net/";
+
 export default new Router({
   routes: [
     {
@@ -71,7 +74,8 @@ export default new Router({
     {
       path: "/logout",
       beforeEnter() {
-        location.href = "http://localhost:81/auth/realms/gendercomics/protocol/openid-connect/logout?redirect_uri=http%3A%2F%2Flocalhost%3A8080";
+        //location.href = "http://localhost:81/auth/realms/gendercomics/protocol/openid-connect/logout?redirect_uri=http%3A%2F%2Flocalhost%3A8080";
+        location.href = authServerUrl + "auth/realms/gendercomics/protocol/openid-connect/logout?redirect_uri=" + redirectURI;
       }
     }
   ]
