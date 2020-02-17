@@ -76,6 +76,8 @@ export default new Router({
       beforeEnter() {
         //location.href = "http://localhost:81/auth/realms/gendercomics/protocol/openid-connect/logout?redirect_uri=http%3A%2F%2Flocalhost%3A8080";
         location.href = authServerUrl + "auth/realms/gendercomics/protocol/openid-connect/logout?redirect_uri=" + redirectURI;
+        localStorage.removeItem("access-token");
+        localStorage.removeItem("refresh-token");
       }
     }
   ]
