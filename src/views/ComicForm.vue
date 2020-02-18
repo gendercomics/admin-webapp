@@ -81,25 +81,11 @@
                             >
                         </b-input-group>
 
-                        <!-- subtitle -->
-                        <b-input-group
-                            id="input-group-subtitle"
-                            class="pt-2"
-                            prepend="subtitle"
-                            label-for="input-subtitle"
+                        <TextInput
+                            label="subtitle"
+                            v-model="comic.subTitle"
                             v-if="showSubtitle"
-                        >
-                            <b-form-input
-                                id="input-subtitle"
-                                v-model="comic.subTitle"
-                                placeholder="Enter subtitle"
-                            />
-                            <template v-slot:append>
-                                <b-button @click="deleteSubTitle"
-                                    >delete</b-button
-                                >
-                            </template>
-                        </b-input-group>
+                        />
 
                         <!-- creators -->
                         <div
@@ -113,7 +99,7 @@
                                     @change="setClickedIndex(idx)"
                                 >
                                     <b-form-select
-                                        id="select-person"
+                                        v-model="comic.creators[idx].person"
                                         @change="personUpdated"
                                     >
                                         <option
@@ -281,10 +267,12 @@
 
 <script>
 import Header from '@/components/Header';
+import TextInput from '../components/TextInput';
 
 export default {
     name: 'ComicForm',
     components: {
+        TextInput,
         Header,
     },
     computed: {
@@ -352,7 +340,7 @@ export default {
         return {
             comic: {
                 title: '',
-                subTitle: null,
+                subTitle: '',
                 creators: [],
                 publisher: null,
                 location: null,
@@ -403,9 +391,6 @@ export default {
         },
         addSubtitle() {
             this.comic.subTitle = '';
-        },
-        deleteSubTitle() {
-            this.comic.subTitle = null;
         },
         addCreator(person, role) {
             console.log('add creator: ' + person.id, role);
