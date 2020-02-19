@@ -287,7 +287,7 @@ export default {
         return {
             comic: {
                 title: '',
-                subTitle: '',
+                subTitle: null,
                 creators: [],
                 publisher: null,
                 location: null,
