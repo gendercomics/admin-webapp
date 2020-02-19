@@ -81,6 +81,7 @@
                             >
                         </b-input-group>
 
+                        <!-- subtitle -->
                         <TextInput
                             label="subtitle"
                             v-model="comic.subTitle"
@@ -146,18 +147,11 @@
                         </b-input-group>
 
                         <!-- location -->
-                        <b-input-group
-                            id="input-group-5"
-                            class="pt-2"
-                            prepend="location"
-                            v-if="this.showLocation"
-                        >
-                            <b-form-input
-                                id="input-5"
-                                v-model="comic.location"
-                                placeholder="Enter location"
-                            />
-                        </b-input-group>
+                        <TextInput
+                            label="location"
+                            v-model="comic.location"
+                            v-if="showLocation"
+                        />
 
                         <!-- year -->
                         <b-input-group
@@ -180,48 +174,25 @@
                         </b-input-group>
 
                         <!-- edition -->
-                        <b-input-group
-                            id="input-group-7"
-                            class="pt-2"
-                            prepend="edition"
+                        <TextInput
+                            label="edition"
+                            v-model="comic.edition"
                             v-if="showEdition"
-                        >
-                            <b-form-input
-                                id="input-7"
-                                v-model="comic.edition"
-                                placeholder="Enter edition"
-                            />
-                        </b-input-group>
+                        />
 
                         <!-- link -->
-                        <b-input-group
-                            id="input-group-link"
-                            class="pt-2"
-                            prepend="link"
-                            label-for="input-link"
+                        <TextInput
+                            label="link"
+                            v-model="comic.link"
                             v-if="showLink"
-                        >
-                            <b-form-input
-                                id="input-link"
-                                v-model="comic.link"
-                                placeholder="Enter link"
-                            />
-                        </b-input-group>
+                        />
 
                         <!-- isbn -->
-                        <b-input-group
-                            id="input-group-isbn"
-                            class="pt-2"
-                            prepend="isbn"
-                            label-for="input-isbn"
+                        <TextInput
+                            label="isbn"
+                            v-model="comic.isbn"
                             v-if="showIsbn"
-                        >
-                            <b-form-input
-                                id="input-isbn"
-                                v-model="comic.isbn"
-                                placeholder="Enter ISBN"
-                            />
-                        </b-input-group>
+                        />
 
                         <b-button-group class="mt-3 float-right">
                             <b-button type="submit" variant="primary"
@@ -230,8 +201,8 @@
                             <b-button
                                 to="/comics"
                                 type="reset"
-                                variant="outline-danger"
-                                >cancel</b-button
+                                :variant="backBtnVariant"
+                                >back</b-button
                             >
                         </b-button-group>
                     </b-form>
@@ -246,6 +217,7 @@
                 </b-col>
             </b-row>
 
+            <!--
             <b-row class="mt-4">
                 <b-col id="json-persons">
                     <b-card header="persons">
@@ -261,6 +233,8 @@
                     </b-card>
                 </b-col>
             </b-row>
+            
+            -->
         </b-container>
     </div>
 </template>
@@ -274,6 +248,36 @@ export default {
     components: {
         TextInput,
         Header,
+    },
+    data() {
+        return {
+            comic: {
+                title: '',
+                subTitle: '',
+                creators: [],
+                publisher: null,
+                location: null,
+                year: null,
+                edition: null,
+                link: null,
+                isbn: null,
+                metadata: {
+                    createdOn: null,
+                    createdBy: null,
+                    changedOn: null,
+                    changedBy: null,
+                },
+            },
+            persons: null,
+            roles: null,
+            publishers: null,
+            show: true,
+            loading: true,
+            errored: false,
+            selectedPublisher: null,
+            clickedIndex: null,
+            initalComic: null,
+        };
     },
     computed: {
         titleState() {
@@ -314,6 +318,9 @@ export default {
             if (!this.showIsbn) return 'outline-dark';
             return 'dark';
         },
+        backBtnVariant() {
+            return 'outline-danger';
+        },
         showSubtitle() {
             return this.comic.subTitle != null;
         },
@@ -335,35 +342,6 @@ export default {
         showIsbn() {
             return this.comic.isbn != null;
         },
-    },
-    data() {
-        return {
-            comic: {
-                title: '',
-                subTitle: '',
-                creators: [],
-                publisher: null,
-                location: null,
-                year: null,
-                edition: null,
-                link: null,
-                isbn: null,
-                metadata: {
-                    createdOn: null,
-                    createdBy: null,
-                    changedOn: null,
-                    changedBy: null,
-                },
-            },
-            persons: null,
-            roles: null,
-            publishers: null,
-            show: true,
-            loading: true,
-            errored: false,
-            selectedPublisher: null,
-            clickedIndex: null,
-        };
     },
     methods: {
         onSubmit(evt) {
