@@ -145,6 +145,11 @@
                                 v-model="selectedPublisher"
                                 @change="changePublisher()"
                             />
+                            <template v-slot:append>
+                                <b-button @click="removePublisher()"
+                                    ><font-awesome-icon icon="times-circle"
+                                /></b-button>
+                            </template>
                         </b-input-group>
 
                         <!-- location -->
@@ -211,6 +216,18 @@
                 </b-col>
             </b-row>
 
+            <b-row class="mt-4">
+                <b-col id="json-some-values">
+                    <b-card header="some data">
+                        <pre class="mt-0">
+                            selectedPublisher: {{
+                                $data.selectedPublisher
+                            }}</pre
+                        >
+                    </b-card>
+                </b-col>
+            </b-row>
+
             <!--
             <b-row class="mt-4">
                 <b-col id="json-persons">
@@ -236,10 +253,12 @@
 <script>
 import Header from '@/components/Header';
 import InputField from '../components/InputField';
+import SelectField from '../components/SelectField';
 
 export default {
     name: 'ComicForm',
     components: {
+        SelectField,
         InputField,
         Header,
     },
@@ -269,8 +288,9 @@ export default {
             loading: true,
             errored: false,
             selectedPublisher: null,
+            selectedCreatorPerson: [],
+            selectedCreatorRole: [],
             clickedIndex: null,
-            initalComic: null,
         };
     },
     computed: {
@@ -390,6 +410,10 @@ export default {
                     this.comic.publisher = publisher;
                 }
             });
+        },
+        removePublisher() {
+            this.comic.publisher = null;
+            this.selectedPublisher = null;
         },
         setClickedIndex(idx) {
             console.log('setClickedIndex=' + idx);
