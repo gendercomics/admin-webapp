@@ -82,7 +82,7 @@
                         </b-input-group>
 
                         <!-- subtitle -->
-                        <InputField
+                        <input-field
                             label="subtitle"
                             v-model="comic.subTitle"
                             v-if="showSubtitle"
@@ -148,7 +148,7 @@
                         </b-input-group>
 
                         <!-- location -->
-                        <InputField
+                        <input-field
                             label="location"
                             v-model="comic.location"
                             v-if="showLocation"
@@ -156,7 +156,7 @@
                         />
 
                         <!-- year -->
-                        <InputField
+                        <input-field
                             label="year"
                             v-model="comic.year"
                             v-if="showYear"
@@ -164,7 +164,7 @@
                         />
 
                         <!-- edition -->
-                        <InputField
+                        <input-field
                             label="edition"
                             v-model="comic.edition"
                             v-if="showEdition"
@@ -172,7 +172,7 @@
                         />
 
                         <!-- link -->
-                        <InputField
+                        <input-field
                             label="link"
                             v-model="comic.link"
                             v-if="showLink"
@@ -180,7 +180,7 @@
                         />
 
                         <!-- isbn -->
-                        <InputField
+                        <input-field
                             label="isbn"
                             v-model="comic.isbn"
                             v-if="showIsbn"
