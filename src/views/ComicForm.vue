@@ -2,6 +2,18 @@
     <div class="text-left">
         <Header />
 
+        <div class="mt-3 ml-3 mr-3">
+            <b-alert variant="success" dismissible v-model="saveSuccessful"
+                >comic saved!</b-alert
+            >
+        </div>
+
+        <div class="mt-3 ml-3 mr-3">
+            <b-alert variant="danger" dismissible v-model="errored"
+                >error!</b-alert
+            >
+        </div>
+
         <b-container class="mt-3" fluid>
             <b-row>
                 <b-col id="button-col" cols="1">
@@ -100,31 +112,39 @@
                                     prepend="creator"
                                     @change="setClickedIndex(idx)"
                                 >
-                                    <b-form-select
-                                        v-model="comic.creators[idx].person"
-                                        @change="personUpdated"
-                                    >
-                                        <option
-                                            v-for="person in persons"
-                                            v-bind:key="person.id"
-                                            :value="person.id"
-                                            >{{
-                                                person.firstName +
-                                                    ' ' +
-                                                    person.lastName
-                                            }}</option
+                                    <div class="w-75">
+                                        <b-form-select
+                                            v-model="selectedCreatorPerson[idx]"
+                                            @change="personUpdated"
                                         >
+                                            <option
+                                                v-for="person in persons"
+                                                v-bind:key="person.id"
+                                                :value="person.id"
+                                                >{{
+                                                    person.firstName +
+                                                        ' ' +
+                                                        person.lastName
+                                                }}</option
+                                            >
+                                        </b-form-select>
+                                    </div>
+
+                                    <b-form-select
+                                        :options="roles"
+                                        value-field="id"
+                                        text-field="name"
+                                        v-model="selectedCreatorRole[idx]"
+                                        @change="roleUpdated"
+                                    >
+                                        <!--<option value="" disabled>-- Please select a role --</option>-->
                                     </b-form-select>
 
                                     <template v-slot:append>
-                                        <b-form-select
-                                            :options="roles"
-                                            value-field="id"
-                                            text-field="name"
-                                            @change="roleUpdated"
-                                        >
-                                            <!--<option value="" disabled>-- Please select a role --</option>-->
-                                        </b-form-select>
+                                        <b-button @click="removeCreator(idx)"
+                                            ><font-awesome-icon
+                                                icon="times-circle"
+                                        /></b-button>
                                     </template>
                                 </b-input-group>
                             </b-form-row>
@@ -216,19 +236,22 @@
                 </b-col>
             </b-row>
 
+            <!--           
+            
             <b-row class="mt-4">
                 <b-col id="json-some-values">
                     <b-card header="some data">
                         <pre class="mt-0">
-                            selectedPublisher: {{
-                                $data.selectedPublisher
-                            }}</pre
-                        >
+                            <div>selectedPublisher: {{ $data.selectedPublisher }}</div>
+                            <div>selectedCreatorPerson: {{ $data.selectedCreatorPerson }}</div>
+                            <div>selectedCreatorRole: {{ $data.selectedCreatorRole }}</div>
+                            <div>saveSuccessful: {{ $data.saveSuccessful }}</div>
+                        </pre>
                     </b-card>
                 </b-col>
             </b-row>
 
-            <!--
+            
             <b-row class="mt-4">
                 <b-col id="json-persons">
                     <b-card header="persons">
@@ -253,12 +276,10 @@
 <script>
 import Header from '@/components/Header';
 import InputField from '../components/InputField';
-import SelectField from '../components/SelectField';
 
 export default {
     name: 'ComicForm',
     components: {
-        SelectField,
         InputField,
         Header,
     },
@@ -287,6 +308,7 @@ export default {
             show: true,
             loading: true,
             errored: false,
+            saveSuccessful: false,
             selectedPublisher: null,
             selectedCreatorPerson: [],
             selectedCreatorRole: [],
@@ -373,6 +395,7 @@ export default {
                     })
                     .finally(() => (this.loading = false));
             }
+            this.saveSuccessful = true;
         },
         addSubtitle() {
             this.comic.subTitle = '';
@@ -384,6 +407,11 @@ export default {
                 this.comic.creators = [];
             }
             this.comic.creators.push({});
+        },
+        removeCreator(idx) {
+            this.comic.creators.splice(idx, 1);
+            this.selectedCreatorPerson.splice(idx, 1);
+            this.selectedCreatorRole.splice(idx, 1);
         },
         addPublisher() {
             this.comic.publisher = '';
@@ -463,6 +491,14 @@ export default {
                     this.comic = response.data;
                     if (this.comic.publisher != null) {
                         this.selectedPublisher = this.comic.publisher.id;
+                    }
+                    for (let idx in this.comic.creators) {
+                        this.selectedCreatorPerson[idx] = this.comic.creators[
+                            idx
+                        ].person.id;
+                        this.selectedCreatorRole[idx] = this.comic.creators[
+                            idx
+                        ].role.id;
                     }
                 })
                 .catch(error => {

@@ -7,6 +7,13 @@ import VueLogger from 'vuejs-logger';
 import BootstrapVue from 'bootstrap-vue';
 import './styles/styles.scss';
 import moment from 'moment';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faTimesCircle);
+
+Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false;
 
