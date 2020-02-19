@@ -1,6 +1,6 @@
 <template>
     <b-input-group class="pt-2" :prepend="this.label">
-        <b-form-input v-model="localValue" />
+        <b-form-input v-model="localValue" :type="this.type" />
         <template v-slot:append>
             <b-button @click="deleteValue"
                 ><font-awesome-icon icon="times-circle"
@@ -11,10 +11,11 @@
 
 <script>
 export default {
-    name: 'TextInput',
+    name: 'InputField',
     props: {
         label: null,
         value: null,
+        type: null,
     },
     computed: {
         localValue: {

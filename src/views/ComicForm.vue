@@ -82,10 +82,11 @@
                         </b-input-group>
 
                         <!-- subtitle -->
-                        <TextInput
+                        <InputField
                             label="subtitle"
                             v-model="comic.subTitle"
                             v-if="showSubtitle"
+                            type="text"
                         />
 
                         <!-- creators -->
@@ -147,53 +148,46 @@
                         </b-input-group>
 
                         <!-- location -->
-                        <TextInput
+                        <InputField
                             label="location"
                             v-model="comic.location"
                             v-if="showLocation"
+                            type="text"
                         />
 
                         <!-- year -->
-                        <b-input-group
-                            id="input-group-6"
-                            class="pt-2"
-                            prepend="year"
+                        <InputField
+                            label="year"
+                            v-model="comic.year"
                             v-if="showYear"
-                        >
-                            <b-form-input
-                                id="input-6"
-                                type="number"
-                                v-model="comic.year"
-                                :state="yearState"
-                                placeholder="Enter year"
-                            />
-                            <b-form-invalid-feedback
-                                >Are you sure about the
-                                year?</b-form-invalid-feedback
-                            >
-                        </b-input-group>
+                            type="number"
+                        />
 
                         <!-- edition -->
-                        <TextInput
+                        <InputField
                             label="edition"
                             v-model="comic.edition"
                             v-if="showEdition"
+                            type="text"
                         />
 
                         <!-- link -->
-                        <TextInput
+                        <InputField
                             label="link"
                             v-model="comic.link"
                             v-if="showLink"
+                            type="url"
                         />
 
                         <!-- isbn -->
-                        <TextInput
+                        <InputField
                             label="isbn"
                             v-model="comic.isbn"
                             v-if="showIsbn"
+                            type="text"
                         />
 
+                        <!-- action buttons -->
                         <b-button-group class="mt-3 float-right">
                             <b-button type="submit" variant="primary"
                                 >save</b-button
@@ -241,12 +235,12 @@
 
 <script>
 import Header from '@/components/Header';
-import TextInput from '../components/TextInput';
+import InputField from '../components/InputField';
 
 export default {
     name: 'ComicForm',
     components: {
-        TextInput,
+        InputField,
         Header,
     },
     data() {
@@ -282,13 +276,6 @@ export default {
     computed: {
         titleState() {
             return this.comic.title.length >= 4;
-        },
-        yearState() {
-            return (
-                this.comic.year == null ||
-                this.comic.year === '' ||
-                (this.comic.year > 1950 && this.comic.year < 2099)
-            );
         },
         subtitleBtnVariant() {
             if (!this.showSubtitle) return 'outline-dark';
