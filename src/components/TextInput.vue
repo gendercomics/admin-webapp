@@ -16,17 +16,15 @@ export default {
         label: null,
         value: null,
     },
-    data: function() {
-        return {
-            localValue: null,
-        };
-    },
-    created() {
-        this.localValue = this.value;
-
-        this.$watch('localValue', value => {
-            this.$emit('input', value);
-        });
+    computed: {
+        localValue: {
+            get() {
+                return this.value;
+            },
+            set(val) {
+                this.$emit('input', val);
+            },
+        },
     },
     methods: {
         deleteValue() {
