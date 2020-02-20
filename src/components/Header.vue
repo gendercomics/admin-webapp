@@ -11,6 +11,7 @@
                     <b-nav-item to="/persons">Persons</b-nav-item>
                     <b-nav-item to="/publishers">Publishers</b-nav-item>
                     <b-nav-item to="/roles">Roles</b-nav-item>
+                    <b-nav-item to="/keywords" disabled>Keywords</b-nav-item>
                 </b-navbar-nav>
 
                 <!-- Right aligned nav items -->
@@ -26,7 +27,9 @@
                         <template v-slot:button-content>
                             <em>User</em>
                         </template>
-                        <b-dropdown-item href="#" disabled>profile</b-dropdown-item>
+                        <b-dropdown-item href="#" disabled
+                            >profile</b-dropdown-item
+                        >
                         <b-dropdown-item to="logout">logout</b-dropdown-item>
                     </b-nav-item-dropdown>
                 </b-navbar-nav>
@@ -35,10 +38,8 @@
     </div>
 </template>
 
-<script>
-
-</script>
+<script></script>
 
 <style lang="scss">
-    @import "../styles/styles.scss";
+@import '../styles/styles.scss';
 </style>
