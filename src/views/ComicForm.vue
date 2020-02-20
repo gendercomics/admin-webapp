@@ -107,15 +107,13 @@
                             v-bind:key="idx"
                         >
                             <b-form-row class="pl-1 pr-1">
-                                <b-input-group
-                                    class="pt-2"
-                                    prepend="creator"
-                                    @change="setClickedIndex(idx)"
-                                >
-                                    <div class="w-75">
+                                <b-input-group class="pt-2" prepend="creator">
+                                    <div class="w-50">
                                         <b-form-select
-                                            v-model="selectedCreatorPerson[idx]"
-                                            @change="personUpdated"
+                                            v-model="
+                                                comic.creators[idx].person.id
+                                            "
+                                            @change="personUpdated(idx)"
                                         >
                                             <option
                                                 v-for="person in persons"
@@ -134,8 +132,8 @@
                                         :options="roles"
                                         value-field="id"
                                         text-field="name"
-                                        v-model="selectedCreatorRole[idx]"
-                                        @change="roleUpdated"
+                                        v-model="comic.creators[idx].role.id"
+                                        @change="roleUpdated(idx)"
                                     >
                                         <!--<option value="" disabled>-- Please select a role --</option>-->
                                     </b-form-select>
@@ -312,7 +310,6 @@ export default {
             selectedPublisher: null,
             selectedCreatorPerson: [],
             selectedCreatorRole: [],
-            clickedIndex: null,
         };
     },
     computed: {
@@ -400,13 +397,12 @@ export default {
         addSubtitle() {
             this.comic.subTitle = '';
         },
-        addCreator(person, role) {
-            console.log('add creator: ' + person.id, role);
-            console.log('creators=' + this.comic.creators);
+        addCreator() {
+            console.log('add creator');
             if (this.comic.creators === null) {
                 this.comic.creators = [];
             }
-            this.comic.creators.push({});
+            this.comic.creators.push({ person: {}, role: {} });
         },
         removeCreator(idx) {
             this.comic.creators.splice(idx, 1);
@@ -443,41 +439,19 @@ export default {
             this.comic.publisher = null;
             this.selectedPublisher = null;
         },
-        setClickedIndex(idx) {
-            console.log('setClickedIndex=' + idx);
-            this.clickedIndex = idx;
-        },
-        personUpdated(personId) {
-            console.log('personUpdated=' + personId);
-            let creator = this.comic.creators[this.clickedIndex];
-            if (creator == null) {
-                creator = {};
-            }
-            if (creator.person == null) {
-                creator.person = {};
-            }
+        personUpdated(idx) {
+            console.log('personUpdated=' + idx);
             this.persons.forEach(person => {
-                if (personId === person.id) {
-                    creator.person = person;
-                    this.comic.creators[this.clickedIndex] = creator;
-                    this.comic.creators.push();
+                if (this.comic.creators[idx].person.id === person.id) {
+                    this.comic.creators[idx].person = person;
                 }
             });
         },
-        roleUpdated(roleId) {
-            console.log('roleUpdated=' + roleId);
-            let creator = this.comic.creators[this.clickedIndex];
-            if (creator == null) {
-                creator = {};
-            }
-            if (creator.role == null) {
-                creator.role = {};
-            }
+        roleUpdated(idx) {
+            console.log('roleUpdated=' + idx);
             this.roles.forEach(role => {
-                if (roleId === role.id) {
-                    creator.role = role;
-                    this.comic.creators[this.clickedIndex] = creator;
-                    this.comic.creators.push();
+                if (this.comic.creators[idx].role.id === role.id) {
+                    this.comic.creators[idx].role = role;
                 }
             });
         },
