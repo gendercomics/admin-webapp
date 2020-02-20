@@ -308,8 +308,6 @@ export default {
             errored: false,
             saveSuccessful: false,
             selectedPublisher: null,
-            selectedCreatorPerson: [],
-            selectedCreatorRole: [],
         };
     },
     computed: {
@@ -406,8 +404,6 @@ export default {
         },
         removeCreator(idx) {
             this.comic.creators.splice(idx, 1);
-            this.selectedCreatorPerson.splice(idx, 1);
-            this.selectedCreatorRole.splice(idx, 1);
         },
         addPublisher() {
             this.comic.publisher = '';
@@ -465,14 +461,6 @@ export default {
                     this.comic = response.data;
                     if (this.comic.publisher != null) {
                         this.selectedPublisher = this.comic.publisher.id;
-                    }
-                    for (let idx in this.comic.creators) {
-                        this.selectedCreatorPerson[idx] = this.comic.creators[
-                            idx
-                        ].person.id;
-                        this.selectedCreatorRole[idx] = this.comic.creators[
-                            idx
-                        ].role.id;
                     }
                 })
                 .catch(error => {
