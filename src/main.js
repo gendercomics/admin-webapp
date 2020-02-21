@@ -7,11 +7,12 @@ import VueLogger from 'vuejs-logger';
 import BootstrapVue from 'bootstrap-vue';
 import './styles/styles.scss';
 import moment from 'moment';
+import AuthService from './services/authservice';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faTimesCircle);
+library.add(faEdit, faTimesCircle);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
@@ -27,19 +28,20 @@ const options = {
     showConsoleColors: true,
 };
 
+Vue.prototype.moment = moment;
+
 Vue.use(VueLogger, options);
+Vue.use(BootstrapVue);
 
-//let keycloakUrl = process.env.VUE_APP_KEYCLOAK_AUTH_URL;
-//let keycloakRealm = process.env.VUE_APP_KEYCLOAK_REALM;
-//let apiUrl = process.env.VUE_APP_API_URL;
+let keycloakUrl = process.env.VUE_APP_KEYCLOAK_AUTH_URL;
+let keycloakRealm = process.env.VUE_APP_KEYCLOAK_REALM;
+let apiUrl = process.env.VUE_APP_API_URL;
 
-let keycloakUrl = 'https://sso.gendercomics.net/auth/';
-let keycloakRealm = 'gendercomics';
-let apiUrl = 'https://api.gendercomics.net/';
+//let keycloakUrl = 'https://sso.gendercomics.net/auth/';
+//let keycloakRealm = 'gendercomics';
+//let apiUrl = 'https://api.gendercomics.net/';
 
 let initOptions = {
-    //url: 'https://sso.gendercomics.net/auth/', realm: 'gendercomics-stage', clientId: 'gendercomics-admin', onLoad: 'login-required'
-    //url: 'http://localhost:81/auth/', realm: 'gendercomics', clientId: 'gendercomics-admin', onLoad: 'login-required'
     url: keycloakUrl,
     realm: keycloakRealm,
     clientId: 'gendercomics-admin',
@@ -48,21 +50,22 @@ let initOptions = {
 
 let keycloak = Keycloak(initOptions);
 
+const authService = new AuthService();
+
 /** Auth token interceptors */
 const authRequestInterceptor = config => {
     keycloak
         .updateToken(30)
         .success(() => {
             Vue.$log.debug('successfully got new token');
-
-            localStorage.setItem('access-token', keycloak.token);
-            localStorage.setItem('refresh-token', keycloak.refreshToken);
+            authService.storeTokens(keycloak.token, keycloak.refreshToken);
         })
         .error(() => {
             Vue.$log.error('updateToken error');
+            authService.clear();
         });
 
-    const token = localStorage.getItem('access-token');
+    const token = authService.getAccessToken();
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
@@ -71,18 +74,20 @@ const authRequestInterceptor = config => {
 
 Vue.use({
     install(Vue) {
-        //Vue.prototype.$api = axios.create({baseURL: 'https://api.gendercomics.net/'});
-        //Vue.prototype.$api = axios.create({baseURL: 'http://localhost:8001/'});
         Vue.prototype.$api = axios.create({ baseURL: apiUrl });
     },
 });
 
-Vue.prototype.moment = moment;
-
 /** Adding the request and response interceptors */
 Vue.prototype.$api.interceptors.request.use(authRequestInterceptor);
-
-Vue.use(BootstrapVue);
+Vue.prototype.$api.interceptors.request.use(
+    response => {
+        return response;
+    },
+    error => {
+        Vue.$log.debug('response-status=', error.response.status);
+    }
+);
 
 keycloak
     .init({ onLoad: initOptions.onLoad })
@@ -98,8 +103,7 @@ keycloak
             render: h => h(App),
         }).$mount('#app');
 
-        localStorage.setItem('access-token', keycloak.token);
-        localStorage.setItem('refresh-token', keycloak.refreshToken);
+        authService.storeTokens(keycloak.token, keycloak.refreshToken);
 
         setTimeout(() => {
             keycloak
