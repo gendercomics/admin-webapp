@@ -7,7 +7,6 @@ import VueLogger from 'vuejs-logger';
 import BootstrapVue from 'bootstrap-vue';
 import './styles/styles.scss';
 import moment from 'moment';
-import AuthService from './services/authservice';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faEdit, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
@@ -28,10 +27,7 @@ const options = {
     showConsoleColors: true,
 };
 
-Vue.prototype.moment = moment;
-
 Vue.use(VueLogger, options);
-Vue.use(BootstrapVue);
 
 let keycloakUrl = process.env.VUE_APP_KEYCLOAK_AUTH_URL;
 let keycloakRealm = process.env.VUE_APP_KEYCLOAK_REALM;
@@ -50,22 +46,25 @@ let initOptions = {
 
 let keycloak = Keycloak(initOptions);
 
-const authService = new AuthService();
-
 /** Auth token interceptors */
 const authRequestInterceptor = config => {
+    Vue.$log.debug('keycloakUrl=' + keycloakUrl);
+    Vue.$log.debug('keycloakRealm=' + keycloakRealm);
+    Vue.$log.debug('apiUrl=' + apiUrl);
+
     keycloak
         .updateToken(30)
         .success(() => {
             Vue.$log.debug('successfully got new token');
-            authService.storeTokens(keycloak.token, keycloak.refreshToken);
+
+            localStorage.setItem('access-token', keycloak.token);
+            localStorage.setItem('refresh-token', keycloak.refreshToken);
         })
         .error(() => {
             Vue.$log.error('updateToken error');
-            authService.clear();
         });
 
-    const token = authService.getAccessToken();
+    const token = localStorage.getItem('access-token');
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
@@ -78,16 +77,12 @@ Vue.use({
     },
 });
 
+Vue.prototype.moment = moment;
+
 /** Adding the request and response interceptors */
 Vue.prototype.$api.interceptors.request.use(authRequestInterceptor);
-Vue.prototype.$api.interceptors.request.use(
-    response => {
-        return response;
-    },
-    error => {
-        Vue.$log.debug('response-status=', error.response.status);
-    }
-);
+
+Vue.use(BootstrapVue);
 
 keycloak
     .init({ onLoad: initOptions.onLoad })
@@ -103,7 +98,8 @@ keycloak
             render: h => h(App),
         }).$mount('#app');
 
-        authService.storeTokens(keycloak.token, keycloak.refreshToken);
+        localStorage.setItem('access-token', keycloak.token);
+        localStorage.setItem('refresh-token', keycloak.refreshToken);
 
         setTimeout(() => {
             keycloak
