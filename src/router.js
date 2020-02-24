@@ -9,14 +9,14 @@ import Publishers from './views/Publishers';
 import PublisherForm from './views/PublisherForm';
 import Persons from './views/Persons';
 import PersonForm from './views/PersonForm';
+import AuthService from './services/authservice';
 
 Vue.use(Router);
 
-let authServerUrl = 'https://sso.gendercomics.net/';
-let redirectURI = 'https://stage.gendercomics.net/';
+let authServerUrl = process.env.VUE_APP_KEYCLOAK_BASE_URL;
+let redirectURI = process.env.VUE_APP_KEYCLOAK_REDIRECT_URL;
 
-//let authServerUrl = 'http://localhost:81/';
-//let redirectURI = 'https://localhost:8080/';
+const authService = new AuthService();
 
 export default new Router({
     routes: [
@@ -88,8 +88,7 @@ export default new Router({
                     authServerUrl +
                     'auth/realms/gendercomics/protocol/openid-connect/logout?redirect_uri=' +
                     redirectURI;
-                localStorage.removeItem('access-token');
-                localStorage.removeItem('refresh-token');
+                authService.clear();
             },
         },
     ],
