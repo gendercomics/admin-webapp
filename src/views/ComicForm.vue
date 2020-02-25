@@ -29,6 +29,12 @@
                             >creator+</b-button
                         >
                         <b-button
+                            :variant="typeBtnVariant"
+                            @click="addType"
+                            :disabled="this.showType"
+                            >type</b-button
+                        >
+                        <b-button
                             :variant="publisherBtnVariant"
                             @click="addPublisher"
                             :disabled="this.showPublisher"
@@ -64,10 +70,22 @@
                             :disabled="this.showIsbn"
                             >isbn</b-button
                         >
-                    </b-button-group>
 
-                    <b-button-group vertical class="mt-2">
-                        <b-button variant="outline-dark">...</b-button>
+                        <!-- in (part of publication) -->
+                        <b-button
+                            :variant="inBtnVariant"
+                            @click="addIn"
+                            :disabled="this.showIn"
+                            v-if="this.showInButtons"
+                            >in</b-button
+                        >
+                        <b-button
+                            :variant="pagesBtnVariant"
+                            @click="addPages"
+                            :disabled="this.showPages"
+                            v-if="this.showInButtons"
+                            >pages</b-button
+                        >
                     </b-button-group>
                 </b-col>
 
@@ -148,6 +166,15 @@
                             </b-form-row>
                         </div>
 
+                        <!-- type -->
+                        <select-field
+                            label="type"
+                            :options="this.types"
+                            v-if="showType"
+                            v-model="comic.type"
+                            :selected="comic.type"
+                        />
+
                         <!-- publisher -->
                         <b-input-group
                             id="input-group-publisher"
@@ -210,6 +237,40 @@
                             type="text"
                         />
 
+                        <!-- in (part of publication -->
+                        <b-input-group
+                            id="input-group-in"
+                            class="pt-2"
+                            prepend="in"
+                            v-if="showIn"
+                        >
+                            <b-form-select
+                                id="input-publication"
+                                v-model="selectedPublication"
+                                @change="changePublication()"
+                            >
+                                <option
+                                    v-for="parent in this.parents"
+                                    v-bind:key="parent.id"
+                                    :value="parent.id"
+                                    >{{ parentOptionText(parent) }}</option
+                                >
+                            </b-form-select>
+                            <template v-slot:append>
+                                <b-button @click="removePublisher()"
+                                    ><font-awesome-icon icon="times-circle"
+                                /></b-button>
+                            </template>
+                        </b-input-group>
+
+                        <!-- pages -->
+                        <input-field
+                            label="pages"
+                            v-model="comic.partOf.pages"
+                            v-if="showPages"
+                            type="text"
+                        />
+
                         <!-- action buttons -->
                         <b-button-group class="mt-3 float-right">
                             <b-button type="submit" variant="primary"
@@ -234,21 +295,23 @@
                 </b-col>
             </b-row>
 
-            <!--           
-            
+            <!--
             <b-row class="mt-4">
                 <b-col id="json-some-values">
                     <b-card header="some data">
                         <pre class="mt-0">
-                            <div>selectedPublisher: {{ $data.selectedPublisher }}</div>
+                            <div>selectedPublication: {{ $data.selectedPublication }}</div>
+
                             <div>selectedCreatorPerson: {{ $data.selectedCreatorPerson }}</div>
                             <div>selectedCreatorRole: {{ $data.selectedCreatorRole }}</div>
                             <div>saveSuccessful: {{ $data.saveSuccessful }}</div>
+
                         </pre>
                     </b-card>
                 </b-col>
             </b-row>
-
+-->
+            <!--
             
             <b-row class="mt-4">
                 <b-col id="json-persons">
@@ -274,10 +337,12 @@
 <script>
 import Header from '@/components/Header';
 import InputField from '../components/InputField';
+import SelectField from '../components/SelectField';
 
 export default {
     name: 'ComicForm',
     components: {
+        SelectField,
         InputField,
         Header,
     },
@@ -287,12 +352,14 @@ export default {
                 title: '',
                 subTitle: null,
                 creators: [],
+                type: null,
                 publisher: null,
                 location: null,
                 year: null,
                 edition: null,
                 link: null,
                 isbn: null,
+                partOf: null,
                 metadata: {
                     createdOn: null,
                     createdBy: null,
@@ -308,6 +375,9 @@ export default {
             errored: false,
             saveSuccessful: false,
             selectedPublisher: null,
+            selectedPublication: null,
+            types: ['anthology', 'comic', 'magazine', 'webcomic'],
+            parents: null,
         };
     },
     computed: {
@@ -316,6 +386,10 @@ export default {
         },
         subtitleBtnVariant() {
             if (!this.showSubtitle) return 'outline-dark';
+            return 'dark';
+        },
+        typeBtnVariant() {
+            if (!this.showType) return 'outline-dark';
             return 'dark';
         },
         publisherBtnVariant() {
@@ -342,11 +416,22 @@ export default {
             if (!this.showIsbn) return 'outline-dark';
             return 'dark';
         },
+        inBtnVariant() {
+            if (!this.showIn) return 'outline-dark';
+            return 'dark';
+        },
+        pagesBtnVariant() {
+            if (!this.showPages) return 'outline-dark';
+            return 'dark';
+        },
         backBtnVariant() {
             return 'outline-danger';
         },
         showSubtitle() {
             return this.comic.subTitle != null;
+        },
+        showType() {
+            return this.comic.type != null;
         },
         showPublisher() {
             return this.comic.publisher != null;
@@ -365,6 +450,23 @@ export default {
         },
         showIsbn() {
             return this.comic.isbn != null;
+        },
+        showIn() {
+            return (
+                this.comic.partOf !== null && this.comic.partOf.comic !== null
+            );
+        },
+        showPages() {
+            return (
+                this.comic.partOf !== null && this.comic.partOf.pages !== null
+            );
+        },
+        showInButtons() {
+            return (
+                this.comic.type === null ||
+                this.comic.type === '' ||
+                this.comic.type === 'comic'
+            );
         },
     },
     methods: {
@@ -405,6 +507,9 @@ export default {
         removeCreator(idx) {
             this.comic.creators.splice(idx, 1);
         },
+        addType() {
+            this.comic.type = '';
+        },
         addPublisher() {
             this.comic.publisher = '';
         },
@@ -422,6 +527,18 @@ export default {
         },
         addIsbn() {
             this.comic.isbn = '';
+        },
+        addIn() {
+            if (this.comic.partOf === null) {
+                this.comic.partOf = { comic: null, pages: null };
+            }
+            this.comic.partOf.comic = '';
+        },
+        addPages() {
+            if (this.comic.partOf === null) {
+                this.comic.partOf = { comic: null, pages: null };
+            }
+            this.comic.partOf.pages = '';
         },
         changePublisher() {
             console.log(this.selectedPublisher);
@@ -451,8 +568,45 @@ export default {
                 }
             });
         },
+        changePublication() {
+            console.log(this.selectedPublication);
+            this.parents.forEach(parent => {
+                if (this.selectedPublication === parent.id) {
+                    this.comic.partOf.comic = parent;
+                }
+            });
+        },
+        loadParents() {
+            this.$api
+                .get('/comics/parents')
+                .then(response => {
+                    this.parents = response.data;
+                })
+                .catch(error => {
+                    console.log(error);
+                    this.errored = true;
+                });
+        },
+        parentOptionText(parent) {
+            let optionText = parent.title;
+
+          /*
+          parent.subtitle !== null
+              ? (optionText += '. ' + parent.subTitle)
+              : optionText;
+          */
+          parent.publisher != null
+              ? (optionText += '. ' + parent.publisher.name)
+              : optionText;
+          parent.year != null
+              ? (optionText += '. ' + parent.year)
+              : optionText;
+            return optionText;
+        },
     },
     mounted() {
+        // load parents (athologies, magazines)
+        this.loadParents();
         // get comic
         if (!this.$route.path.endsWith('new')) {
             this.$api
@@ -461,6 +615,12 @@ export default {
                     this.comic = response.data;
                     if (this.comic.publisher != null) {
                         this.selectedPublisher = this.comic.publisher.id;
+                    }
+                    if (
+                        this.comic.partOf != null &&
+                        this.comic.partOf.comic != null
+                    ) {
+                        this.selectedPublication = this.comic.partOf.comic.id;
                     }
                 })
                 .catch(error => {

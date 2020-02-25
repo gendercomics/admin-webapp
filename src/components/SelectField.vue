@@ -21,6 +21,7 @@ export default {
     props: {
         label: null,
         options: null,
+        selected: null,
     },
     computed: {
         localValue: {
@@ -37,6 +38,11 @@ export default {
             this.$log.debug('delete ' + this.label);
             this.localValue = null;
         },
+    },
+    created() {
+        if (this.selected !== null) {
+            this.value = this.selected;
+        }
     },
 };
 </script>
