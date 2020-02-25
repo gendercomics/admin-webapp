@@ -110,7 +110,7 @@
                         </div>
                     </template>
 
-                    <template v-slot:cell(in)="row">
+                    <template v-slot:cell(partOf)="row">
                         <span>{{ parentDisplayText(row.item) }}</span>
                     </template>
 
@@ -154,7 +154,7 @@ export default {
                 { key: 'actions', label: 'actions' },
                 { key: 'title', label: 'title' },
                 { key: 'creators', label: 'creator(s)' },
-                { key: 'in', label: 'in' },
+                { key: 'partOf', label: 'in' },
                 { key: 'metaData.changedOn', label: 'created/modified' },
                 { key: 'metaData.changedBy', label: 'by' },
             ],
@@ -162,7 +162,7 @@ export default {
             loading: true,
             errored: false,
             filter: null,
-            filterOn: ['title', 'creators', 'in'],
+            filterOn: ['title', 'creators', 'partOf'],
             totalRows: 1,
             currentPage: 1,
             perPage: 10,
