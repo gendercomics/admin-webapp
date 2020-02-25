@@ -1,54 +1,71 @@
 <template>
     <div>
-        <Header/>
+        <Header />
 
         <div>
             <b-jumbotron header-level="5">
-                <template v-slot:header>GenderComics Admin</template>
+                <template v-slot:header
+                    >GenderComics Admin</template
+                >
 
                 <template v-slot:lead>
-                    Welcome. This is the starting place for editing content in the GenderComics database.
+                    Welcome. This is the starting place for editing content in
+                    the GenderComics database.
                 </template>
 
-                <hr class="my-4">
+                <hr class="my-4" />
 
                 <p>
-                    There are currently {{ comicCount }} comics in the database.
+                    {{ count.comics }} comics, {{ count.persons }} persons,
+                    {{ count.publishers }} publishers and {{ count.roles }} roles
+                    are stored in the database.
                 </p>
 
-                <b-button variant="primary" to="comics">edit comics</b-button>
-                <b-button variant="success" href="#">Do Something Else</b-button>
+                <b-button-group>
+                    <b-button variant="outline-primary" to="comics"
+                        >edit comics</b-button
+                    >
+                    <b-button variant="outline-primary" to="persons"
+                        >edit persons</b-button
+                    >
+                    <b-button variant="outline-primary" to="publishers"
+                        >edit publishers</b-button
+                    >
+                    <b-button variant="outline-primary" to="publishers"
+                        >edit roles</b-button
+                    >
+                </b-button-group>
             </b-jumbotron>
         </div>
     </div>
 </template>
 
 <script>
-    // @ is an alias to /src
-    //import HelloWorld from "@/components/HelloWorld.vue";
-    import Header from "@/components/Header";
+// @ is an alias to /src
+//import HelloWorld from "@/components/HelloWorld.vue";
+import Header from '@/components/Header';
 
-    export default {
-        name: "home",
-        components: {
-            Header
-        },
-        data() {
-            return {
-                comicCount: "?",
-                loading: true,
-                errored: false
-            };
-        },
-        mounted() {
-            this.$api
-                .get("/comics/count")
-                .then(response => (this.comicCount = response.data))
-                .catch(error => {
-                    console.log(error);
-                    this.errored = true;
-                })
-                .finally(() => (this.loading = false));
-        }
-    };
+export default {
+    name: 'home',
+    components: {
+        Header,
+    },
+    data() {
+        return {
+            count: null,
+            loading: true,
+            errored: false,
+        };
+    },
+    mounted() {
+        this.$api
+            .get('/count')
+            .then(response => (this.count = response.data))
+            .catch(error => {
+                console.log(error);
+                this.errored = true;
+            })
+            .finally(() => (this.loading = false));
+    },
+};
 </script>
