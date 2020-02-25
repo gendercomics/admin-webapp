@@ -17,8 +17,8 @@
 
                 <p>
                     {{ count.comics }} comics, {{ count.persons }} persons,
-                    {{ count.publishers }} publishers and {{ count.roles }} roles
-                    are stored in the database.
+                    {{ count.publishers }} publishers and
+                    {{ count.roles }} roles are stored in the database.
                 </p>
 
                 <b-button-group>
@@ -52,7 +52,12 @@ export default {
     },
     data() {
         return {
-            count: null,
+            count: {
+                comics: 0,
+                persons: 0,
+                publishers: 0,
+                roles: 0,
+            },
             loading: true,
             errored: false,
         };
