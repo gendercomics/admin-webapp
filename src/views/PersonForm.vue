@@ -50,6 +50,21 @@
 
                                         <b-form-group
                                                 label-cols-sm="2"
+                                                label="pseudonym:"
+                                                label-align-sm="right"
+                                                label-for="pseudonym"
+                                        >
+                                            <b-form-input
+                                                    id="pseudonym"
+                                                    v-model="person.pseudonym"
+                                                    placeholder="enter pseudonym"
+                                                    trim
+                                                    style="max-width: 25rem"
+                                            ></b-form-input>
+                                        </b-form-group>
+
+                                        <b-form-group
+                                                label-cols-sm="2"
                                                 label="wikidata-id:"
                                                 label-align-sm="right"
                                                 label-for="wikidata"
@@ -109,6 +124,7 @@
         person: {
           firstName: null,
           lastName: null,
+          pseudonym: null,
           wikiData: null
         },
         show: true,
