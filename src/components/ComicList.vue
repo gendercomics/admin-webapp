@@ -97,6 +97,10 @@
                         </b-button>
                     </template>
 
+                    <template v-slot:cell(title)="row">
+                        <span>{{ titleDisplayText(row.item) }}</span>
+                    </template>
+
                     <template v-slot:cell(creators)="data">
                         <div
                             v-for="creator in data.item.creators"
@@ -194,9 +198,14 @@ export default {
                 return creator.person.firstName + ' ' + creator.person.lastName;
             }
         },
+        titleDisplayText(item) {
+            return item.issue !== null
+                ? item.title + ', ' + item.issue
+                : item.title;
+        },
         parentDisplayText(item) {
             if (item.partOf !== null && item.partOf.comic.title !== null) {
-                return item.partOf.comic.title;
+                return item.partOf.comic.issue !== null ? item.partOf.comic.title + ', ' + item.partOf.comic.issue : item.partOf.comic.title;
             }
             return null;
         },

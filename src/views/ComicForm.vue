@@ -25,6 +25,12 @@
                             :disabled="this.showSubtitle"
                             >subtitle</b-button
                         >
+                        <b-button
+                            :variant="issueBtnVariant"
+                            @click="addIssue"
+                            :disabled="this.showIssue"
+                            >issue</b-button
+                        >
                         <b-button variant="outline-dark" @click="addCreator"
                             >creator+</b-button
                         >
@@ -116,6 +122,14 @@
                             label="subtitle"
                             v-model="comic.subTitle"
                             v-if="showSubtitle"
+                            type="text"
+                        />
+
+                        <!-- issue -->
+                        <input-field
+                            label="issue"
+                            v-model="comic.issue"
+                            v-if="showIssue"
                             type="text"
                         />
 
@@ -351,6 +365,7 @@ export default {
             comic: {
                 title: '',
                 subTitle: null,
+                issue: null,
                 creators: [],
                 type: null,
                 publisher: null,
@@ -386,6 +401,10 @@ export default {
         },
         subtitleBtnVariant() {
             if (!this.showSubtitle) return 'outline-dark';
+            return 'dark';
+        },
+        issueBtnVariant() {
+            if (!this.showIssue) return 'outline-dark';
             return 'dark';
         },
         typeBtnVariant() {
@@ -429,6 +448,9 @@ export default {
         },
         showSubtitle() {
             return this.comic.subTitle != null;
+        },
+        showIssue() {
+            return this.comic.issue != null;
         },
         showType() {
             return this.comic.type != null;
@@ -496,6 +518,9 @@ export default {
         },
         addSubtitle() {
             this.comic.subTitle = '';
+        },
+        addIssue() {
+            this.comic.issue = '';
         },
         addCreator() {
             console.log('add creator');
@@ -590,17 +615,17 @@ export default {
         parentOptionText(parent) {
             let optionText = parent.title;
 
-          /*
+            /*
           parent.subtitle !== null
               ? (optionText += '. ' + parent.subTitle)
               : optionText;
           */
-          parent.publisher != null
-              ? (optionText += '. ' + parent.publisher.name)
-              : optionText;
-          parent.year != null
-              ? (optionText += '. ' + parent.year)
-              : optionText;
+            parent.publisher != null
+                ? (optionText += '. ' + parent.publisher.name)
+                : optionText;
+            parent.year != null
+                ? (optionText += '. ' + parent.year)
+                : optionText;
             return optionText;
         },
     },
