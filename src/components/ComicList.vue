@@ -106,6 +106,10 @@
                         </div>
                     </template>
 
+                    <template v-slot:cell(in)="row">
+                        <span>{{ parentDisplayText(row.item) }}</span>
+                    </template>
+
                     <template v-slot:cell(metaData.changedOn)="data">
                         <span
                             v-if="
@@ -144,8 +148,9 @@ export default {
         return {
             fields: [
                 { key: 'actions', label: 'actions' },
-                { key: 'title' },
+                { key: 'title', label: 'title' },
                 { key: 'creators', label: 'creator(s)' },
+                { key: 'in', label: 'in' },
                 { key: 'metaData.changedOn', label: 'created/modified' },
                 { key: 'metaData.changedBy', label: 'by' },
             ],
@@ -153,7 +158,7 @@ export default {
             loading: true,
             errored: false,
             filter: null,
-            filterOn: ['title', 'creators'],
+            filterOn: ['title', 'creators', 'in'],
             totalRows: 1,
             currentPage: 1,
             perPage: 10,
@@ -188,6 +193,12 @@ export default {
             if (creator != null) {
                 return creator.person.firstName + ' ' + creator.person.lastName;
             }
+        },
+        parentDisplayText(item) {
+            if (item.partOf !== null && item.partOf.comic.title !== null) {
+                return item.partOf.comic.title;
+            }
+            return null;
         },
     },
 };
