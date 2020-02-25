@@ -10,6 +10,7 @@ import moment from 'moment';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faEdit, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import AuthService from './services/authservice';
 
 library.add(faEdit, faTimesCircle);
 
@@ -33,10 +34,6 @@ let keycloakUrl = process.env.VUE_APP_KEYCLOAK_AUTH_URL;
 let keycloakRealm = process.env.VUE_APP_KEYCLOAK_REALM;
 let apiUrl = process.env.VUE_APP_API_URL;
 
-//let keycloakUrl = 'https://sso.gendercomics.net/auth/';
-//let keycloakRealm = 'gendercomics';
-//let apiUrl = 'https://api.gendercomics.net/';
-
 let initOptions = {
     url: keycloakUrl,
     realm: keycloakRealm,
@@ -46,25 +43,21 @@ let initOptions = {
 
 let keycloak = Keycloak(initOptions);
 
+const authService = new AuthService();
+
 /** Auth token interceptors */
 const authRequestInterceptor = config => {
-    Vue.$log.debug('keycloakUrl=' + keycloakUrl);
-    Vue.$log.debug('keycloakRealm=' + keycloakRealm);
-    Vue.$log.debug('apiUrl=' + apiUrl);
-
     keycloak
         .updateToken(30)
         .success(() => {
             Vue.$log.debug('successfully got new token');
-
-            localStorage.setItem('access-token', keycloak.token);
-            localStorage.setItem('refresh-token', keycloak.refreshToken);
+            authService.storeTokens(keycloak.token, keycloak.refreshToken);
         })
         .error(() => {
             Vue.$log.error('updateToken error');
         });
 
-    const token = localStorage.getItem('access-token');
+    const token = authService.getAccessToken();
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
@@ -81,6 +74,51 @@ Vue.prototype.moment = moment;
 
 /** Adding the request and response interceptors */
 Vue.prototype.$api.interceptors.request.use(authRequestInterceptor);
+Vue.prototype.$api.interceptors.response.use(
+    response => {
+        return response;
+    },
+    error => {
+        Vue.$log.debug('response-status=', error.response.status);
+
+        if (error.response.status !== 401) {
+            return new Promise((resolve, reject) => {
+                reject(error);
+            });
+        }
+
+        if (keycloak.isTokenExpired()) {
+            Vue.$log.debug('Token expired');
+        }
+        
+        keycloak
+            .updateToken(0)
+            .success(refreshed => {
+                Vue.$log.debug('Token refreshed=' + refreshed);
+                authService.storeTokens(keycloak.token, keycloak.refreshToken);
+                const config = error.config;
+                const token = authService.getAccessToken();
+                if (token) {
+                    config.headers.Authorization = `Bearer ${token}`;
+                }
+
+                return new Promise((resolve, reject) => {
+                    axios
+                        .request(config)
+                        .then(response => {
+                            resolve(response);
+                        })
+                        .catch(error => {
+                            reject(error);
+                        });
+                });
+            })
+            .error(() => {
+                Vue.$log.error('Failed to refresh token');
+                keycloak.clearToken();
+            });
+    }
+);
 
 Vue.use(BootstrapVue);
 
@@ -98,8 +136,7 @@ keycloak
             render: h => h(App),
         }).$mount('#app');
 
-        localStorage.setItem('access-token', keycloak.token);
-        localStorage.setItem('refresh-token', keycloak.refreshToken);
+        authService.storeTokens(keycloak.token, keycloak.refreshToken);
 
         setTimeout(() => {
             keycloak
