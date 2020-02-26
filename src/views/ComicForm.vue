@@ -391,7 +391,7 @@ export default {
             saveSuccessful: false,
             selectedPublisher: null,
             selectedPublication: null,
-            types: ['anthology', 'comic', 'magazine', 'webcomic'],
+            types: ['anthology', 'comic', 'magazine', 'series', 'webcomic', 'zine'],
             parents: null,
         };
     },
