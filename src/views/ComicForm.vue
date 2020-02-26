@@ -391,7 +391,14 @@ export default {
             saveSuccessful: false,
             selectedPublisher: null,
             selectedPublication: null,
-            types: ['anthology', 'comic', 'magazine', 'series', 'webcomic', 'zine'],
+            types: [
+                'anthology',
+                'comic',
+                'magazine',
+                'series',
+                'webcomic',
+                'zine',
+            ],
             parents: null,
         };
     },
@@ -614,17 +621,20 @@ export default {
         },
         parentOptionText(parent) {
             let optionText = parent.title;
+            parent.issue != null
+                ? (optionText += ' : ' + parent.issue)
+                : optionText;
 
             /*
-          parent.subtitle !== null
-              ? (optionText += '. ' + parent.subTitle)
-              : optionText;
-          */
+  parent.subtitle !== null
+      ? (optionText += '. ' + parent.subTitle)
+      : optionText;
+  */
             parent.publisher != null
-                ? (optionText += '. ' + parent.publisher.name)
+                ? (optionText += ' : ' + parent.publisher.name)
                 : optionText;
             parent.year != null
-                ? (optionText += '. ' + parent.year)
+                ? (optionText += ' : ' + parent.year)
                 : optionText;
             return optionText;
         },
