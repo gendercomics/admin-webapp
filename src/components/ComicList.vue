@@ -93,8 +93,16 @@
                             @click="edit(row.item)"
                             class="mr-1"
                         >
-                            <font-awesome-icon icon="edit" v-b-tooltip title="edit"/>
+                            <font-awesome-icon
+                                icon="edit"
+                                v-b-tooltip
+                                title="edit"
+                            />
                         </b-button>
+                    </template>
+
+                    <template v-slot:cell(status)="data">
+                        {{ data.item.metaData.status }}
                     </template>
 
                     <template v-slot:cell(title)="row">
@@ -112,10 +120,6 @@
 
                     <template v-slot:cell(partOf)="row">
                         <span>{{ parentDisplayText(row.item) }}</span>
-                    </template>
-
-                    <template v-slot:cell(status)="row">
-                        <span>{{ row.item.metaData.status }}</span>
                     </template>
 
                     <template v-slot:cell(metaData.changedOn)="data">
