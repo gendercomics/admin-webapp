@@ -101,8 +101,22 @@
                         </b-button>
                     </template>
 
-                    <template v-slot:cell(status)="data">
-                        {{ data.item.metaData.status }}
+                    <template v-slot:cell(metaData.status)="row">
+                        <span v-if="row.item.metaData.status === 'DRAFT'"
+                            ><b-badge variant="secondary" v-if
+                                >draft</b-badge
+                            ></span
+                        >
+                        <span v-if="row.item.metaData.status === 'REVIEW'"
+                            ><b-badge variant="warning" v-if
+                                >review</b-badge
+                            ></span
+                        >
+                        <span v-if="row.item.metaData.status === 'FINAL'"
+                            ><b-badge variant="success" v-if
+                                >final</b-badge
+                            ></span
+                        >
                     </template>
 
                     <template v-slot:cell(title)="row">
