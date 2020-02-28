@@ -47,12 +47,6 @@
                             >publisher</b-button
                         >
                         <b-button
-                            :variant="locationBtnVariant"
-                            @click="addLocation"
-                            :disabled="this.showLocation"
-                            >location</b-button
-                        >
-                        <b-button
                             :variant="yearBtnVariant"
                             @click="addYear"
                             :disabled="this.showYear"
@@ -211,14 +205,6 @@
                             </template>
                         </b-input-group>
 
-                        <!-- location -->
-                        <input-field
-                            label="location"
-                            v-model="comic.location"
-                            v-if="showLocation"
-                            type="text"
-                        />
-
                         <!-- year -->
                         <input-field
                             label="year"
@@ -285,22 +271,32 @@
                             type="text"
                         />
 
-                        <!-- action buttons -->
-                        <b-button-group class="mt-3 float-right">
-                            <b-button type="submit" variant="primary"
-                                >save</b-button
-                            >
-                            <b-button
-                                to="/comics"
-                                type="reset"
-                                :variant="backBtnVariant"
-                                >back</b-button
-                            >
-                        </b-button-group>
+                        <!-- status -->
+                        <b-form-group>
+                            <!-- action buttons -->
+                            <b-button-group class="mt-3 float-right">
+                                <!-- editing status -->
+                                <b-form-select
+                                    :options="statusOptions"
+                                    v-model="comic.metaData.status"
+                                />
+
+                                <b-button type="submit" variant="primary"
+                                    >save</b-button
+                                >
+                                <b-button
+                                    to="/comics"
+                                    type="reset"
+                                    :variant="backBtnVariant"
+                                    >back</b-button
+                                >
+                            </b-button-group>
+                        </b-form-group>
                     </b-form>
                 </b-col>
             </b-row>
 
+            <!--
             <b-row class="mt-4">
                 <b-col id="json-comic">
                     <b-card header="comic">
@@ -309,7 +305,7 @@
                 </b-col>
             </b-row>
 
-            <!--
+
             <b-row class="mt-4">
                 <b-col id="json-some-values">
                     <b-card header="some data">
@@ -326,7 +322,7 @@
             </b-row>
 -->
             <!--
-            
+
             <b-row class="mt-4">
                 <b-col id="json-persons">
                     <b-card header="persons">
@@ -342,7 +338,7 @@
                     </b-card>
                 </b-col>
             </b-row>
-            
+
             -->
         </b-container>
     </div>
@@ -369,17 +365,17 @@ export default {
                 creators: [],
                 type: null,
                 publisher: null,
-                location: null,
                 year: null,
                 edition: null,
                 link: null,
                 isbn: null,
                 partOf: null,
-                metadata: {
+                metaData: {
                     createdOn: null,
                     createdBy: null,
                     changedOn: null,
                     changedBy: null,
+                    status: 'DRAFT',
                 },
             },
             persons: null,
@@ -392,6 +388,7 @@ export default {
             selectedPublisher: null,
             selectedPublication: null,
             types: ['anthology', 'comic', 'magazine', 'webcomic'],
+            statusOptions: ['DRAFT', 'REVIEW', 'FINAL'],
             parents: null,
         };
     },
@@ -413,10 +410,6 @@ export default {
         },
         publisherBtnVariant() {
             if (!this.showPublisher) return 'outline-dark';
-            return 'dark';
-        },
-        locationBtnVariant() {
-            if (!this.showLocation) return 'outline-dark';
             return 'dark';
         },
         yearBtnVariant() {
@@ -457,9 +450,6 @@ export default {
         },
         showPublisher() {
             return this.comic.publisher != null;
-        },
-        showLocation() {
-            return this.comic.location != null;
         },
         showYear() {
             return this.comic.year != null;
@@ -538,9 +528,6 @@ export default {
         addPublisher() {
             this.comic.publisher = '';
         },
-        addLocation() {
-            this.comic.location = '';
-        },
         addYear() {
             this.comic.year = '';
         },
@@ -616,10 +603,10 @@ export default {
             let optionText = parent.title;
 
             /*
-          parent.subtitle !== null
-              ? (optionText += '. ' + parent.subTitle)
-              : optionText;
-          */
+      parent.subtitle !== null
+          ? (optionText += '. ' + parent.subTitle)
+          : optionText;
+      */
             parent.publisher != null
                 ? (optionText += '. ' + parent.publisher.name)
                 : optionText;
@@ -646,6 +633,9 @@ export default {
                         this.comic.partOf.comic != null
                     ) {
                         this.selectedPublication = this.comic.partOf.comic.id;
+                    }
+                    if (this.comic.metaData.status === null) {
+                        this.comic.metaData.status = 'DRAFT';
                     }
                 })
                 .catch(error => {
