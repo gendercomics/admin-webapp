@@ -285,18 +285,27 @@
                             type="text"
                         />
 
-                        <!-- action buttons -->
-                        <b-button-group class="mt-3 float-right">
-                            <b-button type="submit" variant="primary"
-                                >save</b-button
-                            >
-                            <b-button
-                                to="/comics"
-                                type="reset"
-                                :variant="backBtnVariant"
-                                >back</b-button
-                            >
-                        </b-button-group>
+                        <!-- status -->
+                        <b-form-group>
+                            <!-- action buttons -->
+                            <b-button-group class="mt-3 float-right">
+                                <!-- editing status -->
+                                <b-form-select
+                                    :options="statusOptions"
+                                    v-model="comic.metaData.status"
+                                />
+
+                                <b-button type="submit" variant="primary"
+                                    >save</b-button
+                                >
+                                <b-button
+                                    to="/comics"
+                                    type="reset"
+                                    :variant="backBtnVariant"
+                                    >back</b-button
+                                >
+                            </b-button-group>
+                        </b-form-group>
                     </b-form>
                 </b-col>
             </b-row>
@@ -326,7 +335,7 @@
             </b-row>
 -->
             <!--
-            
+
             <b-row class="mt-4">
                 <b-col id="json-persons">
                     <b-card header="persons">
@@ -342,7 +351,7 @@
                     </b-card>
                 </b-col>
             </b-row>
-            
+
             -->
         </b-container>
     </div>
@@ -375,11 +384,12 @@ export default {
                 link: null,
                 isbn: null,
                 partOf: null,
-                metadata: {
+                metaData: {
                     createdOn: null,
                     createdBy: null,
                     changedOn: null,
                     changedBy: null,
+                    status: 'DRAFT',
                 },
             },
             persons: null,
@@ -391,14 +401,8 @@ export default {
             saveSuccessful: false,
             selectedPublisher: null,
             selectedPublication: null,
-            types: [
-                'anthology',
-                'comic',
-                'magazine',
-                'series',
-                'webcomic',
-                'zine',
-            ],
+            types: ['anthology', 'comic', 'magazine', 'webcomic'],
+            statusOptions: ['DRAFT', 'REVIEW', 'FINAL'],
             parents: null,
         };
     },
@@ -621,20 +625,17 @@ export default {
         },
         parentOptionText(parent) {
             let optionText = parent.title;
-            parent.issue != null
-                ? (optionText += ' : ' + parent.issue)
-                : optionText;
 
             /*
-  parent.subtitle !== null
-      ? (optionText += '. ' + parent.subTitle)
-      : optionText;
-  */
+      parent.subtitle !== null
+          ? (optionText += '. ' + parent.subTitle)
+          : optionText;
+      */
             parent.publisher != null
-                ? (optionText += ' : ' + parent.publisher.name)
+                ? (optionText += '. ' + parent.publisher.name)
                 : optionText;
             parent.year != null
-                ? (optionText += ' : ' + parent.year)
+                ? (optionText += '. ' + parent.year)
                 : optionText;
             return optionText;
         },
@@ -656,6 +657,9 @@ export default {
                         this.comic.partOf.comic != null
                     ) {
                         this.selectedPublication = this.comic.partOf.comic.id;
+                    }
+                    if (this.comic.metaData.status === null) {
+                        this.comic.metaData.status = 'DRAFT';
                     }
                 })
                 .catch(error => {
