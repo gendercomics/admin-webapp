@@ -47,12 +47,6 @@
                             >publisher</b-button
                         >
                         <b-button
-                            :variant="locationBtnVariant"
-                            @click="addLocation"
-                            :disabled="this.showLocation"
-                            >location</b-button
-                        >
-                        <b-button
                             :variant="yearBtnVariant"
                             @click="addYear"
                             :disabled="this.showYear"
@@ -210,14 +204,6 @@
                                 /></b-button>
                             </template>
                         </b-input-group>
-
-                        <!-- location -->
-                        <input-field
-                            label="location"
-                            v-model="comic.location"
-                            v-if="showLocation"
-                            type="text"
-                        />
 
                         <!-- year -->
                         <input-field
@@ -378,7 +364,6 @@ export default {
                 creators: [],
                 type: null,
                 publisher: null,
-                location: null,
                 year: null,
                 edition: null,
                 link: null,
@@ -426,10 +411,6 @@ export default {
             if (!this.showPublisher) return 'outline-dark';
             return 'dark';
         },
-        locationBtnVariant() {
-            if (!this.showLocation) return 'outline-dark';
-            return 'dark';
-        },
         yearBtnVariant() {
             if (!this.showYear) return 'outline-dark';
             return 'dark';
@@ -468,9 +449,6 @@ export default {
         },
         showPublisher() {
             return this.comic.publisher != null;
-        },
-        showLocation() {
-            return this.comic.location != null;
         },
         showYear() {
             return this.comic.year != null;
@@ -548,9 +526,6 @@ export default {
         },
         addPublisher() {
             this.comic.publisher = '';
-        },
-        addLocation() {
-            this.comic.location = '';
         },
         addYear() {
             this.comic.year = '';
