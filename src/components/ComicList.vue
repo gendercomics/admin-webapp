@@ -93,7 +93,7 @@
                             @click="edit(row.item)"
                             class="mr-1"
                         >
-                            <font-awesome-icon icon="edit" />
+                            <font-awesome-icon icon="edit" v-b-tooltip title="edit"/>
                         </b-button>
                     </template>
 
@@ -112,6 +112,10 @@
 
                     <template v-slot:cell(partOf)="row">
                         <span>{{ parentDisplayText(row.item) }}</span>
+                    </template>
+
+                    <template v-slot:cell(status)="row">
+                        <span>{{ row.item.metaData.status }}</span>
                     </template>
 
                     <template v-slot:cell(metaData.changedOn)="data">
@@ -152,6 +156,7 @@ export default {
         return {
             fields: [
                 { key: 'actions', label: 'actions' },
+                { key: 'metaData.status', label: 'status' },
                 { key: 'title', label: 'title' },
                 { key: 'creators', label: 'creator(s)' },
                 { key: 'partOf', label: 'in' },
@@ -205,7 +210,9 @@ export default {
         },
         parentDisplayText(item) {
             if (item.partOf !== null && item.partOf.comic.title !== null) {
-                return item.partOf.comic.issue !== null ? item.partOf.comic.title + ', ' + item.partOf.comic.issue : item.partOf.comic.title;
+                return item.partOf.comic.issue !== null
+                    ? item.partOf.comic.title + ', ' + item.partOf.comic.issue
+                    : item.partOf.comic.title;
             }
             return null;
         },
