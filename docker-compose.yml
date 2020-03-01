@@ -13,7 +13,7 @@ services:
       - "traefik.frontend.auth.basic=gesche:$$apr1$$MAPCYH7m$$8wTgBxTOH731kXK3fo1JC/"
 
   gendercomics-admin-webapp:
-    image: gendercomics/admin-webapp:1.0.0
+    image: gendercomics/admin-webapp:1.0.2
     container_name: gendercomics-admin-webapp
     networks:
       - proxy
