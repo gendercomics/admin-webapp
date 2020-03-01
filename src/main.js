@@ -74,6 +74,8 @@ Vue.prototype.moment = moment;
 
 /** Adding the request and response interceptors */
 Vue.prototype.$api.interceptors.request.use(authRequestInterceptor);
+
+/*
 Vue.prototype.$api.interceptors.response.use(
     response => {
         return response;
@@ -119,6 +121,7 @@ Vue.prototype.$api.interceptors.response.use(
             });
     }
 );
+ */
 
 Vue.use(BootstrapVue);
 
