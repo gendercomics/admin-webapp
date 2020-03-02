@@ -103,19 +103,13 @@
 
                     <template v-slot:cell(metaData.status)="row">
                         <span v-if="row.item.metaData.status === 'DRAFT'"
-                            ><b-badge variant="secondary" v-if
-                                >draft</b-badge
-                            ></span
+                            ><b-badge variant="secondary">draft</b-badge></span
                         >
                         <span v-if="row.item.metaData.status === 'REVIEW'"
-                            ><b-badge variant="warning" v-if
-                                >review</b-badge
-                            ></span
+                            ><b-badge variant="warning">review</b-badge></span
                         >
                         <span v-if="row.item.metaData.status === 'FINAL'"
-                            ><b-badge variant="success" v-if
-                                >final</b-badge
-                            ></span
+                            ><b-badge variant="success">final</b-badge></span
                         >
                     </template>
 

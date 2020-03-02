@@ -2,7 +2,7 @@ import axios from 'axios';
 
 /** Default config for axios instance */
 let config = {
-    baseURL: "http://localhost:8001/"
+    baseURL: 'http://localhost:8001/',
     //baseURL: "https://api.gendercomics.net/"
 };
 
@@ -12,7 +12,7 @@ const httpClient = axios.create(config);
 /** Auth token interceptors */
 const authInterceptor = config => {
     const token = localStorage.getItem('access-token');
-    if(token) {
+    if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
@@ -40,4 +40,4 @@ httpClient.interceptors.response.use(
     }
 );
 
-export {httpClient};
+export { httpClient };
