@@ -4,9 +4,7 @@
 
         <div>
             <b-jumbotron header-level="5">
-                <template v-slot:header
-                    >GenderComics Admin</template
-                >
+                <template v-slot:header>GenderComics Admin</template>
 
                 <template v-slot:lead>
                     Welcome. This is the starting place for editing content in

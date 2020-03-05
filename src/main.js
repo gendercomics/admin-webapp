@@ -141,6 +141,7 @@ keycloak
 
         authService.storeTokens(keycloak.token, keycloak.refreshToken);
 
+        /*
         setTimeout(() => {
             keycloak
                 .updateToken(70)
@@ -163,6 +164,7 @@ keycloak
                     Vue.$log.error('Failed to refresh token');
                 });
         }, 60000);
+         */
     })
     .error(() => {
         Vue.$log.error('Authentication failed!');
