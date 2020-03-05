@@ -11,15 +11,17 @@ services:
       - "traefik.frontend.rule=Host:stage.${HOST}; PathPrefixStrip:/admin"
       - "traefik.port=80"
       - "traefik.frontend.auth.basic=gesche:$$apr1$$MAPCYH7m$$8wTgBxTOH731kXK3fo1JC/"
+      - "traefik.docker.network=proxy"
 
   gendercomics-admin-webapp:
-    image: gendercomics/admin-webapp:1.0.3
+    image: gendercomics/admin-webapp:1.0.4
     container_name: gendercomics-admin-webapp
     networks:
       - proxy
     labels:
       - "traefik.frontend.rule=Host:${HOST}; PathPrefixStrip:/admin"
       - "traefik.port=80"
+      - "traefik.docker.network=proxy"
 
 networks:
   proxy:
