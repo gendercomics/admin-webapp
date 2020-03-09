@@ -10,6 +10,8 @@ import PublisherForm from './views/PublisherForm';
 import Persons from './views/Persons';
 import PersonForm from './views/PersonForm';
 import AuthService from './services/authservice';
+import Keywords from './views/Keywords';
+import KeywordForm from './views/KeywordForm';
 
 Vue.use(Router);
 
@@ -25,7 +27,7 @@ export default new Router({
             name: 'home',
             component: Home,
             meta: {
-                title: 'gendercomics.net - admin',
+                title: 'gendercomics.net',
             },
         },
         {
@@ -42,43 +44,80 @@ export default new Router({
             name: 'comics',
             component: Comics,
             meta: {
-                title: 'gendercomics.net - admin: comics',
+                title: 'gendercomics.net:comics',
             },
         },
         {
             path: '/comics/:id',
             name: 'ComicForm',
             component: ComicForm,
+            meta: {
+                title: 'gendercomics.net:comics',
+            },
         },
         {
             path: '/persons',
             name: 'persons',
             component: Persons,
+            meta: {
+                title: 'gendercomics.net:persons',
+            },
         },
         {
             path: '/persons/:id',
             name: 'PersonForm',
             component: PersonForm,
+            meta: {
+                title: 'gendercomics.net:persons',
+            },
         },
         {
             path: '/publishers',
             name: 'publishers',
             component: Publishers,
+            meta: {
+                title: 'gendercomics.net:publishers',
+            },
         },
         {
             path: '/publishers/:id',
             name: 'PublisherForm',
             component: PublisherForm,
+            meta: {
+                title: 'gendercomics.net:publishers',
+            },
         },
         {
             path: '/roles',
             name: 'roles',
             component: Roles,
+            meta: {
+                title: 'gendercomics.net:roles',
+            },
         },
         {
             path: '/roles/:id',
             name: 'RoleForm',
             component: RoleForm,
+            meta: {
+                title: 'gendercomics.net:roles',
+            },
+        },
+        {
+            path: '/keywords',
+            name: 'keywords',
+            component: Keywords,
+            meta: {
+                title: 'gendercomics.net:keywords',
+            },
+        },
+        {
+            path: '/keywords/:id',
+            name: 'KeywordForm',
+            component: KeywordForm,
+            meta: {
+                title: 'gendercomics.net:keywords',
+            },
         },
         {
             path: '/logout',
