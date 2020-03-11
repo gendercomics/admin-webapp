@@ -45,6 +45,15 @@
                                 placeholder="Enter keyword"
                                 :state="nameState"
                             />
+
+                            <b-input-group-append>
+                                <b-form-select
+                                    :options="typeOptions"
+                                    size="lg"
+                                    v-model="keyword.type"
+                                ></b-form-select>
+                            </b-input-group-append>
+
                             <b-form-invalid-feedback
                                 >Enter at least 4
                                 characters</b-form-invalid-feedback
@@ -103,6 +112,7 @@ export default {
         return {
             keyword: {
                 name: '',
+                type: 'content',
                 description: null,
                 metaData: {
                     createdOn: null,
@@ -117,6 +127,7 @@ export default {
             errored: false,
             saveSuccessful: false,
             statusOptions: ['DRAFT', 'REVIEW', 'FINAL'],
+            typeOptions: ['content', 'genre'],
         };
     },
     computed: {

@@ -9,7 +9,7 @@
 <script>
 export default {
     watch: {
-        $route(to, from) {
+        $route(to) {
             document.title = to.meta.title || 'gendercomics.net';
         },
         immediate: true,
