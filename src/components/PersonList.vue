@@ -189,7 +189,8 @@ export default {
             this.currentPage = 1;
         },
         fullName(person) {
-            if (person.pseudonym !== null) return person.pseudonym;
+            if (person.pseudonym !== null && person.pseudonym.length !== 0)
+                return person.pseudonym;
             return person.firstName + ' ' + person.lastName;
         },
         wikiDataLink(wikidata) {
