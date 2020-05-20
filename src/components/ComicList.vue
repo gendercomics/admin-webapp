@@ -212,6 +212,12 @@ export default {
         },
         fullName(creator) {
             if (creator != null) {
+                if (
+                    creator.person.pseudonym != null &&
+                    creator.person.pseudonym.length > 1
+                ) {
+                    return creator.person.pseudonym;
+                }
                 return creator.person.firstName + ' ' + creator.person.lastName;
             }
         },

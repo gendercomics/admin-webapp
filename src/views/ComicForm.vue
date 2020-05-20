@@ -146,9 +146,7 @@
                                                 v-bind:key="person.id"
                                                 :value="person.id"
                                                 >{{
-                                                    person.firstName +
-                                                        ' ' +
-                                                        person.lastName
+                                                    creatorName(person)
                                                 }}</option
                                             >
                                         </b-form-select>
@@ -614,6 +612,12 @@ export default {
                 ? (optionText += '. ' + parent.year)
                 : optionText;
             return optionText;
+        },
+        creatorName(creator) {
+            if (creator.pseudonym != null && creator.pseudonym.length > 1) {
+                return creator.pseudonym;
+            }
+            return creator.firstName + ' ' + creator.lastName;
         },
     },
     mounted() {
