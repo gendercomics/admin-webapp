@@ -34,7 +34,7 @@ export default {
     name: 'ComicCreator',
     props: {
         persons: null,
-        roles: null,
+        roles: [],
     },
     data: function() {
         return {
@@ -44,9 +44,6 @@ export default {
     },
     mounted() {},
     methods: {
-        updateCreators: function() {
-            console.log('selected: ' + this.selected);
-        },
         roleUpdated: function() {
             console.log('selectedRole:' + this.role);
         },
