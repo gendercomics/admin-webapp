@@ -29,7 +29,7 @@
                     <b-button variant="outline-primary" to="publishers"
                         >edit publishers</b-button
                     >
-                    <b-button variant="outline-primary" to="publishers"
+                    <b-button variant="outline-primary" to="roles"
                         >edit roles</b-button
                     >
                 </b-button-group>
