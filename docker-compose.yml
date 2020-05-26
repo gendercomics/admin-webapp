@@ -6,7 +6,7 @@ services:
     image: gendercomics/admin-webapp:latest
     container_name: gendercomics-admin-webapp-stage
     environment:
-      - NODE_ENV=staging
+      - VUE_APP_API_URL=https://api-stage.gendercomics.net/
     networks:
       - proxy
     labels:
