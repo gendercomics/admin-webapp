@@ -37,11 +37,12 @@ before_deploy:
   - chmod 600 deploy-key
   - ssh-add deploy-key
   - scp -r ./docker-compose.yml deploy@gendercomics.net:/var/gendercomics/admin-webapp
+  - scp -r ./docker-compose.yml deploy@gendercomics.net:/var/gendercomics/admin-webapp-stage
 
 deploy:
   - provider: script
     skip_cleanup: true
-    script: ssh deploy@gendercomics.net 'docker pull gendercomics/admin-webapp:latest && cd /var/gendercomics/admin-webapp && docker-compose up -d gendercomics-admin-webapp-stage'
+    script: ssh deploy@gendercomics.net 'docker pull gendercomics/admin-webapp:latest && cd /var/gendercomics/admin-webapp-stage && docker-compose up -d gendercomics-admin-webapp-stage'
     on:
       all_branches: true
   - provider: script
@@ -58,6 +59,6 @@ notifications:
   email:
     recipients:
       - michael.litschauer@gmail.com
-    on_success: always
+    on_success: change
     on_failure: always
 
