@@ -5,6 +5,8 @@ services:
   gendercomics-admin-webapp-stage:
     image: gendercomics/admin-webapp:latest
     container_name: gendercomics-admin-webapp-stage
+    environment:
+      - NODE_ENV=staging
     networks:
       - proxy
     labels:
