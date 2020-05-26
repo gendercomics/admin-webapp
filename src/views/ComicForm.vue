@@ -620,6 +620,17 @@ export default {
             }
             return creator.firstName + ' ' + creator.lastName;
         },
+        titleExists(title) {
+            let exists = false;
+            this.$api
+                .head('/comics/title/' + title)
+                .then(response => (exists = response.status === 200))
+                .catch(error => {
+                    console.log(error);
+                    this.errored = true;
+                });
+            return exists;
+        },
     },
     mounted() {
         // load parents (athologies, magazines)
