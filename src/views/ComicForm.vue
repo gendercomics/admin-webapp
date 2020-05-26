@@ -378,7 +378,7 @@ export default {
             },
             persons: [],
             roles: [],
-            publishers: null,
+            publishers: [],
             show: true,
             loading: true,
             errored: false,
