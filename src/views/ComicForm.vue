@@ -104,6 +104,7 @@
                                 required
                                 placeholder="Enter title"
                                 :state="titleState"
+                                lazy
                             />
                             <b-form-invalid-feedback
                                 >Enter at least 4
@@ -392,7 +393,7 @@ export default {
     },
     computed: {
         titleState() {
-            return this.comic.title.length >= 4;
+            return this.comic.title.length >= 1;
         },
         subtitleBtnVariant() {
             if (!this.showSubtitle) return 'outline-dark';
