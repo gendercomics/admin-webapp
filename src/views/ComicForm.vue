@@ -4,14 +4,14 @@
 
         <div class="mt-3 ml-3 mr-3">
             <b-alert variant="success" dismissible v-model="saveSuccessful"
-                >comic saved!</b-alert
-            >
+                >comic saved!
+            </b-alert>
         </div>
 
         <div class="mt-3 ml-3 mr-3">
             <b-alert variant="danger" dismissible v-model="errored"
-                >error!</b-alert
-            >
+                >error!
+            </b-alert>
         </div>
 
         <b-container class="mt-3" fluid>
@@ -23,53 +23,53 @@
                             :variant="subtitleBtnVariant"
                             @click="addSubtitle"
                             :disabled="this.showSubtitle"
-                            >subtitle</b-button
-                        >
+                            >subtitle
+                        </b-button>
                         <b-button
                             :variant="issueBtnVariant"
                             @click="addIssue"
                             :disabled="this.showIssue"
-                            >issue</b-button
-                        >
+                            >issue
+                        </b-button>
                         <b-button variant="outline-dark" @click="addCreator"
-                            >creator+</b-button
-                        >
+                            >creator+
+                        </b-button>
                         <b-button
                             :variant="typeBtnVariant"
                             @click="addType"
                             :disabled="this.showType"
-                            >type</b-button
-                        >
+                            >type
+                        </b-button>
                         <b-button
                             :variant="publisherBtnVariant"
                             @click="addPublisher"
                             :disabled="this.showPublisher"
-                            >publisher</b-button
-                        >
+                            >publisher
+                        </b-button>
                         <b-button
                             :variant="yearBtnVariant"
                             @click="addYear"
                             :disabled="this.showYear"
-                            >year</b-button
-                        >
+                            >year
+                        </b-button>
                         <b-button
                             :variant="editionBtnVariant"
                             @click="addEdition"
                             :disabled="this.showEdition"
-                            >edition</b-button
-                        >
+                            >edition
+                        </b-button>
                         <b-button
                             :variant="linkBtnVariant"
                             @click="addLink"
                             :disabled="this.showLink"
-                            >link</b-button
-                        >
+                            >link
+                        </b-button>
                         <b-button
                             :variant="isbnBtnVariant"
                             @click="addIsbn"
                             :disabled="this.showIsbn"
-                            >isbn</b-button
-                        >
+                            >isbn
+                        </b-button>
 
                         <!-- in (part of publication) -->
                         <b-button
@@ -77,15 +77,15 @@
                             @click="addIn"
                             :disabled="this.showIn"
                             v-if="this.showInButtons"
-                            >in</b-button
-                        >
+                            >in
+                        </b-button>
                         <b-button
                             :variant="pagesBtnVariant"
                             @click="addPages"
                             :disabled="this.showPages"
                             v-if="this.showInButtons"
-                            >pages</b-button
-                        >
+                            >pages
+                        </b-button>
                     </b-button-group>
                 </b-col>
 
@@ -104,12 +104,10 @@
                                 required
                                 placeholder="Enter title"
                                 :state="titleState"
-                                lazy
                             />
                             <b-form-invalid-feedback
-                                >Enter at least 4
-                                characters</b-form-invalid-feedback
-                            >
+                                >Enter at least 1 character
+                            </b-form-invalid-feedback>
                         </b-input-group>
 
                         <!-- subtitle -->
@@ -146,10 +144,8 @@
                                                 v-for="person in persons"
                                                 v-bind:key="person.id"
                                                 :value="person.id"
-                                                >{{
-                                                    creatorName(person)
-                                                }}</option
-                                            >
+                                                >{{ creatorName(person) }}
+                                            </option>
                                         </b-form-select>
                                     </div>
 
@@ -164,10 +160,11 @@
                                     </b-form-select>
 
                                     <template v-slot:append>
-                                        <b-button @click="removeCreator(idx)"
-                                            ><font-awesome-icon
+                                        <b-button @click="removeCreator(idx)">
+                                            <font-awesome-icon
                                                 icon="times-circle"
-                                        /></b-button>
+                                            />
+                                        </b-button>
                                     </template>
                                 </b-input-group>
                             </b-form-row>
@@ -198,9 +195,9 @@
                                 @change="changePublisher()"
                             />
                             <template v-slot:append>
-                                <b-button @click="removePublisher()"
-                                    ><font-awesome-icon icon="times-circle"
-                                /></b-button>
+                                <b-button @click="removePublisher()">
+                                    <font-awesome-icon icon="times-circle" />
+                                </b-button>
                             </template>
                         </b-input-group>
 
@@ -252,13 +249,13 @@
                                     v-for="parent in this.parents"
                                     v-bind:key="parent.id"
                                     :value="parent.id"
-                                    >{{ parentOptionText(parent) }}</option
-                                >
+                                    >{{ parentOptionText(parent) }}
+                                </option>
                             </b-form-select>
                             <template v-slot:append>
-                                <b-button @click="removePublisher()"
-                                    ><font-awesome-icon icon="times-circle"
-                                /></b-button>
+                                <b-button @click="removePublisher()">
+                                    <font-awesome-icon icon="times-circle" />
+                                </b-button>
                             </template>
                         </b-input-group>
 
@@ -281,14 +278,14 @@
                                 />
 
                                 <b-button type="submit" variant="primary"
-                                    >save</b-button
-                                >
+                                    >save
+                                </b-button>
                                 <b-button
                                     to="/comics"
                                     type="reset"
                                     :variant="backBtnVariant"
-                                    >back</b-button
-                                >
+                                    >back
+                                </b-button>
                             </b-button-group>
                         </b-form-group>
                     </b-form>
@@ -393,7 +390,10 @@ export default {
     },
     computed: {
         titleState() {
-            return this.comic.title.length >= 1 && !this.titleExists(this.comic.title);
+            if (this.comic.title.length < 1) {
+                return false;
+            }
+            return null;
         },
         subtitleBtnVariant() {
             if (!this.showSubtitle) return 'outline-dark';
@@ -487,7 +487,12 @@ export default {
             if (this.$route.path.endsWith('new')) {
                 this.$api
                     .post('/comics/', this.comic)
-                    .then(response => (this.comic = response.data))
+                    .then(
+                        response => (
+                            (this.comic = response.data),
+                            (this.saveSuccessful = true)
+                        )
+                    )
                     .catch(error => {
                         console.log(error);
                         this.errored = true;
@@ -496,14 +501,18 @@ export default {
             } else {
                 this.$api
                     .put('/comics/' + this.comic.id, this.comic)
-                    .then(response => (this.comic = response.data))
+                    .then(
+                        response => (
+                            (this.comic = response.data),
+                            (this.saveSuccessful = true)
+                        )
+                    )
                     .catch(error => {
                         console.log(error);
                         this.errored = true;
                     })
                     .finally(() => (this.loading = false));
             }
-            this.saveSuccessful = true;
         },
         addSubtitle() {
             this.comic.subTitle = '';
@@ -602,10 +611,10 @@ export default {
             let optionText = parent.title;
 
             /*
-      parent.subtitle !== null
-          ? (optionText += '. ' + parent.subTitle)
-          : optionText;
-      */
+  parent.subtitle !== null
+      ? (optionText += '. ' + parent.subTitle)
+      : optionText;
+  */
             parent.publisher != null
                 ? (optionText += '. ' + parent.publisher.name)
                 : optionText;
@@ -620,20 +629,9 @@ export default {
             }
             return creator.firstName + ' ' + creator.lastName;
         },
-        titleExists(title) {
-            let exists = false;
-            this.$api
-                .head('/comics/title/' + title)
-                .then(response => (exists = response.status === 200))
-                .catch(error => {
-                    console.log(error);
-                    this.errored = true;
-                });
-            return exists;
-        },
     },
     mounted() {
-        // load parents (athologies, magazines)
+        // load parents (anthologies, magazines)
         this.loadParents();
         // get comic
         if (!this.$route.path.endsWith('new')) {
