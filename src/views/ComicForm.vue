@@ -393,7 +393,7 @@ export default {
     },
     computed: {
         titleState() {
-            return this.comic.title.length >= 1;
+            return this.comic.title.length >= 1 && !this.titleExists(this.comic.title);
         },
         subtitleBtnVariant() {
             if (!this.showSubtitle) return 'outline-dark';
