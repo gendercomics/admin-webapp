@@ -52,9 +52,6 @@ Vue.use({
 
 Vue.prototype.moment = moment;
 
-/** Adding the request and response interceptors */
-//Vue.prototype.$api.interceptors.request.use(authRequestInterceptor);
-
 Vue.use(BootstrapVue);
 
 Vue.prototype.$keycloak
