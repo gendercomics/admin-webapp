@@ -11,6 +11,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faEdit, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import AuthService from './services/authservice';
+import { httpClient } from "./httpclient";
 
 library.add(faEdit, faTimesCircle);
 

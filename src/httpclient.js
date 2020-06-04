@@ -18,10 +18,18 @@ const authInterceptor = config => {
     return config;
 };
 
+/** response interceptpr */
 const responseInterceptor = axios.interceptors.response.use(
     response => response,
     error => {
+        this.$log.debug('response-status=', error.response.status);
 
+        if (error.response.status !== 401) {
+            return Promise.reject(error);
+        }
+        axios.interceptors.response.eject(responseInterceptor);
+
+        this.$log.debug("response-interceptor triggered, continuing ...")
     }
 );
 
@@ -34,17 +42,5 @@ const loggerInterceptor = config => {
 /** Adding the request interceptors */
 httpClient.interceptors.request.use(authInterceptor);
 httpClient.interceptors.request.use(loggerInterceptor);
-
-/** Adding the response interceptors */
-httpClient.interceptors.response.use(
-    response => {
-        /** TODO: Add any response interceptors */
-        return response;
-    },
-    error => {
-        /** TODO: Do something with response error */
-        return Promise.reject(error);
-    }
-);
 
 export { httpClient };
