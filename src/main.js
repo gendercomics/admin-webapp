@@ -28,6 +28,8 @@ const options = {
     showConsoleColors: true,
 };
 
+const authService = new AuthService();
+
 Vue.use(VueLogger, options);
 
 let keycloakUrl = process.env.VUE_APP_KEYCLOAK_AUTH_URL;
@@ -41,91 +43,21 @@ let initOptions = {
     onLoad: 'login-required',
 };
 
-let keycloak = Keycloak(initOptions);
-
-const authService = new AuthService();
-
-/** Auth token interceptors */
-const authRequestInterceptor = config => {
-    keycloak
-        .updateToken(30)
-        .success(() => {
-            Vue.$log.debug('successfully got new token');
-            authService.storeTokens(keycloak.token, keycloak.refreshToken);
-        })
-        .error(() => {
-            Vue.$log.error('updateToken error');
-        });
-
-    const token = authService.getAccessToken();
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-};
-
 Vue.use({
     install(Vue) {
         Vue.prototype.$api = axios.create({ baseURL: apiUrl });
+        Vue.prototype.$keycloak = Keycloak(initOptions);
     },
 });
 
 Vue.prototype.moment = moment;
 
 /** Adding the request and response interceptors */
-Vue.prototype.$api.interceptors.request.use(authRequestInterceptor);
-
-/*
-Vue.prototype.$api.interceptors.response.use(
-    response => {
-        return response;
-    },
-    error => {
-        Vue.$log.debug('response-status=', error.response.status);
-
-        if (error.response.status !== 401) {
-            return new Promise((resolve, reject) => {
-                reject(error);
-            });
-        }
-
-        if (keycloak.isTokenExpired()) {
-            Vue.$log.debug('Token expired');
-        }
-        
-        keycloak
-            .updateToken(0)
-            .success(refreshed => {
-                Vue.$log.debug('Token refreshed=' + refreshed);
-                authService.storeTokens(keycloak.token, keycloak.refreshToken);
-                const config = error.config;
-                const token = authService.getAccessToken();
-                if (token) {
-                    config.headers.Authorization = `Bearer ${token}`;
-                }
-
-                return new Promise((resolve, reject) => {
-                    axios
-                        .request(config)
-                        .then(response => {
-                            resolve(response);
-                        })
-                        .catch(error => {
-                            reject(error);
-                        });
-                });
-            })
-            .error(() => {
-                Vue.$log.error('Failed to refresh token');
-                keycloak.clearToken();
-            });
-    }
-);
- */
+//Vue.prototype.$api.interceptors.request.use(authRequestInterceptor);
 
 Vue.use(BootstrapVue);
 
-keycloak
+Vue.prototype.$keycloak
     .init({ onLoad: initOptions.onLoad })
     .success(auth => {
         if (!auth) {
@@ -139,32 +71,10 @@ keycloak
             render: h => h(App),
         }).$mount('#app');
 
-        authService.storeTokens(keycloak.token, keycloak.refreshToken);
-
-        /*
-        setTimeout(() => {
-            keycloak
-                .updateToken(70)
-                .success(refreshed => {
-                    if (refreshed) {
-                        Vue.$log.debug('Token refreshed' + refreshed);
-                    } else {
-                        Vue.$log.warn(
-                            'Token not refreshed, valid for ' +
-                                Math.round(
-                                    keycloak.tokenParsed.exp +
-                                        keycloak.timeSkew -
-                                        new Date().getTime() / 1000
-                                ) +
-                                ' seconds'
-                        );
-                    }
-                })
-                .error(() => {
-                    Vue.$log.error('Failed to refresh token');
-                });
-        }, 60000);
-         */
+        authService.storeTokens(
+            Vue.prototype.$keycloak.token,
+            Vue.prototype.$keycloak.refreshToken
+        );
     })
     .error(() => {
         Vue.$log.error('Authentication failed!');

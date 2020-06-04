@@ -42,6 +42,7 @@
 // @ is an alias to /src
 //import HelloWorld from "@/components/HelloWorld.vue";
 import Header from '@/components/Header';
+import { httpClient } from '../services/httpclient';
 
 export default {
     name: 'home',
@@ -61,7 +62,7 @@ export default {
         };
     },
     mounted() {
-        this.$api
+        httpClient
             .get('/count')
             .then(response => (this.count = response.data))
             .catch(error => {
