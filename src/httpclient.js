@@ -18,6 +18,13 @@ const authInterceptor = config => {
     return config;
 };
 
+const responseInterceptor = axios.interceptors.response.use(
+    response => response,
+    error => {
+
+    }
+);
+
 /** logger interceptors */
 const loggerInterceptor = config => {
     /** TODO */

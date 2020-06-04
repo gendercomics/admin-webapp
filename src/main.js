@@ -75,6 +75,19 @@ Vue.prototype.moment = moment;
 /** Adding the request and response interceptors */
 Vue.prototype.$api.interceptors.request.use(authRequestInterceptor);
 
+const responseInterceptor = Vue.prototype.$api.interceptors.response.use(
+    response => response,
+    error => {
+        Vue.$log.debug('response-status=', error.response.status);
+        if (error.response.status !== 401) {
+            return new Promise((resolve, reject) => {
+                reject(error);
+            });
+        }
+        axios.interceptors.response.eject(responseInterceptor);
+    }
+);
+
 /*
 Vue.prototype.$api.interceptors.response.use(
     response => {
