@@ -37,7 +37,7 @@ const requestInterceptor = config => {
 };
 
 /** response interceptpr */
-const responseInterceptor = axios.interceptors.response.use(
+const responseInterceptor = httpClient.interceptors.response.use(
     response => response,
     error => {
         Vue.$log.debug('response-status=', error.response.status);
