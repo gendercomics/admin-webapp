@@ -6,6 +6,17 @@
     </div>
 </template>
 
+<script>
+export default {
+    watch: {
+        $route(to) {
+            document.title = to.meta.title || 'gendercomics.net';
+        },
+        immediate: true,
+    },
+};
+</script>
+
 <style lang="scss">
 #app {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
