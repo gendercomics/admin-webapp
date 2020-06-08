@@ -11,7 +11,7 @@
                     <b-nav-item to="/persons">Persons</b-nav-item>
                     <b-nav-item to="/publishers">Publishers</b-nav-item>
                     <b-nav-item to="/roles">Roles</b-nav-item>
-                    <b-nav-item to="/keywords" disabled>Keywords</b-nav-item>
+                    <b-nav-item to="/keywords">Keywords</b-nav-item>
                 </b-navbar-nav>
 
                 <!-- Right aligned nav items -->
