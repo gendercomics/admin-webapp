@@ -45,9 +45,27 @@ const responseInterceptor = httpClient.interceptors.response.use(
         if (error.response.status !== 401) {
             return Promise.reject(error);
         }
-        axios.interceptors.response.eject(responseInterceptor);
+        httpClient.interceptors.response.eject(responseInterceptor);
 
-        Vue.$log.debug('response-interceptor triggered, continuing ...');
+        Vue.$log.debug('response-interceptor: trying token refresh');
+
+        Vue.prototype.$keycloak
+            .updateToken(30)
+            .success(() => {
+                authService.storeTokens(
+                    Vue.prototype.$keycloak.token,
+                    Vue.prototype.$keycloak.refreshToken
+                );
+                Vue.$log.debug('response-interceptor: token refreshed');
+                error.config.headers['Authorization'] =
+                    'Bearer ' + authService.getAccessToken();
+                return httpClient(error.response.config);
+            })
+            .error(() => {
+                Vue.$log.error('token refresh failed');
+                authService.clear();
+                return Promise.reject(error);
+            });
     }
 );
 
