@@ -344,6 +344,7 @@
 import Header from '@/components/Header';
 import InputField from '../components/InputField';
 import SelectField from '../components/SelectField';
+import { httpClient } from '../services/httpclient';
 
 export default {
     name: 'ComicForm',
@@ -485,7 +486,7 @@ export default {
             evt.preventDefault();
             //alert(JSON.stringify(this.comic));
             if (this.$route.path.endsWith('new')) {
-                this.$api
+                httpClient
                     .post('/comics/', this.comic)
                     .then(
                         response => (
@@ -499,7 +500,7 @@ export default {
                     })
                     .finally(() => (this.loading = false));
             } else {
-                this.$api
+                httpClient
                     .put('/comics/' + this.comic.id, this.comic)
                     .then(
                         response => (
@@ -597,7 +598,7 @@ export default {
             });
         },
         loadParents() {
-            this.$api
+            httpClient
                 .get('/comics/parents')
                 .then(response => {
                     this.parents = response.data;
@@ -635,7 +636,7 @@ export default {
         this.loadParents();
         // get comic
         if (!this.$route.path.endsWith('new')) {
-            this.$api
+            httpClient
                 .get(this.$route.path)
                 .then(response => {
                     this.comic = response.data;
@@ -659,7 +660,7 @@ export default {
                 .finally(() => (this.loading = false));
         }
         // get persons
-        this.$api
+        httpClient
             .get('/persons')
             .then(response => (this.persons = response.data))
             .catch(error => {
@@ -668,7 +669,7 @@ export default {
             })
             .finally(() => (this.loading = false));
         // get publishers
-        this.$api
+        httpClient
             .get('/publishers')
             .then(response => (this.publishers = response.data))
             .catch(error => {
@@ -676,7 +677,7 @@ export default {
                 this.errored = true;
             })
             .finally(() => (this.loading = false));
-        this.$api
+        httpClient
             .get('/roles')
             .then(response => (this.roles = response.data))
             .catch(error => {

@@ -140,6 +140,8 @@
 </template>
 
 <script>
+import { httpClient } from '../services/httpclient';
+
 export default {
     name: 'PersonList',
 
@@ -164,7 +166,7 @@ export default {
         };
     },
     mounted() {
-        this.$api
+        httpClient
             .get('/persons')
             .then(
                 response => (

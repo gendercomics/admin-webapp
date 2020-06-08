@@ -8,6 +8,7 @@
 <script>
 import Header from '@/components/Header';
 import ComicList from '@/components/ComicList';
+import { httpClient } from '../services/httpclient';
 
 export default {
     name: 'comics',
@@ -23,7 +24,7 @@ export default {
         };
     },
     mounted() {
-        this.$api
+        httpClient
             .get('/comics/count')
             .then(response => (this.comicCount = response.data))
             .catch(error => {
