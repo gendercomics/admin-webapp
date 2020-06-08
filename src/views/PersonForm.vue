@@ -3,7 +3,11 @@
         <Header />
         <b-container fluid class="mt-4 ml-4 mr-4">
             <b-row>
-                <b-form id="publisher-form" v-if="show">
+                <b-form
+                    id="publisher-form"
+                    v-if="show"
+                    v-on:submit.prevent="onSubmit"
+                >
                     <div>
                         <b-card
                             bg-variant="light"
@@ -82,9 +86,6 @@
                                             <b-button
                                                 type="submit"
                                                 variant="primary"
-                                                @click.stop.prevent.submit()="
-                                                    onSubmit
-                                                "
                                                 >save</b-button
                                             >
                                             <b-button
@@ -117,6 +118,7 @@
 
 <script>
 import Header from '@/components/Header';
+import { httpClient } from '../services/httpclient';
 
 export default {
     name: 'PersonForm',
@@ -139,7 +141,7 @@ export default {
     mounted() {
         // get role
         if (!this.$route.path.endsWith('new')) {
-            this.$api
+            httpClient
                 .get(this.$route.path)
                 .then(response => {
                     this.person = response.data;
@@ -154,7 +156,7 @@ export default {
         onSubmit(evt) {
             evt.preventDefault();
             if (this.$route.path.endsWith('new')) {
-                this.$api
+                httpClient
                     .post('/persons/', this.person)
                     .then(
                         response => (
@@ -167,7 +169,7 @@ export default {
                         this.errored = true;
                     });
             } else {
-                this.$api
+                httpClient
                     .put('/persons/' + this.person.id, this.person)
                     .then(
                         response => (

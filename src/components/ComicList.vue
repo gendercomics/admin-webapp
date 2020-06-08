@@ -161,6 +161,7 @@
 </template>
 
 <script>
+import { httpClient } from '../services/httpclient';
 export default {
     name: 'ComicList',
 
@@ -187,7 +188,7 @@ export default {
         };
     },
     mounted() {
-        this.$api
+        httpClient
             .get('/comics')
             .then(
                 response => (
