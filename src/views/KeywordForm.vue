@@ -55,12 +55,12 @@
                             </b-input-group-append>
 
                             <b-form-invalid-feedback
-                                >Enter at least 4
+                                >Enter at least 1
                                 characters</b-form-invalid-feedback
                             >
                         </b-input-group>
 
-                        <!-- edition -->
+                        <!-- description -->
                         <input-field
                             label="description"
                             v-model="keyword.description"
@@ -99,12 +99,11 @@
 <script>
 import Header from '@/components/Header';
 import InputField from '../components/InputField';
-import SelectField from '../components/SelectField';
+import { httpClient } from '../services/httpclient';
 
 export default {
     name: 'KeywordForm',
     components: {
-        SelectField,
         InputField,
         Header,
     },
@@ -132,7 +131,10 @@ export default {
     },
     computed: {
         nameState() {
-            return this.keyword.name.length >= 4;
+            if (this.keyword.name.length < 1) {
+                return false;
+            }
+            return null;
         },
         descriptionBtnVariant() {
             if (!this.showDescription) return 'outline-dark';
@@ -150,7 +152,7 @@ export default {
             evt.preventDefault();
             //alert(JSON.stringify(this.comic));
             if (this.$route.path.endsWith('new')) {
-                this.$api
+                httpClient
                     .post('/keywords/', this.keyword)
                     .then(response => (this.comic = response.data))
                     .catch(error => {
@@ -159,7 +161,7 @@ export default {
                     })
                     .finally(() => (this.loading = false));
             } else {
-                this.$api
+                httpClient
                     .put('/keywords/' + this.keyword.id, this.keyword)
                     .then(response => (this.keyword = response.data))
                     .catch(error => {
@@ -177,7 +179,7 @@ export default {
     mounted() {
         // get keyword record
         if (!this.$route.path.endsWith('new')) {
-            this.$api
+            httpClient
                 .get(this.$route.path)
                 .then(response => {
                     this.keyword = response.data;

@@ -15,8 +15,9 @@
 
                 <p>
                     {{ count.comics }} comics, {{ count.persons }} persons,
-                    {{ count.publishers }} publishers and
-                    {{ count.roles }} roles are stored in the database.
+                    {{ count.publishers }} publishers, {{ count.roles }} roles
+                    and {{ count.keywords }} keywords are stored in the
+                    database.
                 </p>
 
                 <b-button-group>
@@ -31,6 +32,9 @@
                     >
                     <b-button variant="outline-primary" to="roles"
                         >edit roles</b-button
+                    >
+                    <b-button variant="outline-primary" to="keywords"
+                        >edit keywords</b-button
                     >
                 </b-button-group>
             </b-jumbotron>
@@ -56,6 +60,7 @@ export default {
                 persons: 0,
                 publishers: 0,
                 roles: 0,
+                keywords: 0,
             },
             loading: true,
             errored: false,
