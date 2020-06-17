@@ -10,7 +10,7 @@
                 >
                     <template v-slot="{ tags, disabled, addTag, removeTag }">
                         <b-row>
-                            <b-col class="col-sm-4">
+                            <b-col class="col-sm-3">
                                 <b-dropdown
                                     size="sm"
                                     variant="outline-secondary"
