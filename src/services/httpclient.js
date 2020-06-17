@@ -16,13 +16,13 @@ const authService = new AuthService();
 
 /** Auth token interceptors */
 const requestInterceptor = config => {
-    Vue.prototype.$keycloak
+    Vue.prototype.keycloak
         .updateToken(30)
         .success(() => {
             Vue.$log.debug('successfully got new token');
             authService.storeTokens(
-                Vue.prototype.$keycloak.token,
-                Vue.prototype.$keycloak.refreshToken
+                Vue.prototype.keycloak.token,
+                Vue.prototype.keycloak.refreshToken
             );
         })
         .error(() => {
@@ -49,12 +49,12 @@ const responseInterceptor = httpClient.interceptors.response.use(
 
         Vue.$log.debug('response-interceptor: trying token refresh');
 
-        Vue.prototype.$keycloak
+        Vue.prototype.keycloak
             .updateToken(30)
             .success(() => {
                 authService.storeTokens(
-                    Vue.prototype.$keycloak.token,
-                    Vue.prototype.$keycloak.refreshToken
+                    Vue.prototype.keycloak.token,
+                    Vue.prototype.keycloak.refreshToken
                 );
                 Vue.$log.debug('response-interceptor: token refreshed');
                 error.config.headers['Authorization'] =

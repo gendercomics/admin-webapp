@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
-import axios from 'axios';
 import * as Keycloak from 'keycloak-js';
 import VueLogger from 'vuejs-logger';
 import BootstrapVue from 'bootstrap-vue';
@@ -39,7 +38,6 @@ Vue.use(VueLogger, options);
 
 let keycloakUrl = process.env.VUE_APP_KEYCLOAK_AUTH_URL;
 let keycloakRealm = process.env.VUE_APP_KEYCLOAK_REALM;
-let apiUrl = process.env.VUE_APP_API_URL;
 
 let initOptions = {
     url: keycloakUrl,
@@ -48,18 +46,12 @@ let initOptions = {
     onLoad: 'login-required',
 };
 
-Vue.use({
-    install(Vue) {
-        Vue.prototype.$api = axios.create({ baseURL: apiUrl });
-        Vue.prototype.$keycloak = Keycloak(initOptions);
-    },
-});
-
+Vue.prototype.keycloak = Keycloak(initOptions);
 Vue.prototype.moment = moment;
 
 Vue.use(BootstrapVue);
 
-Vue.prototype.$keycloak
+Vue.prototype.keycloak
     .init({ onLoad: initOptions.onLoad })
     .success(auth => {
         if (!auth) {
@@ -74,8 +66,8 @@ Vue.prototype.$keycloak
         }).$mount('#app');
 
         authService.storeTokens(
-            Vue.prototype.$keycloak.token,
-            Vue.prototype.$keycloak.refreshToken
+            Vue.prototype.keycloak.token,
+            Vue.prototype.keycloak.refreshToken
         );
     })
     .error(() => {
