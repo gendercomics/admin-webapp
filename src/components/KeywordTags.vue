@@ -64,8 +64,7 @@
                                     <b-dropdown-text
                                         v-if="availableOptions.length === 0"
                                     >
-                                        There are no keywords available to
-                                        select
+                                        no keywords available to select
                                     </b-dropdown-text>
                                 </b-dropdown>
                             </b-col>
@@ -111,17 +110,16 @@ export default {
     name: 'KeywordTags',
     props: {
         label: null,
-        /*
         value: {
             type: Array,
             default: () => [],
         },
-       */
     },
     data: function() {
         return {
             search: '',
-            value: [],
+            //options: [],
+            //value: [],
             loading: true,
             keywordOptions: [],
         };
@@ -148,7 +146,7 @@ export default {
         },
         searchDesc() {
             if (this.criteria && this.availableOptions.length === 0) {
-                return 'There are no keywords matching your search criteria';
+                return 'no keywords matching your search criteria';
             }
             return '';
         },
@@ -183,6 +181,11 @@ export default {
     },
     mounted() {
         this.loadOptions();
+        /*
+        this.keywordOptions.forEach(function(item) {
+            this.options.push(item.name);
+        });
+         */
     },
 };
 </script>

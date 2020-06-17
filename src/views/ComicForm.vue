@@ -276,7 +276,11 @@
                         />
 
                         <!-- keywords -->
-                        <KeywordTags label="keywords" v-if="showKeywords" />
+                        <KeywordTags
+                            label="keywords"
+                            v-model="comic.keywords"
+                            v-if="showKeywords"
+                        />
 
                         <!-- status -->
                         <b-form-group>
