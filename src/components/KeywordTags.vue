@@ -83,7 +83,7 @@
                                             @remove="removeTag(tag)"
                                             :title="tag"
                                             :disabled="disabled"
-                                            variant="info"
+                                            variant="secondary"
                                             >{{ tag }}</b-form-tag
                                         >
                                     </li>
@@ -114,12 +114,14 @@ export default {
             type: Array,
             default: () => [],
         },
+        type: {
+            type: String,
+            default: 'content',
+        },
     },
     data: function() {
         return {
             search: '',
-            //options: [],
-            //value: [],
             loading: true,
             keywordOptions: [],
         };
@@ -177,7 +179,7 @@ export default {
         },
         loadOptions() {
             httpClient
-                .get('/keywords?type=content')
+                .get('/keywords?type=' + this.type)
                 .then(response => (this.keywordOptions = response.data))
                 .catch(error => {
                     console.log(error);
