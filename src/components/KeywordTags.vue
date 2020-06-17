@@ -69,7 +69,7 @@
                                 </b-dropdown>
                             </b-col>
 
-                            <b-col>
+                            <b-col class="pl-0 pb-0">
                                 <ul
                                     v-if="tags.length > 0"
                                     class="list-inline d-inline-block ml-1"
@@ -157,6 +157,14 @@ export default {
             });
             return list;
         },
+        localValue: {
+            get() {
+                return this.value;
+            },
+            set(val) {
+                this.$emit('input', val);
+            },
+        },
     },
     methods: {
         onOptionClick({ option, addTag }) {
@@ -164,9 +172,8 @@ export default {
             this.search = '';
         },
         deleteValue() {
-            this.$log.debug('TODO: delete ' + this.label);
-            //this.values = null;
-            // TODO implement as in selectfield
+            this.$log.debug('delete ' + this.label);
+            this.localValue = null;
         },
         loadOptions() {
             httpClient
