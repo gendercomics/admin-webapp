@@ -144,6 +144,8 @@
 </template>
 
 <script>
+import { httpClient } from '../services/httpclient';
+
 export default {
     name: 'KeywordList',
 
@@ -170,7 +172,7 @@ export default {
         };
     },
     mounted() {
-        this.$api
+        httpClient
             .get('/keywords')
             .then(
                 response => (

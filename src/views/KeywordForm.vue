@@ -154,7 +154,12 @@ export default {
             if (this.$route.path.endsWith('new')) {
                 httpClient
                     .post('/keywords/', this.keyword)
-                    .then(response => (this.comic = response.data))
+                    .then(
+                        response => (
+                            (this.comic = response.data),
+                            (this.saveSuccessful = true)
+                        )
+                    )
                     .catch(error => {
                         console.log(error);
                         this.errored = true;
@@ -163,14 +168,16 @@ export default {
             } else {
                 httpClient
                     .put('/keywords/' + this.keyword.id, this.keyword)
-                    .then(response => (this.keyword = response.data))
+                    .then(
+                        response => (this.keyword = response.data),
+                        (this.saveSuccessful = true)
+                    )
                     .catch(error => {
                         console.log(error);
                         this.errored = true;
                     })
                     .finally(() => (this.loading = false));
             }
-            this.saveSuccessful = true;
         },
         addDescription() {
             this.keyword.description = '';

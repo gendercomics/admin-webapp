@@ -9,10 +9,15 @@ import './styles/styles.scss';
 import moment from 'moment';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faEdit, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import {
+    faEdit,
+    faSearch,
+    faTags,
+    faTimesCircle,
+} from '@fortawesome/free-solid-svg-icons';
 import AuthService from './services/authservice';
 
-library.add(faEdit, faTimesCircle);
+library.add(faEdit, faSearch, faTags, faTimesCircle);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 

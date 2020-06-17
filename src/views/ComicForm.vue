@@ -86,6 +86,14 @@
                             v-if="this.showInButtons"
                             >pages
                         </b-button>
+
+                        <!-- keywords -->
+                        <b-button
+                            :variant="keywordsBtnVariant"
+                            @click="addKeywords"
+                            :disabled="this.showKeywords"
+                            >keywords
+                        </b-button>
                     </b-button-group>
                 </b-col>
 
@@ -253,7 +261,7 @@
                                 </option>
                             </b-form-select>
                             <template v-slot:append>
-                                <b-button @click="removePublisher()">
+                                <b-button @click="removeIn()">
                                     <font-awesome-icon icon="times-circle" />
                                 </b-button>
                             </template>
@@ -266,6 +274,9 @@
                             v-if="showPages"
                             type="text"
                         />
+
+                        <!-- keywords -->
+                        <KeywordTags label="keywords" v-if="showKeywords" />
 
                         <!-- status -->
                         <b-form-group>
@@ -292,7 +303,6 @@
                 </b-col>
             </b-row>
 
-            <!--
             <b-row class="mt-4">
                 <b-col id="json-comic">
                     <b-card header="comic">
@@ -301,7 +311,7 @@
                 </b-col>
             </b-row>
 
-
+            <!--
             <b-row class="mt-4">
                 <b-col id="json-some-values">
                     <b-card header="some data">
@@ -345,10 +355,12 @@ import Header from '@/components/Header';
 import InputField from '../components/InputField';
 import SelectField from '../components/SelectField';
 import { httpClient } from '../services/httpclient';
+import KeywordTags from '../components/KeywordTags';
 
 export default {
     name: 'ComicForm',
     components: {
+        KeywordTags,
         SelectField,
         InputField,
         Header,
@@ -367,6 +379,7 @@ export default {
                 link: null,
                 isbn: null,
                 partOf: null,
+                keywords: null,
                 metaData: {
                     createdOn: null,
                     createdBy: null,
@@ -439,6 +452,10 @@ export default {
         backBtnVariant() {
             return 'outline-danger';
         },
+        keywordsBtnVariant() {
+            if (!this.showKeywords) return 'outline-dark';
+            return 'dark';
+        },
         showSubtitle() {
             return this.comic.subTitle != null;
         },
@@ -479,6 +496,9 @@ export default {
                 this.comic.type === '' ||
                 this.comic.type === 'comic'
             );
+        },
+        showKeywords() {
+            return this.comic.keywords != null;
         },
     },
     methods: {
@@ -561,6 +581,9 @@ export default {
             }
             this.comic.partOf.pages = '';
         },
+        addKeywords() {
+            this.comic.keywords = [];
+        },
         changePublisher() {
             console.log(this.selectedPublisher);
             this.publishers.forEach(publisher => {
@@ -572,6 +595,9 @@ export default {
         removePublisher() {
             this.comic.publisher = null;
             this.selectedPublisher = null;
+        },
+        removeIn() {
+            this.comic.partOf = null;
         },
         personUpdated(idx) {
             console.log('personUpdated=' + idx);
