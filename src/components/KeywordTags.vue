@@ -180,8 +180,7 @@ export default {
         },
         deleteValue() {
             this.$log.debug('delete ' + this.label);
-            this.localValue = null;
-            this.tagNames = null;
+            this.$emit("input", null);
         },
         loadOptions() {
             httpClient
