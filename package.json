@@ -1,6 +1,6 @@
 {
   "name": "admin-webapp",
-  "version": "1.0.7-SNAPSHOT",
+  "version": "1.1.0-SNAPSHOT",
   "private": true,
   "scripts": {
     "serve dev": "vue-cli-service serve --mode development",
@@ -16,7 +16,6 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.27",
     "@fortawesome/free-solid-svg-icons": "^5.12.1",
     "@fortawesome/vue-fontawesome": "^0.1.9",
-    "@johmun/vue-tags-input": "^2.1.0",
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
     "bootstrap-vue": "^2.6.1",

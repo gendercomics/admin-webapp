@@ -104,7 +104,7 @@
 import { httpClient } from '../services/httpclient';
 
 export default {
-    name: 'KeywordTags',
+    name: 'TagInput',
     props: {
         label: null,
         value: {
@@ -176,11 +176,11 @@ export default {
         onTagRemoved({ tag, removeTag }) {
             removeTag(tag);
             this.tagNames.splice(this.tagNames.indexOf(tag), 1);
-            this.$emit("input", this.mappedTags);
+            this.$emit('input', this.mappedTags);
         },
         deleteValue() {
             this.$log.debug('delete ' + this.label);
-            this.$emit("input", null);
+            this.$emit('input', null);
         },
         loadOptions() {
             httpClient
