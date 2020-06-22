@@ -97,7 +97,6 @@
                 </template>
             </b-input-group>
         </b-form-group>
-        {{ mappedTags }}
     </div>
 </template>
 
@@ -175,8 +174,9 @@ export default {
             this.search = '';
         },
         onTagRemoved({ tag, removeTag }) {
-            this.tagNames.splice(this.tagNames.indexOf(tag), 1);
             removeTag(tag);
+            this.tagNames.splice(this.tagNames.indexOf(tag), 1);
+            this.$emit("input", this.mappedTags);
         },
         deleteValue() {
             this.$log.debug('delete ' + this.label);

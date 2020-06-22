@@ -312,6 +312,7 @@
                 </b-col>
             </b-row>
 
+            <!--
             <b-row class="mt-4">
                 <b-col id="json-comic">
                     <b-card header="comic">
@@ -320,7 +321,7 @@
                 </b-col>
             </b-row>
 
-            <!--
+
             <b-row class="mt-4">
                 <b-col id="json-some-values">
                     <b-card header="some data">
