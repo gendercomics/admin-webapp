@@ -365,12 +365,10 @@ import InputField from '../components/InputField';
 import SelectField from '../components/SelectField';
 import { httpClient } from '../services/httpclient';
 import KeywordTags from '../components/KeywordTags';
-import TagInput from '../components/TagInput';
 
 export default {
     name: 'ComicForm',
     components: {
-        TagInput,
         KeywordTags,
         SelectField,
         InputField,

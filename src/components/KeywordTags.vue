@@ -2,12 +2,7 @@
     <div class="mt-2">
         <b-form-group>
             <b-input-group>
-                <b-form-tags
-                    v-model="localValue"
-                    @input="$emit('input', $event)"
-                    no-outer-focus
-                    class="mb-2"
-                >
+                <b-form-tags v-model="localValue" no-outer-focus class="mb-2">
                     <template v-slot="{ tags, disabled, addTag, removeTag }">
                         <b-row>
                             <b-col class="col-sm-3">
@@ -83,7 +78,7 @@
                                             @remove="
                                                 onTagRemoved({ tag, removeTag })
                                             "
-                                            :title="tag"
+                                            :title="tag.name"
                                             :disabled="disabled"
                                             variant="secondary"
                                             >{{ tag }}</b-form-tag
@@ -158,10 +153,10 @@ export default {
         },
         localValue: {
             get() {
-                return this.value;
+                return this.mappedTags;
             },
-            set(val) {
-                this.$emit('input', val);
+            set() {
+                this.$emit('input', this.mappedTags);
             },
         },
         mappedTags: function() {
@@ -186,6 +181,7 @@ export default {
         deleteValue() {
             this.$log.debug('delete ' + this.label);
             this.localValue = null;
+            this.tagNames = null;
         },
         loadOptions() {
             httpClient
@@ -197,9 +193,15 @@ export default {
                 })
                 .finally(() => (this.loading = false));
         },
+        initTagNames() {
+            this.value.forEach(value => {
+                this.tagNames.push(value.name);
+            });
+        },
     },
-    mounted() {
+    created() {
         this.loadOptions();
+        this.initTagNames();
     },
 };
 </script>
