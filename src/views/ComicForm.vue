@@ -275,12 +275,17 @@
                             type="text"
                         />
 
-                        <!-- keywords -->
+                        <!-- keywords (content) -->
                         <KeywordTags
                             label="keywords"
                             v-model="comic.keywords"
+                            type="content"
                             v-if="showKeywords"
                         />
+
+                        <!--
+                        <TagInput v-if="showKeywords" />
+                        -->
 
                         <!-- status -->
                         <b-form-group>
@@ -360,10 +365,12 @@ import InputField from '../components/InputField';
 import SelectField from '../components/SelectField';
 import { httpClient } from '../services/httpclient';
 import KeywordTags from '../components/KeywordTags';
+import TagInput from '../components/TagInput';
 
 export default {
     name: 'ComicForm',
     components: {
+        TagInput,
         KeywordTags,
         SelectField,
         InputField,

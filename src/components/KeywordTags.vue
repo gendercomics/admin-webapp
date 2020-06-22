@@ -3,7 +3,7 @@
         <b-form-group>
             <b-input-group>
                 <b-form-tags
-                    :value="value"
+                    v-model="localValue"
                     @input="$emit('input', $event)"
                     no-outer-focus
                     class="mb-2"
@@ -51,7 +51,7 @@
                                     <b-dropdown-divider></b-dropdown-divider>
                                     <b-dropdown-item-button
                                         v-for="option in availableOptions"
-                                        :key="option"
+                                        :key="option.id"
                                         @click="
                                             onOptionClick({
                                                 option,
@@ -59,7 +59,7 @@
                                             })
                                         "
                                     >
-                                        {{ option }}
+                                        {{ option.name }}
                                     </b-dropdown-item-button>
                                     <b-dropdown-text
                                         v-if="availableOptions.length === 0"
@@ -69,21 +69,23 @@
                                 </b-dropdown>
                             </b-col>
 
-                            <b-col>
+                            <b-col class="pl-0 pb-0">
                                 <ul
                                     v-if="tags.length > 0"
                                     class="list-inline d-inline-block ml-1"
                                 >
                                     <li
-                                        v-for="tag in tags"
+                                        v-for="tag in tagNames"
                                         :key="tag"
                                         class="list-inline-item"
                                     >
                                         <b-form-tag
-                                            @remove="removeTag(tag)"
+                                            @remove="
+                                                onTagRemoved({ tag, removeTag })
+                                            "
                                             :title="tag"
                                             :disabled="disabled"
-                                            variant="info"
+                                            variant="secondary"
                                             >{{ tag }}</b-form-tag
                                         >
                                     </li>
@@ -100,6 +102,7 @@
                 </template>
             </b-input-group>
         </b-form-group>
+        {{ mappedTags }}
     </div>
 </template>
 
@@ -114,14 +117,17 @@ export default {
             type: Array,
             default: () => [],
         },
+        type: {
+            type: String,
+            default: 'content',
+        },
     },
     data: function() {
         return {
+            tagNames: [],
+            options: [],
             search: '',
-            //options: [],
-            //value: [],
             loading: true,
-            keywordOptions: [],
         };
     },
     computed: {
@@ -133,12 +139,12 @@ export default {
             const criteria = this.criteria;
             // Filter out already selected options
             const options = this.options.filter(
-                opt => this.value.indexOf(opt) === -1
+                opt => this.tagNames.indexOf(opt.name) === -1
             );
             if (criteria) {
                 // Show only options that match criteria
                 return options.filter(
-                    opt => opt.toLowerCase().indexOf(criteria) > -1
+                    opt => opt.name.toLowerCase().indexOf(criteria) > -1
                 );
             }
             // Show all options available
@@ -150,28 +156,41 @@ export default {
             }
             return '';
         },
-        options() {
-            let list = [];
-            this.keywordOptions.forEach(function(item) {
-                list.push(item.name);
-            });
-            return list;
+        localValue: {
+            get() {
+                return this.value;
+            },
+            set(val) {
+                this.$emit('input', val);
+            },
+        },
+        mappedTags: function() {
+            return this.options.filter(option =>
+                this.tagNames.includes(option.name)
+            );
         },
     },
     methods: {
         onOptionClick({ option, addTag }) {
-            addTag(option);
+            this.$log.debug(
+                'option clicked: ' + option.id + '::' + option.name
+            );
+            addTag(option.name);
+            this.tagNames.push(option.name);
             this.search = '';
         },
+        onTagRemoved({ tag, removeTag }) {
+            this.tagNames.splice(this.tagNames.indexOf(tag), 1);
+            removeTag(tag);
+        },
         deleteValue() {
-            this.$log.debug('TODO: delete ' + this.label);
-            //this.values = null;
-            // TODO implement as in selectfield
+            this.$log.debug('delete ' + this.label);
+            this.localValue = null;
         },
         loadOptions() {
             httpClient
-                .get('/keywords?type=content')
-                .then(response => (this.keywordOptions = response.data))
+                .get('/keywords?type=' + this.type)
+                .then(response => (this.options = response.data))
                 .catch(error => {
                     console.log(error);
                     this.errored = true;
@@ -181,11 +200,6 @@ export default {
     },
     mounted() {
         this.loadOptions();
-        /*
-        this.keywordOptions.forEach(function(item) {
-            this.options.push(item.name);
-        });
-         */
     },
 };
 </script>
