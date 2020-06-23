@@ -16,6 +16,7 @@
 
         <b-container class="mt-3" fluid>
 
+            <b-card no-body>
             <b-tabs>
                 <b-tab title="en">
                     <b-row class="mt-2">
@@ -100,7 +101,7 @@
                 <b-tab title="de">deutscher tab</b-tab>
             </b-tabs>
 
-
+            </b-card>
 
 
         </b-container>
