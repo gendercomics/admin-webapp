@@ -15,83 +15,94 @@
         </div>
 
         <b-container class="mt-3" fluid>
-            <b-row>
-                <b-col id="button-col" cols="1">
-                    <b-button-group vertical>
-                        <b-button disabled>keyword</b-button>
 
-                        <b-button
-                            :variant="descriptionBtnVariant"
-                            @click="addDescription"
-                            :disabled="this.showDescription"
-                            >description</b-button
-                        >
-                    </b-button-group>
-                </b-col>
+            <b-tabs>
+                <b-tab title="en">
+                    <b-row class="mt-2">
+                        <b-col id="button-col" cols="1">
+                            <b-button-group vertical>
+                                <b-button disabled>keyword</b-button>
 
-                <b-col id="form-col">
-                    <b-form @submit="onSubmit" v-if="show">
-                        <!-- name -->
-                        <b-input-group
-                            prepend="name"
-                            id="input-group-name"
-                            label-for="input-name"
-                            size="lg"
-                        >
-                            <b-form-input
-                                id="input-name"
-                                v-model="keyword.name"
-                                required
-                                placeholder="Enter keyword"
-                                :state="nameState"
-                            />
-
-                            <b-input-group-append>
-                                <b-form-select
-                                    :options="typeOptions"
-                                    size="lg"
-                                    v-model="keyword.type"
-                                ></b-form-select>
-                            </b-input-group-append>
-
-                            <b-form-invalid-feedback
-                                >Enter at least 1
-                                characters</b-form-invalid-feedback
-                            >
-                        </b-input-group>
-
-                        <!-- description -->
-                        <input-field
-                            label="description"
-                            v-model="keyword.description"
-                            v-if="showDescription"
-                            type="text"
-                        />
-
-                        <!-- status -->
-                        <b-form-group>
-                            <!-- action buttons -->
-                            <b-button-group class="mt-3 float-right">
-                                <!-- editing status -->
-                                <b-form-select
-                                    :options="statusOptions"
-                                    v-model="keyword.metaData.status"
-                                />
-
-                                <b-button type="submit" variant="primary"
-                                    >save</b-button
-                                >
                                 <b-button
-                                    to="/keywords"
-                                    type="reset"
-                                    :variant="backBtnVariant"
-                                    >back</b-button
+                                        :variant="descriptionBtnVariant"
+                                        @click="addDescription"
+                                        :disabled="this.showDescription"
+                                >description</b-button
                                 >
                             </b-button-group>
-                        </b-form-group>
-                    </b-form>
-                </b-col>
-            </b-row>
+                        </b-col>
+
+                        <b-col id="form-col">
+                            <b-form @submit="onSubmit" v-if="show">
+                                <!-- name -->
+                                <b-input-group
+                                        prepend="name"
+                                        id="input-group-name"
+                                        label-for="input-name"
+                                        size="lg"
+                                >
+                                    <b-form-input
+                                            id="input-name"
+                                            v-model="keyword.name"
+                                            required
+                                            placeholder="Enter keyword"
+                                            :state="nameState"
+                                    />
+
+                                    <b-input-group-append>
+                                        <b-form-select
+                                                :options="typeOptions"
+                                                size="lg"
+                                                v-model="keyword.type"
+                                        ></b-form-select>
+                                    </b-input-group-append>
+
+                                    <b-form-invalid-feedback
+                                    >Enter at least 1
+                                        characters</b-form-invalid-feedback
+                                    >
+                                </b-input-group>
+
+                                <!-- description -->
+                                <input-field
+                                        label="description"
+                                        v-model="keyword.description"
+                                        v-if="showDescription"
+                                        type="text"
+                                />
+
+                                <!-- action buttons -->
+                                <b-form-group>
+                                    <b-button-group class="mt-3 float-right">
+                                        <!-- editing status -->
+                                        <b-form-select
+                                                :options="statusOptions"
+                                                v-model="keyword.metaData.status"
+                                        />
+
+                                        <b-button type="submit" variant="primary"
+                                        >save</b-button
+                                        >
+                                        <b-button
+                                                to="/keywords"
+                                                type="reset"
+                                                :variant="backBtnVariant"
+                                        >back</b-button
+                                        >
+                                    </b-button-group>
+                                </b-form-group>
+                            </b-form>
+                        </b-col>
+                    </b-row>
+
+
+                </b-tab>
+                <b-tab title="de">deutscher tab</b-tab>
+            </b-tabs>
+
+
+
+
         </b-container>
     </div>
 </template>
