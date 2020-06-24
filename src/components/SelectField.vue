@@ -1,5 +1,5 @@
 <template>
-    <b-input-group class="pt-2" :prepend="this.label">
+    <b-input-group :prepend="this.label">
         <b-form-select
             id="input-publisher"
             :options="this.options"
@@ -7,7 +7,7 @@
             text-field="name"
             v-model="localValue"
         />
-        <template v-slot:append>
+        <template v-slot:append v-if="removable">
             <b-button @click="deleteValue"
                 ><font-awesome-icon icon="times-circle"
             /></b-button>
@@ -22,6 +22,10 @@ export default {
         label: null,
         options: null,
         selected: null,
+        removable: {
+            type: Boolean,
+            default: false,
+        },
     },
     computed: {
         localValue: {

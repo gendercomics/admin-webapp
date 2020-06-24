@@ -14,96 +14,88 @@
             >
         </div>
 
-        <b-container class="mt-3" fluid>
+        <b-container class="mt-2" fluid>
 
-            <b-card no-body>
-            <b-tabs>
-                <b-tab title="en">
-                    <b-row class="mt-2">
-                        <b-col id="button-col" cols="1">
-                            <b-button-group vertical>
-                                <b-button disabled>keyword</b-button>
+            <div>keyword: {{keyword.name}}</div>
 
-                                <b-button
-                                        :variant="descriptionBtnVariant"
-                                        @click="addDescription"
-                                        :disabled="this.showDescription"
-                                >description</b-button
-                                >
-                            </b-button-group>
-                        </b-col>
+            <b-form @submit="onSubmit" v-if="show">
+                <b-row class="m-2">
+                    <!-- type -->
+                    <select-field label="type" :options="typeOptions" />
+                </b-row>
 
-                        <b-col id="form-col">
-                            <b-form @submit="onSubmit" v-if="show">
-                                <!-- name -->
-                                <b-input-group
-                                        prepend="name"
-                                        id="input-group-name"
-                                        label-for="input-name"
-                                        size="lg"
-                                >
-                                    <b-form-input
-                                            id="input-name"
-                                            v-model="keyword.name"
-                                            required
-                                            placeholder="Enter keyword"
-                                            :state="nameState"
-                                    />
+                <b-row class="m-2">
 
-                                    <b-input-group-append>
-                                        <b-form-select
-                                                :options="typeOptions"
-                                                size="lg"
-                                                v-model="keyword.type"
-                                        ></b-form-select>
-                                    </b-input-group-append>
+                    <b-card no-body class="mt-2" style="width: 100%">
+                        <b-tabs>
+                            <b-tab title="de">
+                                <b-row>
+                                    <b-col id="button-col" cols="1" class="m-2">
+                                        <b-button-group vertical>
+                                            <b-button disabled>keyword</b-button>
+                                            <b-button
+                                                    :variant="descriptionBtnVariant"
+                                                    @click="addDescription"
+                                                    :disabled="this.showDescription"
+                                            >description</b-button
+                                            >
+                                        </b-button-group>
+                                    </b-col>
 
-                                    <b-form-invalid-feedback
-                                    >Enter at least 1
-                                        characters</b-form-invalid-feedback
-                                    >
-                                </b-input-group>
+                                    <b-col id="form-col">
 
-                                <!-- description -->
-                                <input-field
-                                        label="description"
-                                        v-model="keyword.description"
-                                        v-if="showDescription"
-                                        type="text"
-                                />
-
-                                <!-- action buttons -->
-                                <b-form-group>
-                                    <b-button-group class="mt-3 float-right">
-                                        <!-- editing status -->
-                                        <b-form-select
-                                                :options="statusOptions"
-                                                v-model="keyword.metaData.status"
+                                        <!-- name -->
+                                        <input-field
+                                                label="name"
+                                                v-model="keyword.name"
+                                                class="m-2 pr-3"
                                         />
 
-                                        <b-button type="submit" variant="primary"
-                                        >save</b-button
-                                        >
-                                        <b-button
-                                                to="/keywords"
-                                                type="reset"
-                                                :variant="backBtnVariant"
-                                        >back</b-button
-                                        >
-                                    </b-button-group>
-                                </b-form-group>
-                            </b-form>
-                        </b-col>
-                    </b-row>
+                                        <!-- description -->
+                                        <input-field
+                                                label="description"
+                                                v-model="keyword.description"
+                                                v-if="showDescription"
+                                                type="text"
+                                                removable
+                                        />
 
+                                    </b-col>
 
-                </b-tab>
-                <b-tab title="de">deutscher tab</b-tab>
-            </b-tabs>
+                                </b-row>
 
-            </b-card>
+                            </b-tab>
+                            <b-tab title="en" />
+                        </b-tabs>
+                    </b-card>
 
+                </b-row>
 
+                <b-row class="ml-2">
+
+                <!-- action buttons -->
+                <b-form-group>
+                    <b-button-group class="mt-3 float-right">
+                        <!-- editing status -->
+                        <b-form-select
+                                :options="statusOptions"
+                                v-model="keyword.metaData.status"
+                        />
+
+                        <b-button type="submit" variant="primary"
+                        >save</b-button
+                        >
+                        <b-button
+                                to="/keywords"
+                                type="reset"
+                                :variant="backBtnVariant"
+                        >back</b-button
+                        >
+                    </b-button-group>
+                </b-form-group>
+                </b-row>
+
+            </b-form>
         </b-container>
     </div>
 </template>
@@ -111,12 +103,14 @@
 <script>
 import Header from '@/components/Header';
 import InputField from '../components/InputField';
+import SelectField from '../components/SelectField';
 import { httpClient } from '../services/httpclient';
 
 export default {
     name: 'KeywordForm',
     components: {
         InputField,
+        SelectField,
         Header,
     },
     data() {

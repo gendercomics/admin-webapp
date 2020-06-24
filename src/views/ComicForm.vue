@@ -359,7 +359,6 @@
 <script>
 import Header from '@/components/Header';
 import InputField from '../components/InputField';
-import SelectField from '../components/SelectField';
 import { httpClient } from '../services/httpclient';
 import TagInput from '../components/TagInput';
 
@@ -367,7 +366,6 @@ export default {
     name: 'ComicForm',
     components: {
         TagInput,
-        SelectField,
         InputField,
         Header,
     },
