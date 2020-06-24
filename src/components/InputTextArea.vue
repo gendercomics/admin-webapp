@@ -1,13 +1,13 @@
 <template>
     <b-input-group :prepend="this.label">
         <b-form-textarea
-                v-model="localValue"
-                :rows="this.rows"
-                placeholder="write something ..."
+            v-model="localValue"
+            :rows="this.rows"
+            placeholder="write something ..."
         />
         <template v-slot:append v-if="removable">
             <b-button @click="deleteValue"
-            ><font-awesome-icon icon="times-circle"
+                ><font-awesome-icon icon="times-circle"
             /></b-button>
         </template>
     </b-input-group>

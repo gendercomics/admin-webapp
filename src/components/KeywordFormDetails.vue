@@ -2,7 +2,7 @@
     <div class="ml-2">
         <div>{{ value }}</div>
 
-<!--
+        <!--
         <b-row class="ml-2">
             <div id="button-col" class="mt-2 mb-2">
                 <b-button-group vertical>

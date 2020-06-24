@@ -1,6 +1,10 @@
 <template>
     <b-input-group :prepend="this.label" :size="this.size">
-        <b-form-input v-model="localValue" :type="this.type" :disabled="this.disabled"/>
+        <b-form-input
+            v-model="localValue"
+            :type="this.type"
+            :disabled="this.disabled"
+        />
         <template v-slot:append v-if="removable">
             <b-button @click="deleteValue"
                 ><font-awesome-icon icon="times-circle"

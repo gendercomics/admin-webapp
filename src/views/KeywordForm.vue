@@ -15,13 +15,13 @@
         </div>
 
         <b-container class="mt-2" fluid>
-
             <div class="m-2">
-                <input-field label="keyword"
-                             v-model="keyword.name"
-                             size="lg"
-                             disabled
-                            />
+                <input-field
+                    label="keyword"
+                    v-model="keyword.name"
+                    size="lg"
+                    disabled
+                />
             </div>
 
             <b-form @submit="onSubmit" v-if="show">
@@ -31,81 +31,74 @@
                 </b-row>
 
                 <b-row class="m-2">
-
                     <b-card no-body class="mt-2" style="width: 100%">
                         <b-tabs>
                             <b-tab title="de">
-
-
-                                <keyword-form-details v-model="keyword.values.de" />
-
+                                <keyword-form-details
+                                    v-model="keyword.values.de"
+                                />
 
                                 <b-row class="ml-2">
                                     <div id="button-col" class="mt-2 mb-2">
                                         <b-button-group vertical>
-                                            <b-button disabled>keyword</b-button>
+                                            <b-button disabled
+                                                >keyword</b-button
+                                            >
                                             <b-button
-                                                    :variant="descriptionBtnVariant"
-                                                    @click="addDescription"
-                                                    :disabled="this.showDescription"
-                                            >description</b-button
+                                                :variant="descriptionBtnVariant"
+                                                @click="addDescription"
+                                                :disabled="this.showDescription"
+                                                >description</b-button
                                             >
                                         </b-button-group>
                                     </div>
 
                                     <b-col id="form-col" class="pl-0 mr-3">
-
                                         <!-- name -->
                                         <input-field
-                                                label="name"
-                                                v-model="keyword.name"
-                                                class="m-2"
+                                            label="name"
+                                            v-model="keyword.name"
+                                            class="m-2"
                                         />
 
                                         <!-- description -->
                                         <input-text-area
-                                                class="m-2"
-                                                label="description"
-                                                v-model="keyword.description"
-                                                v-if="showDescription"
-                                                removable
+                                            class="m-2"
+                                            label="description"
+                                            v-model="keyword.description"
+                                            v-if="showDescription"
+                                            removable
                                         />
-
                                     </b-col>
-
                                 </b-row>
-
                             </b-tab>
                             <b-tab title="en" />
                         </b-tabs>
                     </b-card>
-
                 </b-row>
 
                 <b-row class="ml-2">
-
-                <!-- action buttons -->
-                <b-form-group>
-                    <b-button-group class="mt-3 float-right">
-                        <!-- editing status -->
-                        <b-form-select
+                    <!-- action buttons -->
+                    <b-form-group>
+                        <b-button-group class="mt-3 float-right">
+                            <!-- editing status -->
+                            <b-form-select
                                 :options="statusOptions"
                                 v-model="keyword.metaData.status"
-                        />
+                            />
 
-                        <b-button type="submit" variant="primary"
-                        >save</b-button
-                        >
-                        <b-button
+                            <b-button type="submit" variant="primary"
+                                >save</b-button
+                            >
+                            <b-button
                                 to="/keywords"
                                 type="reset"
                                 :variant="backBtnVariant"
-                        >back</b-button
-                        >
-                    </b-button-group>
-                </b-form-group>
+                                >back</b-button
+                            >
+                        </b-button-group>
+                    </b-form-group>
                 </b-row>
-
             </b-form>
         </b-container>
     </div>
@@ -115,9 +108,9 @@
 import Header from '@/components/Header';
 import InputField from '../components/InputField';
 import SelectField from '../components/SelectField';
-import InputTextArea from "../components/InputTextArea";
+import InputTextArea from '../components/InputTextArea';
 import { httpClient } from '../services/httpclient';
-import KeywordFormDetails from "../components/KeywordFormDetails";
+import KeywordFormDetails from '../components/KeywordFormDetails';
 
 export default {
     name: 'KeywordForm',
@@ -143,11 +136,12 @@ export default {
                 },
                 values: [
                     {
-                    de: {
-                        name: null,
-                        description: null,
-                    }
-                }],
+                        de: {
+                            name: null,
+                            description: null,
+                        },
+                    },
+                ],
             },
             show: true,
             loading: true,
