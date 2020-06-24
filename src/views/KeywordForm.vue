@@ -35,6 +35,11 @@
                     <b-card no-body class="mt-2" style="width: 100%">
                         <b-tabs>
                             <b-tab title="de">
+
+
+                                <keyword-form-details v-model="keyword.values.de" />
+
+
                                 <b-row class="ml-2">
                                     <div id="button-col" class="mt-2 mb-2">
                                         <b-button-group vertical>
@@ -112,10 +117,12 @@ import InputField from '../components/InputField';
 import SelectField from '../components/SelectField';
 import InputTextArea from "../components/InputTextArea";
 import { httpClient } from '../services/httpclient';
+import KeywordFormDetails from "../components/KeywordFormDetails";
 
 export default {
     name: 'KeywordForm',
     components: {
+        KeywordFormDetails,
         InputField,
         SelectField,
         InputTextArea,
@@ -134,6 +141,13 @@ export default {
                     changedBy: null,
                     status: 'DRAFT',
                 },
+                values: [
+                    {
+                    de: {
+                        name: null,
+                        description: null,
+                    }
+                }],
             },
             show: true,
             loading: true,
