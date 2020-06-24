@@ -1,9 +1,13 @@
 <template>
-    <b-input-group :prepend="this.label" :size="this.size">
-        <b-form-input v-model="localValue" :type="this.type" :disabled="this.disabled"/>
+    <b-input-group :prepend="this.label">
+        <b-form-textarea
+                v-model="localValue"
+                :rows="this.rows"
+                placeholder="write something ..."
+        />
         <template v-slot:append v-if="removable">
             <b-button @click="deleteValue"
-                ><font-awesome-icon icon="times-circle"
+            ><font-awesome-icon icon="times-circle"
             /></b-button>
         </template>
     </b-input-group>
@@ -15,7 +19,10 @@ export default {
     props: {
         label: null,
         value: null,
-        type: null,
+        rows: {
+            type: Number,
+            default: 2,
+        },
         removable: {
             type: Boolean,
             default: false,

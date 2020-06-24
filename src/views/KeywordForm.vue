@@ -16,7 +16,13 @@
 
         <b-container class="mt-2" fluid>
 
-            <div>keyword: {{keyword.name}}</div>
+            <div class="m-2">
+                <input-field label="keyword"
+                             v-model="keyword.name"
+                             size="lg"
+                             disabled
+                            />
+            </div>
 
             <b-form @submit="onSubmit" v-if="show">
                 <b-row class="m-2">
@@ -29,8 +35,8 @@
                     <b-card no-body class="mt-2" style="width: 100%">
                         <b-tabs>
                             <b-tab title="de">
-                                <b-row>
-                                    <b-col id="button-col" cols="1" class="m-2">
+                                <b-row class="ml-2">
+                                    <div id="button-col" class="mt-2 mb-2">
                                         <b-button-group vertical>
                                             <b-button disabled>keyword</b-button>
                                             <b-button
@@ -40,23 +46,23 @@
                                             >description</b-button
                                             >
                                         </b-button-group>
-                                    </b-col>
+                                    </div>
 
-                                    <b-col id="form-col">
+                                    <b-col id="form-col" class="pl-0 mr-3">
 
                                         <!-- name -->
                                         <input-field
                                                 label="name"
                                                 v-model="keyword.name"
-                                                class="m-2 pr-3"
+                                                class="m-2"
                                         />
 
                                         <!-- description -->
-                                        <input-field
+                                        <input-text-area
+                                                class="m-2"
                                                 label="description"
                                                 v-model="keyword.description"
                                                 v-if="showDescription"
-                                                type="text"
                                                 removable
                                         />
 
@@ -104,6 +110,7 @@
 import Header from '@/components/Header';
 import InputField from '../components/InputField';
 import SelectField from '../components/SelectField';
+import InputTextArea from "../components/InputTextArea";
 import { httpClient } from '../services/httpclient';
 
 export default {
@@ -111,6 +118,7 @@ export default {
     components: {
         InputField,
         SelectField,
+        InputTextArea,
         Header,
     },
     data() {
