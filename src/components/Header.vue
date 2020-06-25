@@ -22,6 +22,11 @@
                         <b-button size="sm" class="my-2 my-sm-0" type="submit" disabled>Search</b-button>
                     </b-nav-form>
                     -->
+                    <b-form-select v-model="language" >
+                        <b-form-select-option value="de">de</b-form-select-option>
+                        <b-form-select-option value="en">en</b-form-select-option>
+                    </b-form-select>
+
                     <b-nav-item-dropdown right>
                         <!-- Using 'button-content' slot -->
                         <template v-slot:button-content>
@@ -38,7 +43,16 @@
     </div>
 </template>
 
-<script></script>
+<script>
+export default {
+    name: 'Header',
+    data() {
+        return {
+            language: 'de',
+        };
+    },
+};
+</script>
 
 <style lang="scss">
 @import '../styles/styles.scss';

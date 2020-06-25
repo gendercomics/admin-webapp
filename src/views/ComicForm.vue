@@ -299,6 +299,8 @@
                             v-if="showKeywords"
                         />
 
+                        {{ comic.keywords }}
+
                         <!-- status -->
                         <b-form-group>
                             <!-- action buttons -->
