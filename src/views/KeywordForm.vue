@@ -18,7 +18,7 @@
             <div class="m-2">
                 <input-field
                     label="keyword"
-                    v-model="keyword.name"
+                    :value="displayNames"
                     size="lg"
                     disabled
                 />
@@ -98,9 +98,7 @@ export default {
     data() {
         return {
             keyword: {
-                name: '',
                 type: 'content',
-                description: null,
                 metaData: {
                     createdOn: null,
                     createdBy: null,
@@ -130,6 +128,19 @@ export default {
     computed: {
         backBtnVariant() {
             return 'outline-danger';
+        },
+        displayNames() {
+            let names = '';
+            if (this.keyword.values.de.name !== null) {
+                names += this.keyword.values.de.name;
+            }
+            if (names.length > 0 && this.keyword.values.en.name !== null) {
+                names += ' :: ';
+            }
+            if (this.keyword.values.en.name !== null) {
+                names += this.keyword.values.en.name;
+            }
+            return names;
         },
     },
     methods: {
