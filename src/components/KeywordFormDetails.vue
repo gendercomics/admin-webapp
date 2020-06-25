@@ -1,8 +1,5 @@
 <template>
-    <div class="ml-2">
-        <div>{{ value }}</div>
-
-        <!--
+    <div>
         <b-row class="ml-2">
             <div id="button-col" class="mt-2 mb-2">
                 <b-button-group vertical>
@@ -17,19 +14,23 @@
             </div>
 
             <b-col id="form-col" class="pl-0 mr-3">
-
-                <input-field label="name" v-model="value.name" class="m-2" />
+                <input-field
+                    label="name"
+                    v-model="localValue.name"
+                    class="m-2"
+                    @input="valueUpdated()"
+                />
 
                 <input-text-area
                     class="m-2"
                     label="description"
-                    v-model="value.description"
+                    v-model="localValue.description"
                     v-if="showDescription"
                     removable
+                    @input="valueUpdated()"
                 />
             </b-col>
         </b-row>
-        -->
     </div>
 </template>
 <script>
@@ -49,12 +50,6 @@ export default {
         },
     },
     computed: {
-        nameState() {
-            if (this.value.name.length < 1) {
-                return false;
-            }
-            return null;
-        },
         descriptionBtnVariant() {
             if (!this.showDescription) return 'outline-dark';
             return 'dark';
@@ -65,10 +60,22 @@ export default {
         showDescription() {
             return this.value.description != null;
         },
+        localValue: {
+            get() {
+                return this.value;
+            },
+            set(val) {
+                this.$emit('input', val);
+            },
+        },
     },
     methods: {
         addDescription() {
             this.value.description = '';
+        },
+        valueUpdated: function() {
+            console.log('value:' + this.value);
+            this.$emit('input', this.value);
         },
     },
 };

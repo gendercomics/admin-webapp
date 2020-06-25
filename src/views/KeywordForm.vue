@@ -27,52 +27,28 @@
             <b-form @submit="onSubmit" v-if="show">
                 <b-row class="m-2">
                     <!-- type -->
-                    <select-field label="type" :options="typeOptions" />
+                    <select-field
+                        label="type"
+                        :options="typeOptions"
+                        :selected="keyword.type"
+                    />
                 </b-row>
 
                 <b-row class="m-2">
                     <b-card no-body class="mt-2" style="width: 100%">
                         <b-tabs>
+                            <!-- german name and description -->
                             <b-tab title="de">
                                 <keyword-form-details
                                     v-model="keyword.values.de"
                                 />
-
-                                <b-row class="ml-2">
-                                    <div id="button-col" class="mt-2 mb-2">
-                                        <b-button-group vertical>
-                                            <b-button disabled
-                                                >keyword</b-button
-                                            >
-                                            <b-button
-                                                :variant="descriptionBtnVariant"
-                                                @click="addDescription"
-                                                :disabled="this.showDescription"
-                                                >description</b-button
-                                            >
-                                        </b-button-group>
-                                    </div>
-
-                                    <b-col id="form-col" class="pl-0 mr-3">
-                                        <!-- name -->
-                                        <input-field
-                                            label="name"
-                                            v-model="keyword.name"
-                                            class="m-2"
-                                        />
-
-                                        <!-- description -->
-                                        <input-text-area
-                                            class="m-2"
-                                            label="description"
-                                            v-model="keyword.description"
-                                            v-if="showDescription"
-                                            removable
-                                        />
-                                    </b-col>
-                                </b-row>
                             </b-tab>
-                            <b-tab title="en" />
+                            <!-- english name and description -->
+                            <b-tab title="en">
+                                <keyword-form-details
+                                    v-model="keyword.values.en"
+                                />
+                            </b-tab>
                         </b-tabs>
                     </b-card>
                 </b-row>
@@ -108,7 +84,6 @@
 import Header from '@/components/Header';
 import InputField from '../components/InputField';
 import SelectField from '../components/SelectField';
-import InputTextArea from '../components/InputTextArea';
 import { httpClient } from '../services/httpclient';
 import KeywordFormDetails from '../components/KeywordFormDetails';
 
@@ -118,7 +93,6 @@ export default {
         KeywordFormDetails,
         InputField,
         SelectField,
-        InputTextArea,
         Header,
     },
     data() {
@@ -134,14 +108,16 @@ export default {
                     changedBy: null,
                     status: 'DRAFT',
                 },
-                values: [
-                    {
-                        de: {
-                            name: null,
-                            description: null,
-                        },
+                values: {
+                    de: {
+                        name: null,
+                        description: null,
                     },
-                ],
+                    en: {
+                        name: null,
+                        description: null,
+                    },
+                },
             },
             show: true,
             loading: true,
@@ -152,21 +128,8 @@ export default {
         };
     },
     computed: {
-        nameState() {
-            if (this.keyword.name.length < 1) {
-                return false;
-            }
-            return null;
-        },
-        descriptionBtnVariant() {
-            if (!this.showDescription) return 'outline-dark';
-            return 'dark';
-        },
         backBtnVariant() {
             return 'outline-danger';
-        },
-        showDescription() {
-            return this.keyword.description != null;
         },
     },
     methods: {
@@ -200,9 +163,6 @@ export default {
                     })
                     .finally(() => (this.loading = false));
             }
-        },
-        addDescription() {
-            this.keyword.description = '';
         },
     },
     mounted() {
