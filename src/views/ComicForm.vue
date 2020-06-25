@@ -124,6 +124,7 @@
                             v-model="comic.subTitle"
                             v-if="showSubtitle"
                             type="text"
+                            class="mt-2"
                         />
 
                         <!-- issue -->
@@ -132,6 +133,7 @@
                             v-model="comic.issue"
                             v-if="showIssue"
                             type="text"
+                            class="mt-2"
                         />
 
                         <!-- creators -->
@@ -185,6 +187,7 @@
                             v-if="showType"
                             v-model="comic.type"
                             :selected="comic.type"
+                            class="mt-2"
                         />
 
                         <!-- publisher -->
@@ -215,6 +218,7 @@
                             v-model="comic.year"
                             v-if="showYear"
                             type="number"
+                            class="mt-2"
                         />
 
                         <!-- edition -->
@@ -223,6 +227,7 @@
                             v-model="comic.edition"
                             v-if="showEdition"
                             type="text"
+                            class="mt-2"
                         />
 
                         <!-- link -->
@@ -231,6 +236,7 @@
                             v-model="comic.link"
                             v-if="showLink"
                             type="url"
+                            class="mt-2"
                         />
 
                         <!-- isbn -->
@@ -239,6 +245,7 @@
                             v-model="comic.isbn"
                             v-if="showIsbn"
                             type="text"
+                            class="mt-2"
                         />
 
                         <!-- in (part of publication -->
@@ -273,6 +280,7 @@
                             v-model="comic.partOf.pages"
                             v-if="showPages"
                             type="text"
+                            class="mt-2"
                         />
 
                         <!-- keywords (content) -->
@@ -361,12 +369,14 @@ import Header from '@/components/Header';
 import InputField from '../components/InputField';
 import { httpClient } from '../services/httpclient';
 import TagInput from '../components/TagInput';
+import SelectField from "../components/SelectField";
 
 export default {
     name: 'ComicForm',
     components: {
         TagInput,
         InputField,
+        SelectField,
         Header,
     },
     data() {
