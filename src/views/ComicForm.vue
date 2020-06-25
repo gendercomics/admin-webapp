@@ -124,6 +124,7 @@
                             v-model="comic.subTitle"
                             v-if="showSubtitle"
                             type="text"
+                            removable
                             class="mt-2"
                         />
 
@@ -133,6 +134,7 @@
                             v-model="comic.issue"
                             v-if="showIssue"
                             type="text"
+                            removable
                             class="mt-2"
                         />
 
@@ -187,6 +189,7 @@
                             v-if="showType"
                             v-model="comic.type"
                             :selected="comic.type"
+                            removable
                             class="mt-2"
                         />
 
@@ -218,6 +221,7 @@
                             v-model="comic.year"
                             v-if="showYear"
                             type="number"
+                            removable
                             class="mt-2"
                         />
 
@@ -227,6 +231,7 @@
                             v-model="comic.edition"
                             v-if="showEdition"
                             type="text"
+                            removable
                             class="mt-2"
                         />
 
@@ -236,6 +241,7 @@
                             v-model="comic.link"
                             v-if="showLink"
                             type="url"
+                            removable
                             class="mt-2"
                         />
 
@@ -245,6 +251,7 @@
                             v-model="comic.isbn"
                             v-if="showIsbn"
                             type="text"
+                            removable
                             class="mt-2"
                         />
 
@@ -280,6 +287,7 @@
                             v-model="comic.partOf.pages"
                             v-if="showPages"
                             type="text"
+                            removable
                             class="mt-2"
                         />
 
