@@ -22,9 +22,7 @@
                         <b-button size="sm" class="my-2 my-sm-0" type="submit" disabled>Search</b-button>
                     </b-nav-form>
                     -->
-                    <b-form-select
-                            v-model="language"
-                    >
+                    <b-form-select v-model="language">
                         <b-form-select-option value="de"
                             >de</b-form-select-option
                         >
@@ -60,7 +58,7 @@ export default {
                 return getters.language();
             },
             set(val) {
-                mutations.setLanguage(val)
+                mutations.setLanguage(val);
             },
         },
     },

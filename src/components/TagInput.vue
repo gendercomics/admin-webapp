@@ -145,8 +145,7 @@ export default {
             // Filter out already selected options
             const options = this.options.filter(
                 opt =>
-                    this.tagNames.indexOf(opt.values[this.language].name) ===
-                    -1
+                    this.tagNames.indexOf(opt.values[this.language].name) === -1
             );
             if (criteria) {
                 // Show only options that match criteria
@@ -218,6 +217,13 @@ export default {
             this.value.forEach(value => {
                 this.tagNames.push(value.values[this.language].name);
             });
+        },
+    },
+    watch: {
+        language: function() {
+            this.$log.debug('language changed:' + this.language);
+            this.tagNames = [];
+            this.initTagNames();
         },
     },
     created() {
