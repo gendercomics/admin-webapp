@@ -23,8 +23,7 @@
                     </b-nav-form>
                     -->
                     <b-form-select
-                        v-model="language"
-                        @change="languageChanged()"
+                            v-model="language"
                     >
                         <b-form-select-option value="de"
                             >de</b-form-select-option
@@ -51,22 +50,24 @@
 </template>
 
 <script>
-import store from '../services/store';
+import { getters, mutations } from '../services/store';
 
 export default {
     name: 'Header',
-    data() {
-        return {
-            language: null,
-        };
-    },
-    methods: {
-        languageChanged() {
-            store.language = this.language;
+    computed: {
+        language: {
+            get() {
+                return getters.language();
+            },
+            set(val) {
+                mutations.setLanguage(val)
+            },
         },
     },
-    created() {
-        this.language = store.language;
+    methods: {
+        changeLanguage(lang) {
+            mutations.setLanguage(lang);
+        },
     },
 };
 </script>

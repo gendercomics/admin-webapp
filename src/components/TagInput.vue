@@ -98,8 +98,6 @@
             </b-input-group>
         </b-form-group>
 
-        {{ this.language }}
-
         <!--
         <b-row class="mt-4">
             <b-col id="json-tagnames">
@@ -114,7 +112,7 @@
 
 <script>
 import { httpClient } from '../services/httpclient';
-import store from '../services/store';
+import { getters } from '../services/store';
 
 export default {
     name: 'TagInput',
@@ -181,9 +179,9 @@ export default {
                 this.tagNames.includes(option.values[this.language].name)
             );
         },
-        language: {
-          return store.l
-        }
+        language() {
+            return getters.language();
+        },
     },
     methods: {
         onOptionClick({ option, addTag }) {
