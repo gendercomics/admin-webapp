@@ -379,7 +379,7 @@ import Header from '@/components/Header';
 import InputField from '../components/InputField';
 import { httpClient } from '../services/httpclient';
 import TagInput from '../components/TagInput';
-import SelectField from "../components/SelectField";
+import SelectField from '../components/SelectField';
 
 export default {
     name: 'ComicForm',
