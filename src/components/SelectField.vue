@@ -1,7 +1,6 @@
 <template>
     <b-input-group :prepend="this.label">
         <b-form-select
-            id="input-publisher"
             :options="this.options"
             value-field="id"
             text-field="name"
