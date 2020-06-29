@@ -164,7 +164,7 @@ export default {
             loading: true,
             errored: false,
             filter: null,
-            filterOn: ['values.de.name', 'values.en.name'],
+            filterOn: ['values'],
             totalRows: 1,
             currentPage: 1,
             perPage: 10,
