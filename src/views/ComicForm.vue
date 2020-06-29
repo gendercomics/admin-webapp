@@ -87,6 +87,14 @@
                             >pages
                         </b-button>
 
+                        <!-- genres -->
+                        <b-button
+                            :variant="genresBtnVariant"
+                            @click="addGenres"
+                            :disabled="this.showGenres"
+                            >genres
+                        </b-button>
+
                         <!-- keywords -->
                         <b-button
                             :variant="keywordsBtnVariant"
@@ -291,6 +299,14 @@
                             class="mt-2"
                         />
 
+                        <!-- keywords (genres) -->
+                        <TagInput
+                            label="genres"
+                            v-model="comic.genres"
+                            type="genre"
+                            v-if="showGenres"
+                        />
+
                         <!-- keywords (content) -->
                         <TagInput
                             label="keywords"
@@ -401,6 +417,7 @@ export default {
                 link: null,
                 isbn: null,
                 partOf: null,
+                genres: null,
                 keywords: null,
                 metaData: {
                     createdOn: null,
@@ -478,6 +495,10 @@ export default {
             if (!this.showKeywords) return 'outline-dark';
             return 'dark';
         },
+        genresBtnVariant() {
+            if (!this.showGenres) return 'outline-dark';
+            return 'dark';
+        },
         showSubtitle() {
             return this.comic.subTitle != null;
         },
@@ -521,6 +542,9 @@ export default {
         },
         showKeywords() {
             return this.comic.keywords != null;
+        },
+        showGenres() {
+            return this.comic.genres != null;
         },
     },
     methods: {
@@ -605,6 +629,9 @@ export default {
         },
         addKeywords() {
             this.comic.keywords = [];
+        },
+        addGenres() {
+            this.comic.genres = [];
         },
         changePublisher() {
             console.log(this.selectedPublisher);

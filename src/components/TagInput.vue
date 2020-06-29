@@ -1,8 +1,8 @@
 <template>
     <div class="mt-2">
-        <b-form-group>
+        <b-form-group class="mb-0">
             <b-input-group>
-                <b-form-tags v-model="localValue" no-outer-focus class="mb-2">
+                <b-form-tags v-model="localValue" no-outer-focus>
                     <template v-slot="{ tags, disabled, addTag, removeTag }">
                         <b-row>
                             <b-col class="col-sm-3">
@@ -67,7 +67,7 @@
                             <b-col class="pl-0 pb-0">
                                 <ul
                                     v-if="tags.length > 0"
-                                    class="list-inline d-inline-block ml-1"
+                                    class="list-inline d-inline-block ml-1 mb-0"
                                 >
                                     <li
                                         v-for="tag in tagNames"
@@ -91,7 +91,7 @@
                 </b-form-tags>
 
                 <template v-slot:append>
-                    <b-button @click="deleteValue" class="mb-2"
+                    <b-button @click="deleteValue"
                         ><font-awesome-icon icon="times-circle"
                     /></b-button>
                 </template>
