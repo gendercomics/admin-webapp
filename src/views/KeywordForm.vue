@@ -31,6 +31,7 @@
                         label="type"
                         :options="typeOptions"
                         :selected="keyword.type"
+                        v-model="keyword.type"
                     />
                 </b-row>
 
@@ -108,12 +109,14 @@ export default {
                 },
                 values: {
                     de: {
-                        name: null,
+                        name: '',
                         description: null,
+                        language: 'de',
                     },
                     en: {
-                        name: null,
+                        name: '',
                         description: null,
+                        language: 'en',
                     },
                 },
             },
@@ -131,13 +134,13 @@ export default {
         },
         displayNames() {
             let names = '';
-            if (this.keyword.values.de.name !== null) {
+            if (this.keyword.values.de.name.length > 0) {
                 names += this.keyword.values.de.name;
             }
-            if (names.length > 0 && this.keyword.values.en.name !== null) {
+            if (names.length > 0 && this.keyword.values.en.name.length > 0) {
                 names += ' :: ';
             }
-            if (this.keyword.values.en.name !== null) {
+            if (this.keyword.values.en.name.length > 0) {
                 names += this.keyword.values.en.name;
             }
             return names;
