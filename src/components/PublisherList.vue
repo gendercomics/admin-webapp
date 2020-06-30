@@ -56,6 +56,8 @@
 </template>
 
 <script>
+import { httpClient } from '../services/httpclient';
+
 export default {
     name: 'RolesList',
     data() {
@@ -74,7 +76,7 @@ export default {
         };
     },
     mounted() {
-        this.$api
+        httpClient
             .get('/publishers')
             .then(response => (this.publishers = response.data))
             .catch(error => {

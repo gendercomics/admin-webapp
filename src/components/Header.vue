@@ -11,7 +11,7 @@
                     <b-nav-item to="/persons">Persons</b-nav-item>
                     <b-nav-item to="/publishers">Publishers</b-nav-item>
                     <b-nav-item to="/roles">Roles</b-nav-item>
-                    <b-nav-item to="/keywords" disabled>Keywords</b-nav-item>
+                    <b-nav-item to="/keywords">Keywords</b-nav-item>
                 </b-navbar-nav>
 
                 <!-- Right aligned nav items -->
@@ -22,6 +22,15 @@
                         <b-button size="sm" class="my-2 my-sm-0" type="submit" disabled>Search</b-button>
                     </b-nav-form>
                     -->
+                    <b-form-select v-model="language">
+                        <b-form-select-option value="de"
+                            >de</b-form-select-option
+                        >
+                        <b-form-select-option value="en"
+                            >en</b-form-select-option
+                        >
+                    </b-form-select>
+
                     <b-nav-item-dropdown right>
                         <!-- Using 'button-content' slot -->
                         <template v-slot:button-content>
@@ -38,7 +47,28 @@
     </div>
 </template>
 
-<script></script>
+<script>
+import { getters, mutations } from '../services/store';
+
+export default {
+    name: 'Header',
+    computed: {
+        language: {
+            get() {
+                return getters.language();
+            },
+            set(val) {
+                mutations.setLanguage(val);
+            },
+        },
+    },
+    methods: {
+        changeLanguage(lang) {
+            mutations.setLanguage(lang);
+        },
+    },
+};
+</script>
 
 <style lang="scss">
 @import '../styles/styles.scss';

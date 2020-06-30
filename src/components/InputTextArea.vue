@@ -1,10 +1,9 @@
 <template>
     <b-input-group :prepend="this.label">
-        <b-form-select
-            :options="this.options"
-            value-field="id"
-            text-field="name"
+        <b-form-textarea
             v-model="localValue"
+            :rows="this.rows"
+            placeholder="write something ..."
         />
         <template v-slot:append v-if="removable">
             <b-button @click="deleteValue"
@@ -16,14 +15,25 @@
 
 <script>
 export default {
-    name: 'SelectField',
+    name: 'InputField',
     props: {
         label: null,
-        options: null,
-        selected: null,
+        value: null,
+        rows: {
+            type: Number,
+            default: 2,
+        },
         removable: {
             type: Boolean,
             default: false,
+        },
+        disabled: {
+            type: Boolean,
+            default: false,
+        },
+        size: {
+            type: String,
+            default: 'md',
         },
     },
     computed: {
@@ -41,11 +51,6 @@ export default {
             this.$log.debug('delete ' + this.label);
             this.localValue = null;
         },
-    },
-    created() {
-        if (this.selected !== null) {
-            this.value = this.selected;
-        }
     },
 };
 </script>

@@ -44,7 +44,7 @@ deploy:
     skip_cleanup: true
     script: ssh deploy@gendercomics.net 'docker pull gendercomics/admin-webapp:latest && cd /var/gendercomics/admin-webapp-stage && docker-compose up -d gendercomics-admin-webapp-stage'
     on:
-      all_branches: true
+      branch: develop
   - provider: script
     skip_cleanup: true
     script: ssh deploy@gendercomics.net 'docker pull gendercomics/admin-webapp:$VERSION && cd /var/gendercomics/admin-webapp && docker-compose up -d gendercomics-admin-webapp'

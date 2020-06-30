@@ -29,8 +29,8 @@
                     </b-form-group>
                 </b-col>
                 <b-col lg="6" class="my-1">
-                    <b-button to="comics/new" variant="outline-primary"
-                        >new comic</b-button
+                    <b-button to="keywords/new" variant="outline-primary"
+                        >new keyword</b-button
                     >
                 </b-col>
             </b-row>
@@ -79,7 +79,7 @@
                     head-variant="dark"
                     bordered
                     :fields="fields"
-                    :items="comics"
+                    :items="keywords"
                     :current-page="currentPage"
                     :per-page="perPage"
                     :filter="filter"
@@ -111,23 +111,6 @@
                         <span v-if="row.item.metaData.status === 'FINAL'"
                             ><b-badge variant="success">final</b-badge></span
                         >
-                    </template>
-
-                    <template v-slot:cell(title)="row">
-                        <span>{{ titleDisplayText(row.item) }}</span>
-                    </template>
-
-                    <template v-slot:cell(creators)="data">
-                        <div
-                            v-for="creator in data.item.creators"
-                            v-bind:key="creator.id"
-                        >
-                            <span>{{ fullName(creator) }}</span>
-                        </div>
-                    </template>
-
-                    <template v-slot:cell(partOf)="row">
-                        <span>{{ parentDisplayText(row.item) }}</span>
                     </template>
 
                     <template v-slot:cell(metaData.changedOn)="data">
@@ -162,25 +145,26 @@
 
 <script>
 import { httpClient } from '../services/httpclient';
+
 export default {
-    name: 'ComicList',
+    name: 'KeywordList',
 
     data() {
         return {
             fields: [
                 { key: 'actions', label: 'actions' },
                 { key: 'metaData.status', label: 'status' },
-                { key: 'title', label: 'title' },
-                { key: 'creators', label: 'creator(s)' },
-                { key: 'partOf', label: 'in' },
+                { key: 'values.de.name', label: 'keyword [de]' },
+                { key: 'values.en.name', label: 'keyword [en]' },
+                { key: 'type', label: 'type' },
                 { key: 'metaData.changedOn', label: 'created/modified' },
                 { key: 'metaData.changedBy', label: 'by' },
             ],
-            comics: null,
+            keywords: null,
             loading: true,
             errored: false,
             filter: null,
-            filterOn: ['title', 'creators', 'partOf'],
+            filterOn: ['values'],
             totalRows: 1,
             currentPage: 1,
             perPage: 10,
@@ -189,11 +173,11 @@ export default {
     },
     mounted() {
         httpClient
-            .get('/comics')
+            .get('/keywords')
             .then(
                 response => (
-                    (this.comics = response.data),
-                    (this.totalRows = this.comics.length)
+                    (this.keywords = response.data),
+                    (this.totalRows = this.keywords.length)
                 )
             )
             .catch(error => {
@@ -204,36 +188,12 @@ export default {
     },
     methods: {
         edit(item) {
-            this.$router.push('/comics/' + item.id);
+            this.$router.push('/keywords/' + item.id);
         },
         onFiltered(filteredItems) {
             // Trigger pagination to update the number of buttons/pages due to filtering
             this.totalRows = filteredItems.length;
             this.currentPage = 1;
-        },
-        fullName(creator) {
-            if (creator != null) {
-                if (
-                    creator.person.pseudonym != null &&
-                    creator.person.pseudonym.length > 1
-                ) {
-                    return creator.person.pseudonym;
-                }
-                return creator.person.firstName + ' ' + creator.person.lastName;
-            }
-        },
-        titleDisplayText(item) {
-            return item.issue !== null
-                ? item.title + ', ' + item.issue
-                : item.title;
-        },
-        parentDisplayText(item) {
-            if (item.partOf !== null && item.partOf.comic.title !== null) {
-                return item.partOf.comic.issue !== null
-                    ? item.partOf.comic.title + ', ' + item.partOf.comic.issue
-                    : item.partOf.comic.title;
-            }
-            return null;
         },
     },
 };

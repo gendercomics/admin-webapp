@@ -86,6 +86,22 @@
                             v-if="this.showInButtons"
                             >pages
                         </b-button>
+
+                        <!-- genres -->
+                        <b-button
+                            :variant="genresBtnVariant"
+                            @click="addGenres"
+                            :disabled="this.showGenres"
+                            >genres
+                        </b-button>
+
+                        <!-- keywords -->
+                        <b-button
+                            :variant="keywordsBtnVariant"
+                            @click="addKeywords"
+                            :disabled="this.showKeywords"
+                            >keywords
+                        </b-button>
                     </b-button-group>
                 </b-col>
 
@@ -116,6 +132,8 @@
                             v-model="comic.subTitle"
                             v-if="showSubtitle"
                             type="text"
+                            removable
+                            class="mt-2"
                         />
 
                         <!-- issue -->
@@ -124,6 +142,8 @@
                             v-model="comic.issue"
                             v-if="showIssue"
                             type="text"
+                            removable
+                            class="mt-2"
                         />
 
                         <!-- creators -->
@@ -177,6 +197,8 @@
                             v-if="showType"
                             v-model="comic.type"
                             :selected="comic.type"
+                            removable
+                            class="mt-2"
                         />
 
                         <!-- publisher -->
@@ -207,6 +229,8 @@
                             v-model="comic.year"
                             v-if="showYear"
                             type="number"
+                            removable
+                            class="mt-2"
                         />
 
                         <!-- edition -->
@@ -215,6 +239,8 @@
                             v-model="comic.edition"
                             v-if="showEdition"
                             type="text"
+                            removable
+                            class="mt-2"
                         />
 
                         <!-- link -->
@@ -223,6 +249,8 @@
                             v-model="comic.link"
                             v-if="showLink"
                             type="url"
+                            removable
+                            class="mt-2"
                         />
 
                         <!-- isbn -->
@@ -231,6 +259,8 @@
                             v-model="comic.isbn"
                             v-if="showIsbn"
                             type="text"
+                            removable
+                            class="mt-2"
                         />
 
                         <!-- in (part of publication -->
@@ -253,7 +283,7 @@
                                 </option>
                             </b-form-select>
                             <template v-slot:append>
-                                <b-button @click="removePublisher()">
+                                <b-button @click="removeIn()">
                                     <font-awesome-icon icon="times-circle" />
                                 </b-button>
                             </template>
@@ -265,6 +295,24 @@
                             v-model="comic.partOf.pages"
                             v-if="showPages"
                             type="text"
+                            removable
+                            class="mt-2"
+                        />
+
+                        <!-- keywords (genres) -->
+                        <TagInput
+                            label="genres"
+                            v-model="comic.genres"
+                            type="genre"
+                            v-if="showGenres"
+                        />
+
+                        <!-- keywords (content) -->
+                        <TagInput
+                            label="keywords"
+                            v-model="comic.keywords"
+                            type="content"
+                            v-if="showKeywords"
                         />
 
                         <!-- status -->
@@ -343,13 +391,16 @@
 <script>
 import Header from '@/components/Header';
 import InputField from '../components/InputField';
+import { httpClient } from '../services/httpclient';
+import TagInput from '../components/TagInput';
 import SelectField from '../components/SelectField';
 
 export default {
     name: 'ComicForm',
     components: {
-        SelectField,
+        TagInput,
         InputField,
+        SelectField,
         Header,
     },
     data() {
@@ -366,6 +417,8 @@ export default {
                 link: null,
                 isbn: null,
                 partOf: null,
+                genres: null,
+                keywords: null,
                 metaData: {
                     createdOn: null,
                     createdBy: null,
@@ -438,6 +491,14 @@ export default {
         backBtnVariant() {
             return 'outline-danger';
         },
+        keywordsBtnVariant() {
+            if (!this.showKeywords) return 'outline-dark';
+            return 'dark';
+        },
+        genresBtnVariant() {
+            if (!this.showGenres) return 'outline-dark';
+            return 'dark';
+        },
         showSubtitle() {
             return this.comic.subTitle != null;
         },
@@ -479,13 +540,19 @@ export default {
                 this.comic.type === 'comic'
             );
         },
+        showKeywords() {
+            return this.comic.keywords != null;
+        },
+        showGenres() {
+            return this.comic.genres != null;
+        },
     },
     methods: {
         onSubmit(evt) {
             evt.preventDefault();
             //alert(JSON.stringify(this.comic));
             if (this.$route.path.endsWith('new')) {
-                this.$api
+                httpClient
                     .post('/comics/', this.comic)
                     .then(
                         response => (
@@ -499,7 +566,7 @@ export default {
                     })
                     .finally(() => (this.loading = false));
             } else {
-                this.$api
+                httpClient
                     .put('/comics/' + this.comic.id, this.comic)
                     .then(
                         response => (
@@ -560,6 +627,12 @@ export default {
             }
             this.comic.partOf.pages = '';
         },
+        addKeywords() {
+            this.comic.keywords = [];
+        },
+        addGenres() {
+            this.comic.genres = [];
+        },
         changePublisher() {
             console.log(this.selectedPublisher);
             this.publishers.forEach(publisher => {
@@ -571,6 +644,9 @@ export default {
         removePublisher() {
             this.comic.publisher = null;
             this.selectedPublisher = null;
+        },
+        removeIn() {
+            this.comic.partOf = null;
         },
         personUpdated(idx) {
             console.log('personUpdated=' + idx);
@@ -597,7 +673,7 @@ export default {
             });
         },
         loadParents() {
-            this.$api
+            httpClient
                 .get('/comics/parents')
                 .then(response => {
                     this.parents = response.data;
@@ -635,7 +711,7 @@ export default {
         this.loadParents();
         // get comic
         if (!this.$route.path.endsWith('new')) {
-            this.$api
+            httpClient
                 .get(this.$route.path)
                 .then(response => {
                     this.comic = response.data;
@@ -659,7 +735,7 @@ export default {
                 .finally(() => (this.loading = false));
         }
         // get persons
-        this.$api
+        httpClient
             .get('/persons')
             .then(response => (this.persons = response.data))
             .catch(error => {
@@ -668,7 +744,7 @@ export default {
             })
             .finally(() => (this.loading = false));
         // get publishers
-        this.$api
+        httpClient
             .get('/publishers')
             .then(response => (this.publishers = response.data))
             .catch(error => {
@@ -676,7 +752,7 @@ export default {
                 this.errored = true;
             })
             .finally(() => (this.loading = false));
-        this.$api
+        httpClient
             .get('/roles')
             .then(response => (this.roles = response.data))
             .catch(error => {

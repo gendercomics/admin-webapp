@@ -1,7 +1,11 @@
 <template>
-    <b-input-group class="pt-2" :prepend="this.label">
-        <b-form-input v-model="localValue" :type="this.type" />
-        <template v-slot:append>
+    <b-input-group :prepend="this.label" :size="this.size">
+        <b-form-input
+            v-model="localValue"
+            :type="this.type"
+            :disabled="this.disabled"
+        />
+        <template v-slot:append v-if="removable">
             <b-button @click="deleteValue"
                 ><font-awesome-icon icon="times-circle"
             /></b-button>
@@ -16,6 +20,18 @@ export default {
         label: null,
         value: null,
         type: null,
+        removable: {
+            type: Boolean,
+            default: false,
+        },
+        disabled: {
+            type: Boolean,
+            default: false,
+        },
+        size: {
+            type: String,
+            default: 'md',
+        },
     },
     computed: {
         localValue: {
