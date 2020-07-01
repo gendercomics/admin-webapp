@@ -71,7 +71,7 @@ const responseInterceptor = httpClient.interceptors.response.use(
 
 /** logger interceptors */
 const loggerInterceptor = config => {
-    /** TODO */
+    Vue.$log.debug('apiUrl=' + apiUrl);
     return config;
 };
 
