@@ -41,6 +41,8 @@ jobs:
       - docker push gendercomics/admin-webapp-stage:latest
     # deploy stage
     - stage: deploy-stage
+    - before_install:
+      - openssl aes-256-cbc -K $encrypted_c82131f2301a_key -iv $encrypted_c82131f2301a_iv -in deploy-key.enc -out deploy-key -d
     - before_deploy:
       - eval "$(ssh-agent -s)"
       - chmod 600 deploy-key
