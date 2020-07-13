@@ -23,14 +23,17 @@ before_install:
 before_script:
   - VERSION=$(node -p -e "require('./package.json').version")
 
-script:
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker build -t gendercomics/admin-webapp .
-  - docker tag gendercomics/admin-webapp gendercomics/admin-webapp:latest
-  - docker tag gendercomics/admin-webapp gendercomics/admin-webapp:$VERSION
-  - docker images
-  - docker push gendercomics/admin-webapp:latest
-  - docker push gendercomics/admin-webapp:$VERSION
+jobs:
+  include:
+    - stage: build-production
+    - script:
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - docker build -t gendercomics/admin-webapp .
+      - docker tag gendercomics/admin-webapp gendercomics/admin-webapp:latest
+      - docker tag gendercomics/admin-webapp gendercomics/admin-webapp:$VERSION
+      - docker images
+      - docker push gendercomics/admin-webapp:latest
+      - docker push gendercomics/admin-webapp:$VERSION
 
 before_deploy:
   - eval "$(ssh-agent -s)"
