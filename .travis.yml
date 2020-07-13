@@ -23,8 +23,20 @@ before_install:
 before_script:
   - VERSION=$(node -p -e "require('./package.json').version")
 
+stages:
+  - build-stage
+  - name: build-production
+    if: branch = master
+
 jobs:
   include:
+    - stage: build-stage
+    - script:
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - docker build -f Dockerfile-stage -t gendercomics/admin-webapp-stage .
+      - docker tag gendercomics/admin-webapp-stage gendercomics/admin-webapp-stage:latest
+      - docker images
+      - docker push gendercomics/admin-webapp-stage:latest
     - stage: build-production
     - script:
       - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
