@@ -4,10 +4,8 @@
   "private": true,
   "scripts": {
     "serve dev": "vue-cli-service serve --mode development",
-    "serve staging": "vue-cli-service serve --mode stage",
     "serve": "vue-cli-service serve",
     "build dev": "vue-cli-service build --mode development",
-    "build staging": "vue-cli-service build --mode stage",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit"
@@ -20,13 +18,12 @@
     "bootstrap": "^4.5.0",
     "bootstrap-vue": "^2.15.0",
     "core-js": "^2.6.11",
-    "css-loader": "^3.4.2",
+    "css-loader": "^3.6.0",
     "keycloak-js": "^6.0.1",
-    "moment": "^2.24.0",
+    "moment": "^2.27.0",
     "normalize.css": "^8.0.1",
     "vue": "^2.6.11",
-    "vue-multiselect": "^2.1.6",
-    "vue-router": "^3.1.6",
+    "vue-router": "^3.3.4",
     "vuejs-logger": "^1.5.4"
   },
   "devDependencies": {
@@ -42,7 +39,7 @@
     "eslint": "^5.16.0",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-vue": "^5.0.0",
-    "node-sass": "^4.13.1",
+    "node-sass": "^4.14.1",
     "prettier": "^1.19.1",
     "sass-loader": "^7.3.1",
     "vue-template-compiler": "^2.6.11"
