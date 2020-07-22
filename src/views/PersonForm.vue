@@ -16,6 +16,7 @@
 
         <b-form @submit="onSubmit" v-if="show">
             <b-container class="mt-2" fluid>
+                <!-- person name as summary on top -->
                 <div class="m-2">
                     <input-field
                         label="person"
@@ -41,11 +42,26 @@
                     </div>
 
                     <b-col id="form-col" class="pl-0 mr-3">
+                        <!-- names -->
+                        <div
+                            v-for="(name, idx) in person.names"
+                            v-bind:key="idx"
+                        >
+                            <name-field
+                                class="m-2"
+                                removable
+                                v-model="person.names[idx]"
+                                @delete="removeName(idx)"
+                            />
+                        </div>
+
+                        <!-- wikidata-id -->
                         <input-field
                             label="wikidata-id"
                             v-model="person.wikiData"
                             class="m-2"
                             v-if="showWikiData"
+                            :link="wikiDataLink"
                             removable
                         />
                     </b-col>
@@ -77,107 +93,6 @@
         </b-form>
 
         <b-container fluid class="mt-4 ml-4 mr-4">
-            <b-row>
-                <b-form
-                    id="publisher-form"
-                    v-if="show"
-                    v-on:submit.prevent="onSubmit"
-                >
-                    <div>
-                        <b-card
-                            bg-variant="light"
-                            header="add a new person"
-                            style="min-width: 50rem"
-                        >
-                            <b-card-body>
-                                <b-row>
-                                    <b-col>
-                                        <b-form-group
-                                            label-cols-sm="2"
-                                            label="firstname:"
-                                            label-align-sm="right"
-                                            label-for="firstname"
-                                        >
-                                            <b-form-input
-                                                id="firstname"
-                                                v-model="person.firstName"
-                                                placeholder="enter firstname"
-                                                trim
-                                                style="max-width: 25rem"
-                                            ></b-form-input>
-                                        </b-form-group>
-
-                                        <b-form-group
-                                            label-cols-sm="2"
-                                            label="lastname:"
-                                            label-align-sm="right"
-                                            label-for="lastname"
-                                        >
-                                            <b-form-input
-                                                id="lastname"
-                                                v-model="person.lastName"
-                                                placeholder="enter lastname"
-                                                trim
-                                                style="max-width: 25rem"
-                                            ></b-form-input>
-                                        </b-form-group>
-
-                                        <b-form-group
-                                            label-cols-sm="2"
-                                            label="pseudonym:"
-                                            label-align-sm="right"
-                                            label-for="pseudonym"
-                                        >
-                                            <b-form-input
-                                                id="pseudonym"
-                                                v-model="person.pseudonym"
-                                                placeholder="enter pseudonym"
-                                                trim
-                                                style="max-width: 25rem"
-                                            ></b-form-input>
-                                        </b-form-group>
-
-                                        <b-form-group
-                                            label-cols-sm="2"
-                                            label="wikidata-id:"
-                                            label-align-sm="right"
-                                            label-for="wikidata"
-                                        >
-                                            <b-form-input
-                                                id="wikidata"
-                                                type="text"
-                                                v-model="person.wikiData"
-                                                placeholder="enter wikidata id"
-                                                trim
-                                                style="max-width: 25rem"
-                                            ></b-form-input>
-                                        </b-form-group>
-                                    </b-col>
-                                </b-row>
-
-                                <b-row class="mt-2">
-                                    <b-col>
-                                        <b-button-group class="float-right">
-                                            <b-button
-                                                type="submit"
-                                                variant="primary"
-                                                >save
-                                            </b-button>
-                                            <b-button
-                                                to="/persons"
-                                                type="reset"
-                                                variant="outline-danger"
-                                                >cancel
-                                            </b-button>
-                                        </b-button-group>
-                                    </b-col>
-                                </b-row>
-                            </b-card-body>
-                        </b-card>
-                    </div>
-                </b-form>
-            </b-row>
-
             <div v-if="debug">
                 <b-row class="mt-4 mr-4">
                     <b-col id="json-person">
@@ -195,12 +110,14 @@
 import Header from '@/components/Header';
 import InputField from '../components/InputField';
 import { httpClient } from '../services/httpclient';
+import NameField from '../components/NameField';
 
 export default {
     name: 'PersonForm',
     components: {
         Header,
         InputField,
+        NameField,
     },
     data() {
         return {
@@ -241,7 +158,27 @@ export default {
     },
     computed: {
         personNames() {
-            return '';
+            let personName = '';
+            if (this.person.names !== null) {
+                this.person.names.forEach(function(item) {
+                    personName.length > 0
+                        ? (personName += ', ')
+                        : (personName += '');
+                    item.name !== null
+                        ? (personName += item.name)
+                        : (personName += '');
+                    item.firstName !== null
+                        ? (personName += item.firstName)
+                        : (personName += '');
+                    personName.length > 0
+                        ? (personName += ' ')
+                        : (personName += '');
+                    item.lastName !== null
+                        ? (personName += item.lastName)
+                        : (personName += '');
+                });
+            }
+            return personName;
         },
         wikiDataBtnVariant() {
             if (!this.showWikiData) return 'outline-dark';
@@ -249,6 +186,9 @@ export default {
         },
         showWikiData() {
             return this.person.wikiData != null;
+        },
+        wikiDataLink() {
+            return 'https://wikidata.org/wiki/' + this.person.wikiData;
         },
     },
     methods: {
@@ -287,10 +227,19 @@ export default {
             if (this.person.names === null) {
                 this.person.names = [];
             }
-            this.person.names.push({ name: {} });
+            this.person.names.push({
+                name: null,
+                firstName: null,
+                lastName: null,
+                pseudonym: false,
+                searchable: true,
+            });
         },
         addWikiData() {
             this.person.wikiData = '';
+        },
+        removeName(idx) {
+            this.person.names.splice(idx, 1);
         },
     },
 };

@@ -14,10 +14,18 @@ import {
     faSearch,
     faTags,
     faTimesCircle,
+    faUserSecret,
 } from '@fortawesome/free-solid-svg-icons';
 import AuthService from './services/authservice';
 
-library.add(faEdit, faExternalLinkAlt, faSearch, faTags, faTimesCircle);
+library.add(
+    faEdit,
+    faExternalLinkAlt,
+    faSearch,
+    faTags,
+    faTimesCircle,
+    faUserSecret
+);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
