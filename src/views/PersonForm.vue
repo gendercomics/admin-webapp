@@ -125,7 +125,6 @@ export default {
                 names: null,
                 firstName: null,
                 lastName: null,
-                pseudonym: null,
                 wikiData: null,
                 metaData: {
                     createdOn: null,

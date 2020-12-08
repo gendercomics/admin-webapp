@@ -31,18 +31,18 @@
             <b-form-checkbox
                 switch
                 v-b-tooltip.hover
-                title="pseudonym"/><font-awesome-icon
-                icon="user-secret"
-                v-model="localValue.pseudonym"
+                title="pseudonym"
+                v-model="localValue.pseudonym"/>
+            <font-awesome-icon icon="user-secret"
         /></b-input-group-append>
 
         <b-input-group-append is-text>
             <b-form-checkbox
                 switch
                 v-b-tooltip.hover
-                title="searchable"/><font-awesome-icon
-                icon="search"
-                v-model="localValue.searchable"
+                title="searchable"
+                v-model="localValue.searchable"/>
+            <font-awesome-icon icon="search"
         /></b-input-group-append>
 
         <!-- remove button -->
@@ -63,7 +63,7 @@ export default {
             name: null,
             firstName: null,
             lastName: null,
-            pseudonym: false,
+            pseudonym: null,
             searchable: true,
         },
         removable: {
