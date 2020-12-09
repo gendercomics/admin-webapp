@@ -196,7 +196,7 @@ export default {
             loading: true,
             errored: false,
             filter: null,
-            filterOn: ['firstName', 'lastName', 'pseudonym'],
+            filterOn: [],
             totalRows: 1,
             currentPage: 1,
             perPage: 10,

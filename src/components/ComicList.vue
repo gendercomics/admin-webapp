@@ -180,7 +180,7 @@ export default {
             loading: true,
             errored: false,
             filter: null,
-            filterOn: ['title', 'creators', 'partOf'],
+            filterOn: [],
             totalRows: 1,
             currentPage: 1,
             perPage: 10,
