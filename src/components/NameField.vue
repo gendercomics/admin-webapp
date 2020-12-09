@@ -98,11 +98,9 @@ export default {
         },
     },
     mounted() {
-        console.log('localValue=',this.localValue);
         if (this.localValue.name !== null) {
             this.nameType = 'name';
         }
-        console.log('nameType=', this.nameType);
     },
     methods: {
         deleteValue() {
