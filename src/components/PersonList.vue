@@ -105,8 +105,8 @@
                         <b-button
                             variant="light"
                             size="sm"
-                            @click="alert(row.item)"
                             class="mr-1"
+                            @click="deletePerson(row.item)"
                         >
                             <font-awesome-icon
                                 icon="trash"
@@ -222,6 +222,11 @@ export default {
         edit(item) {
             console.log('edit item: ' + item.id);
             this.$router.push('/persons/' + item.id);
+        },
+        deletePerson(item) {
+            console.log('delete item: ' + item.id);
+            //alert('Delete ' + this.fullName(item));
+            // TODO add code for deleting item
         },
         onFiltered(filteredItems) {
             // Trigger pagination to update the number of buttons/pages due to filtering
