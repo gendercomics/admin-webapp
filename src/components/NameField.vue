@@ -97,6 +97,13 @@ export default {
             return this.nameType === 'firstLastName';
         },
     },
+    mounted() {
+        console.log('localValue=',this.localValue);
+        if (this.localValue.name !== null) {
+            this.nameType = 'name';
+        }
+        console.log('nameType=', this.nameType);
+    },
     methods: {
         deleteValue() {
             this.$log.debug('delete name');
