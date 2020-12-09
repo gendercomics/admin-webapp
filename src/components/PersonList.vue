@@ -87,17 +87,54 @@
                     @filtered="onFiltered"
                 >
                     <template v-slot:cell(actions)="row">
+                        <!-- edit button -->
                         <b-button
+                            variant="light"
                             size="sm"
                             @click="edit(row.item)"
                             class="mr-1"
                         >
-                            edit
+                            <font-awesome-icon
+                                icon="edit"
+                                v-b-tooltip
+                                title="edit"
+                            />
+                        </b-button>
+
+                        <!-- delete button -->
+                        <b-button
+                            variant="light"
+                            size="sm"
+                            @click="alert(row.item)"
+                            class="mr-1"
+                        >
+                            <font-awesome-icon
+                                icon="trash"
+                                v-b-tooltip
+                                title="delete"
+                            />
                         </b-button>
                     </template>
 
+                    <template v-slot:cell(metaData.status)="row">
+                        <span v-if="row.item.metaData.status === 'DRAFT'"
+                            ><b-badge variant="secondary">draft</b-badge></span
+                        >
+                        <span v-if="row.item.metaData.status === 'REVIEW'"
+                            ><b-badge variant="warning">review</b-badge></span
+                        >
+                        <span v-if="row.item.metaData.status === 'FINAL'"
+                            ><b-badge variant="success">final</b-badge></span
+                        >
+                    </template>
+
                     <template v-slot:cell(name)="data">
-                        <span>{{ fullName(data.item) }}</span>
+                        <div
+                            v-for="nameObj in data.item.names"
+                            v-bind:key="nameObj.id"
+                        >
+                            <span>{{ fullName(nameObj) }}</span>
+                        </div>
                     </template>
 
                     <template v-slot:cell(wikiData)="data">
@@ -149,6 +186,7 @@ export default {
         return {
             fields: [
                 { key: 'actions', label: 'actions' },
+                { key: 'metaData.status', label: 'status' },
                 { key: 'name', label: 'name/pseudonym' },
                 { key: 'wikiData', label: 'wikidata' },
                 { key: 'metaData.changedOn', label: 'created/modified' },
@@ -190,13 +228,12 @@ export default {
             this.totalRows = filteredItems.length;
             this.currentPage = 1;
         },
-        fullName(person) {
-            if (person.pseudonym !== null && person.pseudonym.length !== 0)
-                return person.pseudonym;
-            return person.firstName + ' ' + person.lastName;
-        },
         wikiDataLink(wikidata) {
             return 'https://www.wikidata.org/wiki/' + wikidata;
+        },
+        fullName(nameObj) {
+            if (nameObj.name !== null) return nameObj.name;
+            return nameObj.firstName + ' ' + nameObj.lastName;
         },
     },
 };
