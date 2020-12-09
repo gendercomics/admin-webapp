@@ -38,6 +38,11 @@
                                 :disabled="this.showWikiData"
                                 >wikidata-id</b-button
                             >
+                            <b-button
+                                variant="outline-dark"
+                                :pressed.sync="showJson"
+                                >JSON</b-button
+                            >
                         </b-button-group>
                     </div>
 
@@ -93,7 +98,7 @@
         </b-form>
 
         <b-container fluid class="mt-4 ml-4 mr-4">
-            <div v-if="debug">
+            <div v-if="showJson">
                 <b-row class="mt-4 mr-4">
                     <b-col id="json-person">
                         <b-card header="person">
@@ -137,7 +142,7 @@ export default {
             show: true,
             errored: false,
             saveSuccessful: false,
-            debug: true,
+            showJson: false,
             statusOptions: ['DRAFT', 'REVIEW', 'FINAL'],
         };
     },
