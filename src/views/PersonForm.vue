@@ -69,30 +69,28 @@
                             :link="wikiDataLink"
                             removable
                         />
+
+                        <!-- action buttons -->
+                        <b-form-group>
+                            <b-button-group class="mt-3 float-right">
+                                <!-- editing status -->
+                                <b-form-select
+                                    :options="statusOptions"
+                                    v-model="person.metaData.status"
+                                />
+
+                                <b-button type="submit" variant="primary"
+                                    >save</b-button
+                                >
+                                <b-button
+                                    to="/persons"
+                                    type="reset"
+                                    variant="outline-danger"
+                                    >back</b-button
+                                >
+                            </b-button-group>
+                        </b-form-group>
                     </b-col>
-                </b-row>
-
-                <b-row class="ml-2">
-                    <!-- action buttons -->
-                    <b-form-group>
-                        <b-button-group class="mt-3 float-right">
-                            <!-- editing status -->
-                            <b-form-select
-                                :options="statusOptions"
-                                v-model="person.metaData.status"
-                            />
-
-                            <b-button type="submit" variant="primary"
-                                >save</b-button
-                            >
-                            <b-button
-                                to="/persons"
-                                type="reset"
-                                variant="outline-danger"
-                                >back</b-button
-                            >
-                        </b-button-group>
-                    </b-form-group>
                 </b-row>
             </b-container>
         </b-form>

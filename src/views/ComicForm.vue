@@ -14,111 +14,122 @@
             </b-alert>
         </div>
 
-        <b-container class="mt-3" fluid>
-            <b-row>
-                <b-col id="button-col" cols="1">
-                    <b-button-group vertical>
-                        <b-button disabled>title</b-button>
-                        <b-button
-                            :variant="subtitleBtnVariant"
-                            @click="addSubtitle"
-                            :disabled="this.showSubtitle"
-                            >subtitle
-                        </b-button>
-                        <b-button
-                            :variant="issueBtnVariant"
-                            @click="addIssue"
-                            :disabled="this.showIssue"
-                            >issue
-                        </b-button>
-                        <b-button variant="outline-dark" @click="addCreator"
-                            >creator+
-                        </b-button>
-                        <b-button
-                            :variant="typeBtnVariant"
-                            @click="addType"
-                            :disabled="this.showType"
-                            >type
-                        </b-button>
-                        <b-button
-                            :variant="publisherBtnVariant"
-                            @click="addPublisher"
-                            :disabled="this.showPublisher"
-                            >publisher
-                        </b-button>
-                        <b-button
-                            :variant="yearBtnVariant"
-                            @click="addYear"
-                            :disabled="this.showYear"
-                            >year
-                        </b-button>
-                        <b-button
-                            :variant="editionBtnVariant"
-                            @click="addEdition"
-                            :disabled="this.showEdition"
-                            >edition
-                        </b-button>
-                        <b-button
-                            :variant="linkBtnVariant"
-                            @click="addLink"
-                            :disabled="this.showLink"
-                            >link
-                        </b-button>
-                        <b-button
-                            :variant="isbnBtnVariant"
-                            @click="addIsbn"
-                            :disabled="this.showIsbn"
-                            >isbn
-                        </b-button>
+        <b-form @submit="onSubmit" v-if="show">
+            <b-container class="mt-2" fluid>
+                <!-- comic summary on top TODO: improve summary -->
+                <div class="m-2">
+                    <input-field
+                        label="comic"
+                        :value="comic.title"
+                        size="lg"
+                        disabled
+                    />
+                </div>
 
-                        <!-- in (part of publication) -->
-                        <b-button
-                            :variant="inBtnVariant"
-                            @click="addIn"
-                            :disabled="this.showIn"
-                            v-if="this.showInButtons"
-                            >in
-                        </b-button>
-                        <b-button
-                            :variant="pagesBtnVariant"
-                            @click="addPages"
-                            :disabled="this.showPages"
-                            v-if="this.showInButtons"
-                            >pages
-                        </b-button>
+                <b-row class="ml-2">
+                    <div id="button-col" class="mt-2 mb-2">
 
-                        <!-- genres -->
-                        <b-button
-                            :variant="genresBtnVariant"
-                            @click="addGenres"
-                            :disabled="this.showGenres"
-                            >genres
-                        </b-button>
+                      <b-button-group vertical>
+                            <b-button disabled>title</b-button>
+                            <b-button
+                                :variant="subtitleBtnVariant"
+                                @click="addSubtitle"
+                                :disabled="this.showSubtitle"
+                                >subtitle
+                            </b-button>
+                            <b-button
+                                :variant="issueBtnVariant"
+                                @click="addIssue"
+                                :disabled="this.showIssue"
+                                >issue
+                            </b-button>
+                            <b-button variant="outline-dark" @click="addCreator"
+                                >creator+
+                            </b-button>
+                            <b-button
+                                :variant="typeBtnVariant"
+                                @click="addType"
+                                :disabled="this.showType"
+                                >type
+                            </b-button>
+                            <b-button
+                                :variant="publisherBtnVariant"
+                                @click="addPublisher"
+                                :disabled="this.showPublisher"
+                                >publisher
+                            </b-button>
+                            <b-button
+                                :variant="yearBtnVariant"
+                                @click="addYear"
+                                :disabled="this.showYear"
+                                >year
+                            </b-button>
+                            <b-button
+                                :variant="editionBtnVariant"
+                                @click="addEdition"
+                                :disabled="this.showEdition"
+                                >edition
+                            </b-button>
+                            <b-button
+                                :variant="linkBtnVariant"
+                                @click="addLink"
+                                :disabled="this.showLink"
+                                >link
+                            </b-button>
+                            <b-button
+                                :variant="isbnBtnVariant"
+                                @click="addIsbn"
+                                :disabled="this.showIsbn"
+                                >isbn
+                            </b-button>
 
-                        <!-- keywords -->
-                        <b-button
-                            :variant="keywordsBtnVariant"
-                            @click="addKeywords"
-                            :disabled="this.showKeywords"
-                            >keywords
-                        </b-button>
-                        <!-- toggle JSON view -->
-                        <b-button
-                            variant="outline-dark"
-                            :pressed.sync="showJson"
-                            >JSON</b-button
-                        >
-                    </b-button-group>
-                </b-col>
+                            <!-- in (part of publication) -->
+                            <b-button
+                                :variant="inBtnVariant"
+                                @click="addIn"
+                                :disabled="this.showIn"
+                                v-if="this.showInButtons"
+                                >in
+                            </b-button>
+                            <b-button
+                                :variant="pagesBtnVariant"
+                                @click="addPages"
+                                :disabled="this.showPages"
+                                v-if="this.showInButtons"
+                                >pages
+                            </b-button>
 
-                <b-col id="form-col">
-                    <b-form @submit="onSubmit" v-if="show">
+                            <!-- genres -->
+                            <b-button
+                                :variant="genresBtnVariant"
+                                @click="addGenres"
+                                :disabled="this.showGenres"
+                                >genres
+                            </b-button>
+
+                            <!-- keywords -->
+                            <b-button
+                                :variant="keywordsBtnVariant"
+                                @click="addKeywords"
+                                :disabled="this.showKeywords"
+                                >keywords
+                            </b-button>
+                            <!-- toggle JSON view -->
+                            <b-button
+                                variant="outline-dark"
+                                :pressed.sync="showJson"
+                                >JSON</b-button
+                            >
+                        </b-button-group>
+                    </div>
+
+                    <b-col id="form-col" class="mt-2 mr-2">
                         <!-- title -->
                         <b-input-group
                             prepend="title"
                             id="input-group-title"
                             label-for="input-title"
-                            size="lg"
+                            size="md"
                         >
                             <b-form-input
                                 id="input-title"
@@ -342,11 +353,13 @@
                                 </b-button>
                             </b-button-group>
                         </b-form-group>
-                    </b-form>
-                </b-col>
-            </b-row>
+                    </b-col>
+                </b-row>
+            </b-container>
+        </b-form>
 
-            <b-row class="mt-4" v-if="showJson">
+        <b-container fluid class="mt-4 ml-4 mr-4">
+            <b-row class="mt-4 mr-4" v-if="showJson">
                 <b-col id="json-comic">
                     <b-card header="comic">
                         <pre class="mt-0">{{ $data.comic }}</pre>
