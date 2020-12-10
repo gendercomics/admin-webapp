@@ -116,6 +116,19 @@
                         </b-button>
                     </template>
 
+                    <!-- state -->
+                    <template v-slot:cell(metaData.status)="row">
+                        <span v-if="row.item.metaData.status === 'DRAFT'"
+                            ><b-badge variant="secondary">draft</b-badge></span
+                        >
+                        <span v-if="row.item.metaData.status === 'REVIEW'"
+                            ><b-badge variant="warning">review</b-badge></span
+                        >
+                        <span v-if="row.item.metaData.status === 'FINAL'"
+                            ><b-badge variant="success">final</b-badge></span
+                        >
+                    </template>
+
                     <template v-slot:cell(url)="data">
                         <b-link target="_blank" v-bind:href="data.item.url">{{
                             data.item.url
@@ -161,6 +174,7 @@ export default {
         return {
             fields: [
                 { key: 'actions', label: 'actions' },
+                { key: 'metaData.status', label: 'status' },
                 { key: 'name', label: 'name' },
                 { key: 'location', label: 'location' },
                 { key: 'url', label: 'url' },
@@ -200,6 +214,7 @@ export default {
         },
         deletePublisher(item) {
             console.log('delete publisher: ' + item.name);
+            // TODO implement delete logic
         },
     },
 };
