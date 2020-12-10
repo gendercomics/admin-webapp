@@ -102,6 +102,12 @@
                             :disabled="this.showKeywords"
                             >keywords
                         </b-button>
+                        <!-- toggle JSON view -->
+                        <b-button
+                            variant="outline-dark"
+                            :pressed.sync="showJson"
+                            >JSON</b-button
+                        >
                     </b-button-group>
                 </b-col>
 
@@ -156,15 +162,15 @@
                                     <div class="w-50">
                                         <b-form-select
                                             v-model="
-                                                comic.creators[idx].person.id
+                                                comic.creators[idx].name.id
                                             "
-                                            @change="personUpdated(idx)"
+                                            @change="nameUpdated(idx)"
                                         >
                                             <option
-                                                v-for="person in persons"
-                                                v-bind:key="person.id"
-                                                :value="person.id"
-                                                >{{ creatorName(person) }}
+                                                v-for="name in names"
+                                                v-bind:key="name.id"
+                                                :value="name.id"
+                                                >{{ creatorName(name) }}
                                             </option>
                                         </b-form-select>
                                     </div>
@@ -340,8 +346,7 @@
                 </b-col>
             </b-row>
 
-            <!--
-            <b-row class="mt-4">
+            <b-row class="mt-4" v-if="showJson">
                 <b-col id="json-comic">
                     <b-card header="comic">
                         <pre class="mt-0">{{ $data.comic }}</pre>
@@ -349,41 +354,13 @@
                 </b-col>
             </b-row>
 
-
-            <b-row class="mt-4">
-                <b-col id="json-some-values">
-                    <b-card header="some data">
-                        <pre class="mt-0">
-                            <div>selectedPublication: {{ $data.selectedPublication }}</div>
-
-                            <div>selectedCreatorPerson: {{ $data.selectedCreatorPerson }}</div>
-                            <div>selectedCreatorRole: {{ $data.selectedCreatorRole }}</div>
-                            <div>saveSuccessful: {{ $data.saveSuccessful }}</div>
-
-                        </pre>
+            <b-row class="mt-4" v-if="showJson">
+                <b-col id="json-names">
+                    <b-card header="names">
+                        <pre class="mt-0">{{ $data.names }}</pre>
                     </b-card>
                 </b-col>
             </b-row>
--->
-            <!--
-
-            <b-row class="mt-4">
-                <b-col id="json-persons">
-                    <b-card header="persons">
-                        <pre class="mt-0">{{ $data.persons }}</pre>
-                    </b-card>
-                </b-col>
-            </b-row>
-
-            <b-row class="mt-4">
-                <b-col id="json-publishers">
-                    <b-card header="publishers">
-                        <pre class="mt-0">{{ $data.publishers }}</pre>
-                    </b-card>
-                </b-col>
-            </b-row>
-
-            -->
         </b-container>
     </div>
 </template>
@@ -427,7 +404,7 @@ export default {
                     status: 'DRAFT',
                 },
             },
-            persons: [],
+            names: [],
             roles: [],
             publishers: [],
             show: true,
@@ -439,6 +416,7 @@ export default {
             types: ['anthology', 'comic', 'magazine', 'webcomic'],
             statusOptions: ['DRAFT', 'REVIEW', 'FINAL'],
             parents: null,
+            showJson: false,
         };
     },
     computed: {
@@ -592,7 +570,7 @@ export default {
             if (this.comic.creators === null) {
                 this.comic.creators = [];
             }
-            this.comic.creators.push({ person: {}, role: {} });
+            this.comic.creators.push({ name: {}, role: {} });
         },
         removeCreator(idx) {
             this.comic.creators.splice(idx, 1);
@@ -648,11 +626,11 @@ export default {
         removeIn() {
             this.comic.partOf = null;
         },
-        personUpdated(idx) {
-            console.log('personUpdated=' + idx);
-            this.persons.forEach(person => {
-                if (this.comic.creators[idx].person.id === person.id) {
-                    this.comic.creators[idx].person = person;
+        nameUpdated(idx) {
+            console.log('nameUpdated=' + idx);
+            this.names.forEach(name => {
+                if (this.comic.creators[idx].name.id === name.id) {
+                    this.comic.creators[idx].name = name;
                 }
             });
         },
@@ -699,11 +677,11 @@ export default {
                 : optionText;
             return optionText;
         },
-        creatorName(creator) {
-            if (creator.pseudonym != null && creator.pseudonym.length > 1) {
-                return creator.pseudonym;
+        creatorName(name) {
+            if (name.name !== null) {
+                return name.name;
             }
-            return creator.firstName + ' ' + creator.lastName;
+            return name.firstName + ' ' + name.lastName;
         },
     },
     mounted() {
@@ -734,10 +712,10 @@ export default {
                 })
                 .finally(() => (this.loading = false));
         }
-        // get persons
+        // get persons (creators = searchable persons)
         httpClient
-            .get('/persons')
-            .then(response => (this.persons = response.data))
+            .get('/creators')
+            .then(response => (this.names = response.data))
             .catch(error => {
                 console.log(error);
                 this.errored = true;

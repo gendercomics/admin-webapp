@@ -122,7 +122,7 @@
                             v-for="creator in data.item.creators"
                             v-bind:key="creator.id"
                         >
-                            <span>{{ fullName(creator) }}</span>
+                            <span>{{ fullName(creator.name) }}</span>
                         </div>
                     </template>
 
@@ -180,7 +180,7 @@ export default {
             loading: true,
             errored: false,
             filter: null,
-            filterOn: ['title', 'creators', 'partOf'],
+            filterOn: [],
             totalRows: 1,
             currentPage: 1,
             perPage: 10,
@@ -212,15 +212,10 @@ export default {
             this.currentPage = 1;
         },
         fullName(creator) {
-            if (creator != null) {
-                if (
-                    creator.person.pseudonym != null &&
-                    creator.person.pseudonym.length > 1
-                ) {
-                    return creator.person.pseudonym;
-                }
-                return creator.person.firstName + ' ' + creator.person.lastName;
+            if (creator.name != null) {
+                return creator.name;
             }
+            return creator.firstName + ' ' + creator.lastName;
         },
         titleDisplayText(item) {
             return item.issue !== null
