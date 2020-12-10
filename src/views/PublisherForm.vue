@@ -1,115 +1,133 @@
 <template>
     <div class="text-left">
         <Header />
-        <b-container fluid class="mt-4 ml-4 mr-4">
-            <b-row>
-                <b-form
-                    id="publisher-form"
-                    v-if="show"
-                    v-on:submit.prevent="onSubmit"
-                >
-                    <div>
-                        <b-card
-                            bg-variant="light"
-                            header="add a new publisher"
-                            style="min-width: 50rem"
-                        >
-                            <b-card-body>
-                                <b-row>
-                                    <b-col>
-                                        <b-form-group
-                                            label-cols-sm="2"
-                                            label="name:"
-                                            label-align-sm="right"
-                                            label-for="name"
-                                        >
-                                            <b-form-input
-                                                id="name"
-                                                v-model="publisher.name"
-                                                placeholder="enter publisher name"
-                                                trim
-                                                style="max-width: 25rem"
-                                            ></b-form-input>
-                                        </b-form-group>
 
-                                        <b-form-group
-                                            label-cols-sm="2"
-                                            label="location:"
-                                            label-align-sm="right"
-                                            label-for="location"
-                                        >
-                                            <b-form-input
-                                                id="location"
-                                                type="text"
-                                                v-model="publisher.location"
-                                                placeholder="enter publisher location"
-                                                trim
-                                                style="max-width: 25rem"
-                                            ></b-form-input>
-                                        </b-form-group>
+        <div class="mt-3 ml-3 mr-3">
+            <b-alert variant="success" dismissible v-model="saveSuccessful"
+                >publisher saved!
+            </b-alert>
+        </div>
 
-                                        <b-form-group
-                                            label-cols-sm="2"
-                                            label="url:"
-                                            label-align-sm="right"
-                                            label-for="url"
-                                        >
-                                            <b-form-input
-                                                id="url"
-                                                type="url"
-                                                v-model="publisher.url"
-                                                placeholder="enter publisher url"
-                                                trim
-                                                style="max-width: 25rem"
-                                            ></b-form-input>
-                                        </b-form-group>
-                                    </b-col>
-                                </b-row>
+        <div class="mt-3 ml-3 mr-3">
+            <b-alert variant="danger" dismissible v-model="errored"
+                >error!
+            </b-alert>
+        </div>
 
-                                <b-row class="mt-2">
-                                    <b-col>
-                                        <b-button-group class="float-right">
-                                            <b-button
-                                                type="submit"
-                                                variant="primary"
-                                                >save</b-button
-                                            >
-                                            <b-button
-                                                to="/publishers"
-                                                type="reset"
-                                                variant="outline-danger"
-                                                >cancel</b-button
-                                            >
-                                        </b-button-group>
-                                    </b-col>
-                                </b-row>
-                            </b-card-body>
-                        </b-card>
+        <b-form @submit="onSubmit" v-if="show">
+            <b-container class="mt-2" fluid>
+                <!-- publisher name as summary on top -->
+                <div class="m-2">
+                    <input-field
+                        label="publisher"
+                        :value="publisher.name"
+                        size="lg"
+                        disabled
+                    />
+                </div>
+
+                <b-row class="ml-2">
+                    <div id="button-col" class="mt-2 mb-2">
+                        <b-button-group vertical>
+                            <b-button disabled>publisher</b-button>
+                            <b-button
+                                :variant="locationBtnVariant"
+                                @click="addLocation"
+                                :disabled="this.showLocation"
+                                >location</b-button
+                            >
+                            <b-button
+                                :variant="urlBtnVariant"
+                                @click="addUrl"
+                                :disabled="this.showUrl"
+                                >url</b-button
+                            >
+                        </b-button-group>
                     </div>
-                </b-form>
-            </b-row>
 
-            <div v-if="debug">
+                    <b-col id="form-col" class="pl-0 mr-3">
+                        <!-- name -->
+                        <input-field
+                            label="name"
+                            v-model="publisher.name"
+                            type="text"
+                            class="m-2"
+                        />
+
+                        <!-- location -->
+                        <input-field
+                            label="location"
+                            v-model="publisher.location"
+                            class="m-2"
+                            v-if="showLocation"
+                            type="text"
+                            removable
+                        />
+
+                        <!-- url -->
+                        <input-field
+                            label="url"
+                            v-model="publisher.url"
+                            class="m-2"
+                            v-if="showUrl"
+                            type="url"
+                            :link="publisher.url"
+                            removable
+                        />
+                    </b-col>
+                </b-row>
+
+                <b-row class="ml-2">
+                    <!-- action buttons -->
+                    <b-form-group>
+                        <b-button-group class="mt-3 float-right">
+                            <!-- editing status -->
+                            <b-form-select
+                                :options="statusOptions"
+                                v-model="publisher.metaData.status"
+                            />
+
+                            <b-button type="submit" variant="primary"
+                                >save</b-button
+                            >
+                            <b-button
+                                to="/publishers"
+                                type="reset"
+                                variant="outline-danger"
+                                >back</b-button
+                            >
+                        </b-button-group>
+                    </b-form-group>
+                </b-row>
+            </b-container>
+        </b-form>
+
+        <!--
+        <b-container fluid class="mt-4 ml-4 mr-4">
+            <div v-if="showJson">
                 <b-row class="mt-4 mr-4">
-                    <b-col id="json-publisher">
-                        <b-card header="publisher">
+                    <b-col id="json-person">
+                        <b-card header="person">
                             <pre class="mt-0">{{ $data.publisher }}</pre>
                         </b-card>
                     </b-col>
                 </b-row>
             </div>
         </b-container>
+        -->
     </div>
 </template>
 
 <script>
 import Header from '@/components/Header';
 import { httpClient } from '../services/httpclient';
+import InputField from '../components/InputField';
 
 export default {
     name: 'PublisherForm',
     components: {
         Header,
+        InputField,
     },
     data() {
         return {
@@ -117,10 +135,19 @@ export default {
                 name: null,
                 location: null,
                 url: null,
+                metaData: {
+                    createdOn: null,
+                    createdBy: null,
+                    changedOn: null,
+                    changedBy: null,
+                    status: 'DRAFT',
+                },
             },
             show: true,
             errored: false,
             debug: false,
+            saveSuccessful: false,
+            statusOptions: ['DRAFT', 'REVIEW', 'FINAL'],
         };
     },
     mounted() {
@@ -136,6 +163,22 @@ export default {
                     this.errored = true;
                 });
         }
+    },
+    computed: {
+        urlBtnVariant() {
+            if (!this.showUrl) return 'outline-dark';
+            return 'dark';
+        },
+        showUrl() {
+            return this.publisher.url != null;
+        },
+        locationBtnVariant() {
+            if (!this.showLocation) return 'outline-dark';
+            return 'dark';
+        },
+        showLocation() {
+            return this.publisher.location != null;
+        },
     },
     methods: {
         onSubmit(evt) {
@@ -167,6 +210,12 @@ export default {
                         this.errored = true;
                     });
             }
+        },
+        addLocation() {
+            this.publisher.location = '';
+        },
+        addUrl() {
+            this.publisher.url = '';
         },
     },
 };

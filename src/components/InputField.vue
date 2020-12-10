@@ -8,7 +8,7 @@
 
         <b-input-group-append v-if="link">
             <b-button
-                @click="openWikiData"
+                @click="openLink"
                 variant="dark-outline"
                 style="background-color: #e9ecef"
                 ><font-awesome-icon icon="external-link-alt"
@@ -59,8 +59,8 @@ export default {
             this.$log.debug('delete ' + this.label);
             this.localValue = null;
         },
-        openWikiData() {
-            console.log('open wikidata link: ' + this.link);
+        openLink() {
+            console.log('open link: ' + this.link);
             window.open(this.link, '_blank');
         },
     },
