@@ -103,6 +103,7 @@
 
                         <!-- delete button -->
                         <b-button
+                            v-show="row.item.metaData.status === 'DRAFT'"
                             variant="light"
                             size="sm"
                             class="mr-1"
