@@ -103,6 +103,7 @@
 
                         <!-- delete button -->
                         <b-button
+                            v-show="row.item.metaData.status === 'DRAFT'"
                             variant="light"
                             size="sm"
                             class="mr-1"
@@ -226,7 +227,14 @@ export default {
         deletePerson(item) {
             console.log('delete item: ' + item.id);
             //alert('Delete ' + this.fullName(item));
-            // TODO add code for deleting item
+            httpClient
+                .delete('/persons/' + item.id, item)
+                .catch(error => {
+                    console.log(error);
+                    this.errored = true;
+                })
+                .finally(() => (this.loading = false));
+            this.persons.splice(this.persons.indexOf(item), 1);
         },
         onFiltered(filteredItems) {
             // Trigger pagination to update the number of buttons/pages due to filtering
