@@ -103,13 +103,14 @@
 
                         <!-- delete button -->
                         <b-button
+                            v-show="row.item.metaData.status === 'DRAFT'"
                             variant="light"
                             size="sm"
                             class="mr-1"
                             @click="deletePublisher(row.item)"
                         >
                             <font-awesome-icon
-                                icon="trash"
+                                icon="trash-alt"
                                 v-b-tooltip
                                 title="delete"
                             />
@@ -214,7 +215,15 @@ export default {
         },
         deletePublisher(item) {
             console.log('delete publisher: ' + item.name);
-            // TODO implement delete logic
+            // TODO display warning modal?
+            httpClient
+                .delete('/publishers/' + item.id, item)
+                .catch(error => {
+                    console.log(error);
+                    this.errored = true;
+                })
+                .finally(() => (this.loading = false));
+            this.publishers.splice(this.publishers.indexOf(item), 1);
         },
     },
 };

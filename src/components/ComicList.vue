@@ -99,6 +99,21 @@
                                 title="edit"
                             />
                         </b-button>
+
+                        <!-- delete button -->
+                        <b-button
+                            v-show="row.item.metaData.status === 'DRAFT'"
+                            variant="light"
+                            size="sm"
+                            class="mr-1"
+                            @click="deleteComic(row.item)"
+                        >
+                            <font-awesome-icon
+                                icon="trash-alt"
+                                v-b-tooltip
+                                title="delete"
+                            />
+                        </b-button>
                     </template>
 
                     <template v-slot:cell(metaData.status)="row">
@@ -229,6 +244,18 @@ export default {
                     : item.partOf.comic.title;
             }
             return null;
+        },
+        deleteComic(item) {
+            console.log('delete comic: ' + item.title);
+            // TODO display warning modal?
+            httpClient
+                .delete('/comics/' + item.id, item)
+                .catch(error => {
+                    console.log(error);
+                    this.errored = true;
+                })
+                .finally(() => (this.loading = false));
+            this.comics.splice(this.comics.indexOf(item), 1);
         },
     },
 };

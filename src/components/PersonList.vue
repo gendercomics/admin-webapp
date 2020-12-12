@@ -110,7 +110,7 @@
                             @click="deletePerson(row.item)"
                         >
                             <font-awesome-icon
-                                icon="trash"
+                                icon="trash-alt"
                                 v-b-tooltip
                                 title="delete"
                             />
@@ -226,7 +226,7 @@ export default {
         },
         deletePerson(item) {
             console.log('delete item: ' + item.id);
-            //alert('Delete ' + this.fullName(item));
+            // TODO display warning modal?
             httpClient
                 .delete('/persons/' + item.id, item)
                 .catch(error => {

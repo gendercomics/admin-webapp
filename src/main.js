@@ -14,7 +14,7 @@ import {
     faSearch,
     faTags,
     faTimesCircle,
-    faTrash,
+    faTrashAlt,
     faUserSecret,
 } from '@fortawesome/free-solid-svg-icons';
 import AuthService from './services/authservice';
@@ -25,7 +25,7 @@ library.add(
     faSearch,
     faTags,
     faTimesCircle,
-    faTrash,
+    faTrashAlt,
     faUserSecret
 );
 

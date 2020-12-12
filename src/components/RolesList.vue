@@ -110,7 +110,7 @@
                             @click="deleteRole(row.item)"
                         >
                             <font-awesome-icon
-                                icon="trash"
+                                icon="trash-alt"
                                 v-b-tooltip
                                 title="delete"
                             />
@@ -203,7 +203,15 @@ export default {
         },
         deleteRole(item) {
             console.log('delete role: ' + item.name);
-            // TODO implement delete logic
+            // TODO display warning modal?
+            httpClient
+                .delete('/roles/' + item.id, item)
+                .catch(error => {
+                    console.log(error);
+                    this.errored = true;
+                })
+                .finally(() => (this.loading = false));
+            this.roles.splice(this.roles.indexOf(item), 1);
         },
         onFiltered(filteredItems) {
             // Trigger pagination to update the number of buttons/pages due to filtering
