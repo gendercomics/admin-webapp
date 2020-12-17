@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import {
     faEdit,
     faExternalLinkAlt,
+    faFilter,
     faSearch,
     faTags,
     faTimesCircle,
@@ -22,6 +23,7 @@ import AuthService from './services/authservice';
 library.add(
     faEdit,
     faExternalLinkAlt,
+    faFilter,
     faSearch,
     faTags,
     faTimesCircle,

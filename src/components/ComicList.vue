@@ -142,7 +142,34 @@
                     </template>
 
                     <template v-slot:cell(partOf)="row">
-                        <span>{{ parentDisplayText(row.item) }}</span>
+                        <div v-if="row.item.partOf !== null">
+                            <span>{{ parentDisplayText(row.item) }}</span>
+                            <b-button
+                                variant="light"
+                                size="sm"
+                                @click="filterParent(row.item)"
+                                class="ml-2 mr-1"
+                            >
+                                <font-awesome-icon
+                                    icon="filter"
+                                    v-b-tooltip
+                                    title="filter"
+                                />
+                            </b-button>
+
+                            <b-button
+                                variant="light"
+                                size="sm"
+                                @click="edit(row.item.partOf.comic)"
+                                class="mr-1"
+                            >
+                                <font-awesome-icon
+                                    icon="edit"
+                                    v-b-tooltip
+                                    title="edit"
+                                />
+                            </b-button>
+                        </div>
                     </template>
 
                     <template v-slot:cell(metaData.changedOn)="data">
@@ -244,6 +271,10 @@ export default {
                     : item.partOf.comic.title;
             }
             return null;
+        },
+        filterParent(item) {
+            console.log('filterParent: ' + item.partOf.comic.title);
+            this.filter = item.partOf.comic.title;
         },
         deleteComic(item) {
             console.log('delete comic: ' + item.title);
