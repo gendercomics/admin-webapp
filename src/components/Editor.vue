@@ -32,6 +32,16 @@
                 >
                     <font-awesome-icon icon="underline" />
                 </b-button>
+                <!-- paragraph -->
+                <b-button
+                    class="m-1"
+                    variant="light"
+                    size="sm"
+                    @click="commands.paragraph"
+                    :pressed="isActive.paragraph()"
+                >
+                    <font-awesome-icon icon="paragraph" />
+                </b-button>
                 <!-- H1 -->
                 <b-button
                     class="m-1"
@@ -41,6 +51,26 @@
                     :pressed="isActive.heading({ level: 1 })"
                 >
                     <b>H1</b>
+                </b-button>
+                <!-- H2 -->
+                <b-button
+                    class="m-1"
+                    variant="light"
+                    size="sm"
+                    @click="commands.heading({ level: 2 })"
+                    :pressed="isActive.heading({ level: 2 })"
+                >
+                    <b>H2</b>
+                </b-button>
+                <!-- H3 -->
+                <b-button
+                    class="m-1"
+                    variant="light"
+                    size="sm"
+                    @click="commands.heading({ level: 3 })"
+                    :pressed="isActive.heading({ level: 3 })"
+                >
+                    <b>H3</b>
                 </b-button>
                 <!-- undo -->
                 <b-button
@@ -79,12 +109,13 @@ import {
 import {
     faBold,
     faItalic,
+    faParagraph,
     faRedo,
     faUnderline,
     faUndo,
 } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
-library.add(faBold, faItalic, faRedo, faUnderline, faUndo);
+library.add(faBold, faItalic, faParagraph, faRedo, faUnderline, faUndo);
 export default {
     name: 'Editor',
     components: {
