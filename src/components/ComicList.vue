@@ -316,7 +316,6 @@ export default {
             return null;
         },
         filterOnParentTitleAndIssue(item) {
-            console.log('filterParent: ' + item.partOf.comic.title);
             let filterString = item.partOf.comic.title;
             if (item.partOf.comic.issue != null) {
                 filterString += ', ' + item.partOf.comic.issue;
