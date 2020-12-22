@@ -83,7 +83,7 @@
                     :current-page="currentPage"
                     :per-page="perPage"
                     :filter="filter"
-                    :filterIncludedFields="filterOn"
+                    :filter-function="customFilter"
                     @filtered="onFiltered"
                 >
                     <template v-slot:cell(actions)="row">
@@ -147,7 +147,7 @@
                             <b-button
                                 variant="light"
                                 size="sm"
-                                @click="filterParent(row.item)"
+                                @click="filterOnParentTitleAndIssue(row.item)"
                                 class="ml-2 mr-1"
                             >
                                 <font-awesome-icon
@@ -253,6 +253,49 @@ export default {
             this.totalRows = filteredItems.length;
             this.currentPage = 1;
         },
+        customFilter(row, filter) {
+            return (
+                this.filterTitle(row, filter) ||
+                this.filterCreators(row, filter) ||
+                this.filterParent(row, filter)
+            );
+        },
+        filterTitle(row, filter) {
+            let titleAndIssue = this.titleDisplayText(row);
+            let filterTitle = titleAndIssue
+                .toLowerCase()
+                .includes(filter.toLowerCase());
+            return filterTitle;
+        },
+        filterCreators(row, filter) {
+            let filterCreator = false;
+            row.creators.forEach(function(creator) {
+                let filterName = '';
+                if (creator.name.name !== null) {
+                    filterName = creator.name.name;
+                } else {
+                    filterName =
+                        creator.name.firstName + ' ' + creator.name.lastName;
+                }
+                filterCreator =
+                    filterCreator ||
+                    filterName
+                        .trim()
+                        .toLowerCase()
+                        .includes(filter.toLowerCase());
+            });
+            return filterCreator;
+        },
+        filterParent(row, filter) {
+            let filterParent = false;
+            let parentString = this.parentDisplayText(row);
+            if (parentString != null) {
+                filterParent = parentString
+                    .toLowerCase()
+                    .includes(filter.toLowerCase());
+            }
+            return filterParent;
+        },
         fullName(creator) {
             if (creator.name != null) {
                 return creator.name;
@@ -272,9 +315,13 @@ export default {
             }
             return null;
         },
-        filterParent(item) {
+        filterOnParentTitleAndIssue(item) {
             console.log('filterParent: ' + item.partOf.comic.title);
-            this.filter = item.partOf.comic.title;
+            let filterString = item.partOf.comic.title;
+            if (item.partOf.comic.issue != null) {
+                filterString += ', ' + item.partOf.comic.issue;
+            }
+            this.filter = filterString;
         },
         deleteComic(item) {
             console.log('delete comic: ' + item.title);
