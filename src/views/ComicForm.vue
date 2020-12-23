@@ -167,6 +167,7 @@
                             v-for="(creator, idx) in comic.creators"
                             v-bind:key="idx"
                         >
+                            <!-- creator -->
                             <b-form-row class="pl-1 pr-1">
                                 <b-input-group class="pt-2" prepend="creator">
                                     <div class="w-50">
@@ -204,6 +205,17 @@
                                     </template>
                                 </b-input-group>
                             </b-form-row>
+                        </div>
+
+                        <!-- creators v2 -->
+                        <div
+                            v-for="(creator, idx) in comic.creators"
+                            v-bind:key="idx"
+                        >
+                            <comic-creator
+                                v-model="comic.creators[idx]"
+                                removable
+                            />
                         </div>
 
                         <!-- type -->
@@ -279,7 +291,7 @@
                             class="mt-2"
                         />
 
-                        <!-- in (part of publication -->
+                        <!-- in (part of publication) -->
                         <b-input-group
                             id="input-group-in"
                             class="pt-2"
@@ -373,6 +385,14 @@
                     </b-card>
                 </b-col>
             </b-row>
+
+            <b-row class="mt-4" v-if="showJson">
+                <b-col id="json-roles">
+                    <b-card header="roles">
+                        <pre class="mt-0">{{ $data.roles }}</pre>
+                    </b-card>
+                </b-col>
+            </b-row>
         </b-container>
     </div>
 </template>
@@ -383,10 +403,15 @@ import InputField from '../components/InputField';
 import { httpClient } from '../services/httpclient';
 import TagInput from '../components/TagInput';
 import SelectField from '../components/SelectField';
+import ComicCreator from '@/components/ComicCreator';
+import RoleService from '@/mixins/roleservice';
+import PersonService from '@/mixins/personservice';
 
 export default {
     name: 'ComicForm',
+    mixins: [PersonService, RoleService],
     components: {
+        ComicCreator,
         TagInput,
         InputField,
         SelectField,
@@ -428,7 +453,7 @@ export default {
             types: ['anthology', 'comic', 'magazine', 'webcomic'],
             statusOptions: ['DRAFT', 'REVIEW', 'FINAL'],
             parents: null,
-            showJson: false,
+            showJson: true,
         };
     },
     computed: {
@@ -699,6 +724,10 @@ export default {
     mounted() {
         // load parents (anthologies, magazines)
         this.loadParents();
+        // load roles
+        this.loadRoles();
+        // load creators (creators = searchable persons)
+        this.loadCreators();
         // get comic
         if (!this.$route.path.endsWith('new')) {
             httpClient
@@ -724,15 +753,6 @@ export default {
                 })
                 .finally(() => (this.loading = false));
         }
-        // get persons (creators = searchable persons)
-        httpClient
-            .get('/creators')
-            .then(response => (this.names = response.data))
-            .catch(error => {
-                console.log(error);
-                this.errored = true;
-            })
-            .finally(() => (this.loading = false));
         // get publishers
         httpClient
             .get('/publishers')
@@ -740,13 +760,6 @@ export default {
             .catch(error => {
                 console.log(error);
                 this.errored = true;
-            })
-            .finally(() => (this.loading = false));
-        httpClient
-            .get('/roles')
-            .then(response => (this.roles = response.data))
-            .catch(error => {
-                console.log(error);
             })
             .finally(() => (this.loading = false));
     },
