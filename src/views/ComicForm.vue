@@ -208,6 +208,7 @@
                         </div>
 
                         <!-- creators v2 -->
+                        <!--
                         <div
                             v-for="(creator, idx) in comic.creators"
                             v-bind:key="idx"
@@ -217,6 +218,7 @@
                                 removable
                             />
                         </div>
+                        -->
 
                         <!-- type -->
                         <select-field
@@ -403,7 +405,7 @@ import InputField from '../components/InputField';
 import { httpClient } from '../services/httpclient';
 import TagInput from '../components/TagInput';
 import SelectField from '../components/SelectField';
-import ComicCreator from '@/components/ComicCreator';
+//import ComicCreator from '@/components/ComicCreator';
 import RoleService from '@/mixins/roleservice';
 import PersonService from '@/mixins/personservice';
 
@@ -411,7 +413,7 @@ export default {
     name: 'ComicForm',
     mixins: [PersonService, RoleService],
     components: {
-        ComicCreator,
+        // ComicCreator,
         TagInput,
         InputField,
         SelectField,
@@ -453,7 +455,7 @@ export default {
             types: ['anthology', 'comic', 'magazine', 'webcomic'],
             statusOptions: ['DRAFT', 'REVIEW', 'FINAL'],
             parents: null,
-            showJson: true,
+            showJson: false,
         };
     },
     computed: {
