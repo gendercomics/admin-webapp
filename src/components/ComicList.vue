@@ -83,7 +83,7 @@
                     :current-page="currentPage"
                     :per-page="perPage"
                     :filter="filter"
-                    :filterIncludedFields="filterOn"
+                    :filter-function="customFilter"
                     @filtered="onFiltered"
                 >
                     <template v-slot:cell(actions)="row">
@@ -97,6 +97,21 @@
                                 icon="edit"
                                 v-b-tooltip
                                 title="edit"
+                            />
+                        </b-button>
+
+                        <!-- delete button -->
+                        <b-button
+                            v-show="row.item.metaData.status === 'DRAFT'"
+                            variant="light"
+                            size="sm"
+                            class="mr-1"
+                            @click="deleteComic(row.item)"
+                        >
+                            <font-awesome-icon
+                                icon="trash-alt"
+                                v-b-tooltip
+                                title="delete"
                             />
                         </b-button>
                     </template>
@@ -122,12 +137,39 @@
                             v-for="creator in data.item.creators"
                             v-bind:key="creator.id"
                         >
-                            <span>{{ fullName(creator) }}</span>
+                            <span>{{ fullName(creator.name) }}</span>
                         </div>
                     </template>
 
                     <template v-slot:cell(partOf)="row">
-                        <span>{{ parentDisplayText(row.item) }}</span>
+                        <div v-if="row.item.partOf !== null">
+                            <span>{{ parentDisplayText(row.item) }}</span>
+                            <b-button
+                                variant="light"
+                                size="sm"
+                                @click="filterOnParentTitleAndIssue(row.item)"
+                                class="ml-2 mr-1"
+                            >
+                                <font-awesome-icon
+                                    icon="filter"
+                                    v-b-tooltip
+                                    title="filter"
+                                />
+                            </b-button>
+
+                            <b-button
+                                variant="light"
+                                size="sm"
+                                @click="edit(row.item.partOf.comic)"
+                                class="mr-1"
+                            >
+                                <font-awesome-icon
+                                    icon="edit"
+                                    v-b-tooltip
+                                    title="edit"
+                                />
+                            </b-button>
+                        </div>
                     </template>
 
                     <template v-slot:cell(metaData.changedOn)="data">
@@ -180,7 +222,7 @@ export default {
             loading: true,
             errored: false,
             filter: null,
-            filterOn: ['title', 'creators', 'partOf'],
+            filterOn: [],
             totalRows: 1,
             currentPage: 1,
             perPage: 10,
@@ -211,16 +253,54 @@ export default {
             this.totalRows = filteredItems.length;
             this.currentPage = 1;
         },
-        fullName(creator) {
-            if (creator != null) {
-                if (
-                    creator.person.pseudonym != null &&
-                    creator.person.pseudonym.length > 1
-                ) {
-                    return creator.person.pseudonym;
+        customFilter(row, filter) {
+            return (
+                this.filterTitle(row, filter) ||
+                this.filterCreators(row, filter) ||
+                this.filterParent(row, filter)
+            );
+        },
+        filterTitle(row, filter) {
+            let titleAndIssue = this.titleDisplayText(row);
+            let filterTitle = titleAndIssue
+                .toLowerCase()
+                .includes(filter.toLowerCase());
+            return filterTitle;
+        },
+        filterCreators(row, filter) {
+            let filterCreator = false;
+            row.creators.forEach(function(creator) {
+                let filterName = '';
+                if (creator.name.name !== null) {
+                    filterName = creator.name.name;
+                } else {
+                    filterName =
+                        creator.name.firstName + ' ' + creator.name.lastName;
                 }
-                return creator.person.firstName + ' ' + creator.person.lastName;
+                filterCreator =
+                    filterCreator ||
+                    filterName
+                        .trim()
+                        .toLowerCase()
+                        .includes(filter.toLowerCase());
+            });
+            return filterCreator;
+        },
+        filterParent(row, filter) {
+            let filterParent = false;
+            let parentString = this.parentDisplayText(row);
+            if (parentString != null) {
+                filterParent = parentString
+                    .toLowerCase()
+                    .includes(filter.toLowerCase());
             }
+            return filterParent;
+        },
+        fullName(creator) {
+            if (creator.name != null) {
+                return creator.name;
+            }
+            return creator.firstName + ' ' + creator.lastName;
         },
         titleDisplayText(item) {
             return item.issue !== null
@@ -234,6 +314,25 @@ export default {
                     : item.partOf.comic.title;
             }
             return null;
+        },
+        filterOnParentTitleAndIssue(item) {
+            let filterString = item.partOf.comic.title;
+            if (item.partOf.comic.issue != null) {
+                filterString += ', ' + item.partOf.comic.issue;
+            }
+            this.filter = filterString;
+        },
+        deleteComic(item) {
+            console.log('delete comic: ' + item.title);
+            // TODO display warning modal?
+            httpClient
+                .delete('/comics/' + item.id, item)
+                .catch(error => {
+                    console.log(error);
+                    this.errored = true;
+                })
+                .finally(() => (this.loading = false));
+            this.comics.splice(this.comics.indexOf(item), 1);
         },
     },
 };

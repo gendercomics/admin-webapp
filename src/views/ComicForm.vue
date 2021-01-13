@@ -14,105 +14,121 @@
             </b-alert>
         </div>
 
-        <b-container class="mt-3" fluid>
-            <b-row>
-                <b-col id="button-col" cols="1">
-                    <b-button-group vertical>
-                        <b-button disabled>title</b-button>
-                        <b-button
-                            :variant="subtitleBtnVariant"
-                            @click="addSubtitle"
-                            :disabled="this.showSubtitle"
-                            >subtitle
-                        </b-button>
-                        <b-button
-                            :variant="issueBtnVariant"
-                            @click="addIssue"
-                            :disabled="this.showIssue"
-                            >issue
-                        </b-button>
-                        <b-button variant="outline-dark" @click="addCreator"
-                            >creator+
-                        </b-button>
-                        <b-button
-                            :variant="typeBtnVariant"
-                            @click="addType"
-                            :disabled="this.showType"
-                            >type
-                        </b-button>
-                        <b-button
-                            :variant="publisherBtnVariant"
-                            @click="addPublisher"
-                            :disabled="this.showPublisher"
-                            >publisher
-                        </b-button>
-                        <b-button
-                            :variant="yearBtnVariant"
-                            @click="addYear"
-                            :disabled="this.showYear"
-                            >year
-                        </b-button>
-                        <b-button
-                            :variant="editionBtnVariant"
-                            @click="addEdition"
-                            :disabled="this.showEdition"
-                            >edition
-                        </b-button>
-                        <b-button
-                            :variant="linkBtnVariant"
-                            @click="addLink"
-                            :disabled="this.showLink"
-                            >link
-                        </b-button>
-                        <b-button
-                            :variant="isbnBtnVariant"
-                            @click="addIsbn"
-                            :disabled="this.showIsbn"
-                            >isbn
-                        </b-button>
+        <b-form @submit="onSubmit" v-if="show">
+            <b-container class="mt-2" fluid>
+                <!-- comic summary on top TODO: improve summary -->
+                <div class="m-2">
+                    <input-field
+                        label="comic"
+                        :value="comic.title"
+                        size="lg"
+                        disabled
+                    />
+                </div>
 
-                        <!-- in (part of publication) -->
-                        <b-button
-                            :variant="inBtnVariant"
-                            @click="addIn"
-                            :disabled="this.showIn"
-                            v-if="this.showInButtons"
-                            >in
-                        </b-button>
-                        <b-button
-                            :variant="pagesBtnVariant"
-                            @click="addPages"
-                            :disabled="this.showPages"
-                            v-if="this.showInButtons"
-                            >pages
-                        </b-button>
+                <b-row class="ml-2">
+                    <div id="button-col" class="mt-2 mb-2">
+                        <b-button-group vertical>
+                            <b-button disabled>title</b-button>
+                            <b-button
+                                :variant="subtitleBtnVariant"
+                                @click="addSubtitle"
+                                :disabled="this.showSubtitle"
+                                >subtitle
+                            </b-button>
+                            <b-button
+                                :variant="issueBtnVariant"
+                                @click="addIssue"
+                                :disabled="this.showIssue"
+                                >issue
+                            </b-button>
+                            <b-button variant="outline-dark" @click="addCreator"
+                                >creator+
+                            </b-button>
+                            <b-button
+                                :variant="typeBtnVariant"
+                                @click="addType"
+                                :disabled="this.showType"
+                                >type
+                            </b-button>
+                            <b-button
+                                :variant="publisherBtnVariant"
+                                @click="addPublisher"
+                                :disabled="this.showPublisher"
+                                >publisher
+                            </b-button>
+                            <b-button
+                                :variant="yearBtnVariant"
+                                @click="addYear"
+                                :disabled="this.showYear"
+                                >year
+                            </b-button>
+                            <b-button
+                                :variant="editionBtnVariant"
+                                @click="addEdition"
+                                :disabled="this.showEdition"
+                                >edition
+                            </b-button>
+                            <b-button
+                                :variant="linkBtnVariant"
+                                @click="addLink"
+                                :disabled="this.showLink"
+                                >link
+                            </b-button>
+                            <b-button
+                                :variant="isbnBtnVariant"
+                                @click="addIsbn"
+                                :disabled="this.showIsbn"
+                                >isbn
+                            </b-button>
 
-                        <!-- genres -->
-                        <b-button
-                            :variant="genresBtnVariant"
-                            @click="addGenres"
-                            :disabled="this.showGenres"
-                            >genres
-                        </b-button>
+                            <!-- in (part of publication) -->
+                            <b-button
+                                :variant="inBtnVariant"
+                                @click="addIn"
+                                :disabled="this.showIn"
+                                v-if="this.showInButtons"
+                                >in
+                            </b-button>
+                            <b-button
+                                :variant="pagesBtnVariant"
+                                @click="addPages"
+                                :disabled="this.showPages"
+                                v-if="this.showInButtons"
+                                >pages
+                            </b-button>
 
-                        <!-- keywords -->
-                        <b-button
-                            :variant="keywordsBtnVariant"
-                            @click="addKeywords"
-                            :disabled="this.showKeywords"
-                            >keywords
-                        </b-button>
-                    </b-button-group>
-                </b-col>
+                            <!-- genres -->
+                            <b-button
+                                :variant="genresBtnVariant"
+                                @click="addGenres"
+                                :disabled="this.showGenres"
+                                >genres
+                            </b-button>
 
-                <b-col id="form-col">
-                    <b-form @submit="onSubmit" v-if="show">
+                            <!-- keywords -->
+                            <b-button
+                                :variant="keywordsBtnVariant"
+                                @click="addKeywords"
+                                :disabled="this.showKeywords"
+                                >keywords
+                            </b-button>
+                            <!-- toggle JSON view -->
+                            <b-button
+                                variant="outline-dark"
+                                :pressed.sync="showJson"
+                                >JSON</b-button
+                            >
+                        </b-button-group>
+                    </div>
+
+                    <b-col id="form-col" class="mt-2 mr-2">
                         <!-- title -->
                         <b-input-group
                             prepend="title"
                             id="input-group-title"
                             label-for="input-title"
-                            size="lg"
+                            size="md"
                         >
                             <b-form-input
                                 id="input-title"
@@ -156,15 +172,15 @@
                                     <div class="w-50">
                                         <b-form-select
                                             v-model="
-                                                comic.creators[idx].person.id
+                                                comic.creators[idx].name.id
                                             "
-                                            @change="personUpdated(idx)"
+                                            @change="nameUpdated(idx)"
                                         >
                                             <option
-                                                v-for="person in persons"
-                                                v-bind:key="person.id"
-                                                :value="person.id"
-                                                >{{ creatorName(person) }}
+                                                v-for="name in names"
+                                                v-bind:key="name.id"
+                                                :value="name.id"
+                                                >{{ creatorName(name) }}
                                             </option>
                                         </b-form-select>
                                     </div>
@@ -336,12 +352,13 @@
                                 </b-button>
                             </b-button-group>
                         </b-form-group>
-                    </b-form>
-                </b-col>
-            </b-row>
+                    </b-col>
+                </b-row>
+            </b-container>
+        </b-form>
 
-            <!--
-            <b-row class="mt-4">
+        <b-container fluid class="mt-4 ml-4 mr-4">
+            <b-row class="mt-4 mr-4" v-if="showJson">
                 <b-col id="json-comic">
                     <b-card header="comic">
                         <pre class="mt-0">{{ $data.comic }}</pre>
@@ -349,41 +366,13 @@
                 </b-col>
             </b-row>
 
-
-            <b-row class="mt-4">
-                <b-col id="json-some-values">
-                    <b-card header="some data">
-                        <pre class="mt-0">
-                            <div>selectedPublication: {{ $data.selectedPublication }}</div>
-
-                            <div>selectedCreatorPerson: {{ $data.selectedCreatorPerson }}</div>
-                            <div>selectedCreatorRole: {{ $data.selectedCreatorRole }}</div>
-                            <div>saveSuccessful: {{ $data.saveSuccessful }}</div>
-
-                        </pre>
+            <b-row class="mt-4" v-if="showJson">
+                <b-col id="json-names">
+                    <b-card header="names">
+                        <pre class="mt-0">{{ $data.names }}</pre>
                     </b-card>
                 </b-col>
             </b-row>
--->
-            <!--
-
-            <b-row class="mt-4">
-                <b-col id="json-persons">
-                    <b-card header="persons">
-                        <pre class="mt-0">{{ $data.persons }}</pre>
-                    </b-card>
-                </b-col>
-            </b-row>
-
-            <b-row class="mt-4">
-                <b-col id="json-publishers">
-                    <b-card header="publishers">
-                        <pre class="mt-0">{{ $data.publishers }}</pre>
-                    </b-card>
-                </b-col>
-            </b-row>
-
-            -->
         </b-container>
     </div>
 </template>
@@ -427,7 +416,7 @@ export default {
                     status: 'DRAFT',
                 },
             },
-            persons: [],
+            names: [],
             roles: [],
             publishers: [],
             show: true,
@@ -439,6 +428,7 @@ export default {
             types: ['anthology', 'comic', 'magazine', 'webcomic'],
             statusOptions: ['DRAFT', 'REVIEW', 'FINAL'],
             parents: null,
+            showJson: false,
         };
     },
     computed: {
@@ -592,7 +582,7 @@ export default {
             if (this.comic.creators === null) {
                 this.comic.creators = [];
             }
-            this.comic.creators.push({ person: {}, role: {} });
+            this.comic.creators.push({ name: {}, role: {} });
         },
         removeCreator(idx) {
             this.comic.creators.splice(idx, 1);
@@ -648,11 +638,11 @@ export default {
         removeIn() {
             this.comic.partOf = null;
         },
-        personUpdated(idx) {
-            console.log('personUpdated=' + idx);
-            this.persons.forEach(person => {
-                if (this.comic.creators[idx].person.id === person.id) {
-                    this.comic.creators[idx].person = person;
+        nameUpdated(idx) {
+            console.log('nameUpdated=' + idx);
+            this.names.forEach(name => {
+                if (this.comic.creators[idx].name.id === name.id) {
+                    this.comic.creators[idx].name = name;
                 }
             });
         },
@@ -699,11 +689,11 @@ export default {
                 : optionText;
             return optionText;
         },
-        creatorName(creator) {
-            if (creator.pseudonym != null && creator.pseudonym.length > 1) {
-                return creator.pseudonym;
+        creatorName(name) {
+            if (name.name !== null) {
+                return name.name;
             }
-            return creator.firstName + ' ' + creator.lastName;
+            return name.firstName + ' ' + name.lastName;
         },
     },
     mounted() {
@@ -734,10 +724,10 @@ export default {
                 })
                 .finally(() => (this.loading = false));
         }
-        // get persons
+        // get persons (creators = searchable persons)
         httpClient
-            .get('/persons')
-            .then(response => (this.persons = response.data))
+            .get('/creators')
+            .then(response => (this.names = response.data))
             .catch(error => {
                 console.log(error);
                 this.errored = true;

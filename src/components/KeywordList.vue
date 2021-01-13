@@ -99,6 +99,21 @@
                                 title="edit"
                             />
                         </b-button>
+
+                        <!-- delete button -->
+                        <b-button
+                            v-show="row.item.metaData.status === 'DRAFT'"
+                            variant="light"
+                            size="sm"
+                            class="mr-1"
+                            @click="deleteKeyword(row.item)"
+                        >
+                            <font-awesome-icon
+                                icon="trash-alt"
+                                v-b-tooltip
+                                title="delete"
+                            />
+                        </b-button>
                     </template>
 
                     <template v-slot:cell(metaData.status)="row">
@@ -194,6 +209,18 @@ export default {
             // Trigger pagination to update the number of buttons/pages due to filtering
             this.totalRows = filteredItems.length;
             this.currentPage = 1;
+        },
+        deleteKeyword(item) {
+            console.log('delete item: ' + item.id);
+            // TODO display warning modal?
+            httpClient
+                .delete('/keywords/' + item.id, item)
+                .catch(error => {
+                    console.log(error);
+                    this.errored = true;
+                })
+                .finally(() => (this.loading = false));
+            this.keywords.splice(this.keywords.indexOf(item), 1);
         },
     },
 };

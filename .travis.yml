@@ -1,7 +1,7 @@
 language: node_js
 
 node_js:
-  - node
+  - 14
 
 dist: trusty
 sudo: false
@@ -23,14 +23,31 @@ before_install:
 before_script:
   - VERSION=$(node -p -e "require('./package.json').version")
 
-script:
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker build -t gendercomics/admin-webapp .
-  - docker tag gendercomics/admin-webapp gendercomics/admin-webapp:latest
-  - docker tag gendercomics/admin-webapp gendercomics/admin-webapp:$VERSION
-  - docker images
-  - docker push gendercomics/admin-webapp:latest
-  - docker push gendercomics/admin-webapp:$VERSION
+stages:
+  - build-stage
+  - name: build-production
+    if: branch = master
+
+jobs:
+  include:
+    # build-stage
+    - stage: build-stage
+    - script:
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - docker build --build-arg VUE_APP_API_URL=https://api-stage.gendercomics.net/ -f Dockerfile-stage -t gendercomics/admin-webapp-stage .
+      - docker tag gendercomics/admin-webapp-stage gendercomics/admin-webapp-stage:latest
+      - docker images
+      - docker push gendercomics/admin-webapp-stage:latest
+    # build-production
+    - stage: build-production
+    - script:
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - docker build -t gendercomics/admin-webapp .
+      - docker tag gendercomics/admin-webapp gendercomics/admin-webapp:latest
+      - docker tag gendercomics/admin-webapp gendercomics/admin-webapp:$VERSION
+      - docker images
+      - docker push gendercomics/admin-webapp:latest
+      - docker push gendercomics/admin-webapp:$VERSION
 
 before_deploy:
   - eval "$(ssh-agent -s)"
@@ -42,7 +59,7 @@ before_deploy:
 deploy:
   - provider: script
     skip_cleanup: true
-    script: ssh deploy@gendercomics.net 'docker pull gendercomics/admin-webapp:latest && cd /var/gendercomics/admin-webapp-stage && docker-compose up -d gendercomics-admin-webapp-stage'
+    script: ssh deploy@gendercomics.net 'docker pull gendercomics/admin-webapp-stage:latest && cd /var/gendercomics/admin-webapp-stage && docker-compose up -d gendercomics-admin-webapp-stage'
     on:
       branch: develop
   - provider: script
