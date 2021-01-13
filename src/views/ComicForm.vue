@@ -406,8 +406,8 @@ import { httpClient } from '../services/httpclient';
 import TagInput from '../components/TagInput';
 import SelectField from '../components/SelectField';
 //import ComicCreator from '@/components/ComicCreator';
-import RoleService from '@/mixins/roleservice';
-import PersonService from '@/mixins/personservice';
+import RoleService from '../mixins/roleservice';
+import PersonService from '../mixins/personservice';
 
 export default {
     name: 'ComicForm',
