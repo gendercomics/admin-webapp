@@ -23,31 +23,18 @@ before_install:
 before_script:
   - VERSION=$(node -p -e "require('./package.json').version")
 
-stages:
-  - build-stage
-  - name: build-production
-    if: branch = master
-
-jobs:
-  include:
-    # build-stage
-    - stage: build-stage
-    - script:
-      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      - docker build --build-arg VUE_APP_API_URL=https://api-stage.gendercomics.net/ -f Dockerfile-stage -t gendercomics/admin-webapp-stage .
-      - docker tag gendercomics/admin-webapp-stage gendercomics/admin-webapp-stage:latest
-      - docker images
-      - docker push gendercomics/admin-webapp-stage:latest
-    # build-production
-    - stage: build-production
-    - script:
-      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      - docker build -t gendercomics/admin-webapp .
-      - docker tag gendercomics/admin-webapp gendercomics/admin-webapp:latest
-      - docker tag gendercomics/admin-webapp gendercomics/admin-webapp:$VERSION
-      - docker images
-      - docker push gendercomics/admin-webapp:latest
-      - docker push gendercomics/admin-webapp:$VERSION
+script:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker build --build-arg VUE_APP_API_URL=https://api-stage.gendercomics.net/ -f Dockerfile-stage -t gendercomics/admin-webapp-stage .
+  - docker tag gendercomics/admin-webapp-stage gendercomics/admin-webapp-stage:latest
+  - docker tag gendercomics/admin-webapp-stage gendercomics/admin-webapp-stage:$VERSION
+  - docker build -t gendercomics/admin-webapp .
+  - docker tag gendercomics/admin-webapp gendercomics/admin-webapp:latest
+  - docker tag gendercomics/admin-webapp gendercomics/admin-webapp:$VERSION
+  - docker images
+  - docker push gendercomics/admin-webapp-stage:latest
+  - docker push gendercomics/admin-webapp:latest
+  - docker push gendercomics/admin-webapp:$VERSION
 
 before_deploy:
   - eval "$(ssh-agent -s)"
