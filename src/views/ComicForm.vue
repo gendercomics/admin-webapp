@@ -406,12 +406,12 @@ import { httpClient } from '../services/httpclient';
 import TagInput from '../components/TagInput';
 import SelectField from '../components/SelectField';
 //import ComicCreator from '@/components/ComicCreator';
-//import RoleService from '../mixins/roleservice';
-//import PersonService from '../mixins/personservice';
+import RoleService from '@/mixins/roleservice';
+import PersonService from '@/mixins/personservice';
 
 export default {
     name: 'ComicForm',
-    //mixins: [PersonService, RoleService],
+    mixins: [PersonService, RoleService],
     components: {
         // ComicCreator,
         TagInput,
@@ -699,26 +699,6 @@ export default {
                     console.log(error);
                     this.errored = true;
                 });
-        },
-        loadCreators() {
-            this.loading = true;
-            httpClient
-                .get('/creators')
-                .then(response => (this.names = response.data))
-                .catch(error => {
-                    console.log(error);
-                })
-                .finally(() => (this.loading = false));
-        },
-        loadRoles() {
-            this.loading = true;
-            httpClient
-                .get('/roles')
-                .then(response => (this.roles = response.data))
-                .catch(error => {
-                    this.$log.error(error);
-                })
-                .finally(() => (this.loading = false));
         },
         parentOptionText(parent) {
             let optionText = parent.title;
