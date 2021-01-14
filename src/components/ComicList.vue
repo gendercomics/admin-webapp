@@ -269,21 +269,25 @@ export default {
         },
         filterCreators(row, filter) {
             let filterCreator = false;
-            row.creators.forEach(function(creator) {
-                let filterName = '';
-                if (creator.name.name !== null) {
-                    filterName = creator.name.name;
-                } else {
-                    filterName =
-                        creator.name.firstName + ' ' + creator.name.lastName;
-                }
-                filterCreator =
-                    filterCreator ||
-                    filterName
-                        .trim()
-                        .toLowerCase()
-                        .includes(filter.toLowerCase());
-            });
+            if (row.creators !== null) {
+                row.creators.forEach(function(creator) {
+                    let filterName = '';
+                    if (creator.name.name !== null) {
+                        filterName = creator.name.name;
+                    } else {
+                        filterName =
+                            creator.name.firstName +
+                            ' ' +
+                            creator.name.lastName;
+                    }
+                    filterCreator =
+                        filterCreator ||
+                        filterName
+                            .trim()
+                            .toLowerCase()
+                            .includes(filter.toLowerCase());
+                });
+            }
             return filterCreator;
         },
         filterParent(row, filter) {

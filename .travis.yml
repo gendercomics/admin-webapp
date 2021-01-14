@@ -33,6 +33,7 @@ script:
   - docker tag gendercomics/admin-webapp gendercomics/admin-webapp:$VERSION
   - docker images
   - docker push gendercomics/admin-webapp-stage:latest
+  - docker push gendercomics/admin-webapp-stage:$VERSION
   - docker push gendercomics/admin-webapp:latest
   - docker push gendercomics/admin-webapp:$VERSION
 
