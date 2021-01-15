@@ -170,6 +170,7 @@
                             <comic-creator
                                 v-model="comic.creators[idx]"
                                 removable
+                                @remove="removeCreator(idx)"
                             />
                         </div>
 
@@ -558,13 +559,13 @@ export default {
             this.comic.issue = '';
         },
         addCreator() {
-            console.log('add creator');
             if (this.comic.creators === null) {
                 this.comic.creators = [];
             }
             this.comic.creators.push({ name: {}, role: {} });
         },
         removeCreator(idx) {
+            this.$log.debug('idx=' + idx);
             this.comic.creators.splice(idx, 1);
         },
         addType() {

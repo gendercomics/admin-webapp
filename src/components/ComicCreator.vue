@@ -61,6 +61,7 @@
             </b-input-group>
         </b-form-row>
 
+        <!--
         <div>
             <b-row class="mt-4">
                 <b-col id="json">
@@ -70,6 +71,7 @@
                 </b-col>
             </b-row>
         </div>
+        -->
     </div>
 </template>
 
@@ -147,7 +149,7 @@ export default {
         },
         removeValue() {
             this.$log.debug('remove creator');
-            this.localValue = null;
+            this.$emit('remove', this.localValue);
         },
         fullName(creatorName) {
             if (creatorName.name != null) {
