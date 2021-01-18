@@ -42,9 +42,20 @@
                                 :disabled="this.showIssue"
                                 >issue
                             </b-button>
-                            <b-button variant="outline-dark" @click="addCreator"
-                                >creator+
-                            </b-button>
+                            <!-- creator button -->
+                            <b-button-group>
+                                <b-button
+                                    disabled
+                                    :variant="creatorBtnVariant"
+                                    >creator
+                                </b-button>
+                                <b-button
+                                    variant="outline-dark"
+                                    @click="addCreator"
+                                    >+
+                                </b-button>
+                            </b-button-group>
+                            <!-- typ button -->
                             <b-button
                                 :variant="typeBtnVariant"
                                 @click="addType"
@@ -422,6 +433,13 @@ export default {
         subtitleBtnVariant() {
             if (!this.showSubtitle) return 'outline-dark';
             return 'dark';
+        },
+        creatorBtnDisabled() {
+            if (this.comic.creators.length > 0) return true;
+            return false;
+        },
+        creatorBtnVariant() {
+            return this.creatorBtnDisabled ? 'dark' : 'outline-dark';
         },
         issueBtnVariant() {
             if (!this.showIssue) return 'outline-dark';

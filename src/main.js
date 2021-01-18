@@ -19,6 +19,8 @@ import {
     faUser,
     faUserSecret,
 } from '@fortawesome/free-solid-svg-icons';
+//import { faPlusSquare } from '@fortawesome/free-regular-svg-icons';
+
 import AuthService from './services/authservice';
 
 library.add(
