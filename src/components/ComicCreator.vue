@@ -5,7 +5,7 @@
                 <!-- role -->
                 <b-form-select
                     :options="roles"
-                    v-model="this.localValue.role.id"
+                    :value="this.localValue.role.id"
                     value-field="id"
                     text-field="name"
                     style="background-color: #E4E7EB; max-width: 15%"
@@ -85,7 +85,9 @@ export default {
     props: {
         value: {
             name: {},
-            role: {},
+            role: {
+                id: null,
+            },
         },
         removable: {
             type: Boolean,
