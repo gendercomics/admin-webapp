@@ -44,9 +44,7 @@
                             </b-button>
                             <!-- creator button -->
                             <b-button-group>
-                                <b-button
-                                    disabled
-                                    :variant="creatorBtnVariant"
+                                <b-button disabled :variant="creatorBtnVariant"
                                     >creator
                                 </b-button>
                                 <b-button
@@ -434,12 +432,13 @@ export default {
             if (!this.showSubtitle) return 'outline-dark';
             return 'dark';
         },
-        creatorBtnDisabled() {
-            if (this.comic.creators.length > 0) return true;
+        creatorsExist() {
+            if (this.comic.creators != null && this.comic.creators.length > 0)
+                return true;
             return false;
         },
         creatorBtnVariant() {
-            return this.creatorBtnDisabled ? 'dark' : 'outline-dark';
+            return this.creatorsExist ? 'dark' : 'outline-dark';
         },
         issueBtnVariant() {
             if (!this.showIssue) return 'outline-dark';

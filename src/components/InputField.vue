@@ -60,7 +60,7 @@ export default {
             this.localValue = null;
         },
         openLink() {
-            console.log('open link: ' + this.link);
+            this.$log.debug('open link: ' + this.link);
             window.open(this.link, '_blank');
         },
     },

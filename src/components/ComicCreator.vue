@@ -16,7 +16,6 @@
                 <!-- name -->
                 <b-dropdown
                     variant="outline-secondary"
-                    block
                     :text="fullName(this.localValue.name)"
                 >
                     <b-dropdown-form @submit.stop.prevent="() => {}">
