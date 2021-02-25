@@ -218,7 +218,6 @@
                             label="year"
                             v-model="comic.year"
                             v-if="showYear"
-                            type="number"
                             removable
                             class="mt-2"
                         />
