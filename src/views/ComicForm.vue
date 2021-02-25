@@ -219,7 +219,7 @@
                             v-model="comic.year"
                             v-if="showYear"
                             removable
-                            class="mt-2"
+                            class="mt-2 w-25"
                         />
 
                         <!-- edition -->
