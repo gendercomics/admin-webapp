@@ -15,12 +15,13 @@
 
                 <!-- name -->
                 <b-dropdown
+                    no-flip
                     variant="outline-secondary"
                     :text="fullName(this.localValue.name)"
                 >
                     <b-dropdown-form @submit.stop.prevent="() => {}">
                         <b-form-group
-                            style="min-width: available"
+                            style="min-width: available;"
                             class="mb-0"
                             :description="searchDesc"
                         >
@@ -39,16 +40,18 @@
                         </b-form-group>
                     </b-dropdown-form>
                     <b-dropdown-divider />
-                    <b-dropdown-item-button
-                        v-for="option in availableOptions"
-                        :key="option.id"
-                        @click="onOptionClick(option)"
-                    >
-                        {{ fullName(option) }}
-                    </b-dropdown-item-button>
-                    <b-dropdown-text v-if="availableOptions.length === 0">
-                        no creator available to select
-                    </b-dropdown-text>
+                    <div style="max-height: 20em; overflow-y: auto">
+                        <b-dropdown-item-button
+                            v-for="option in availableOptions"
+                            :key="option.id"
+                            @click="onOptionClick(option)"
+                        >
+                            {{ fullName(option) }}
+                        </b-dropdown-item-button>
+                        <b-dropdown-text v-if="availableOptions.length === 0">
+                            no creator available to select
+                        </b-dropdown-text>
+                    </div>
                 </b-dropdown>
 
                 <!-- remove button -->
