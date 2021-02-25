@@ -156,7 +156,10 @@ export default {
             if (creatorName.name != null) {
                 return creatorName.name;
             }
-            return creatorName.firstName + ' ' + creatorName.lastName;
+            if (creatorName.firstName != null && creatorName.lastName != null) {
+                return creatorName.firstName + ' ' + creatorName.lastName;
+            }
+            return '-- please select --';
         },
         onOptionClick(option) {
             this.$log.debug(
