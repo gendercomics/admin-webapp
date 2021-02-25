@@ -225,8 +225,8 @@ export default {
             filterOn: [],
             totalRows: 1,
             currentPage: 1,
-            perPage: 10,
-            pageOptions: [10, 20, 50],
+            perPage: 20,
+            pageOptions: [10, 20, 50, 100],
         };
     },
     mounted() {
