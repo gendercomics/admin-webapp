@@ -201,6 +201,13 @@
                             prepend="publisher"
                             v-if="showPublisher"
                         >
+                            <!--
+                            <searchable-dropdown
+                                v-model="this.comic.publisher"
+                                options-path="/publishers"
+                            />
+                            -->
+
                             <b-form-select
                                 id="input-publisher"
                                 :options="publishers"
@@ -344,17 +351,9 @@
             </b-row>
 
             <b-row class="mt-4" v-if="showJson">
-                <b-col id="json-names">
-                    <b-card header="names">
-                        <pre class="mt-0">{{ $data.names }}</pre>
-                    </b-card>
-                </b-col>
-            </b-row>
-
-            <b-row class="mt-4" v-if="showJson">
-                <b-col id="json-roles">
-                    <b-card header="roles">
-                        <pre class="mt-0">{{ $data.roles }}</pre>
+                <b-col id="json-publishers">
+                    <b-card header="publishers">
+                        <pre class="mt-0">{{ $data.publishers }}</pre>
                     </b-card>
                 </b-col>
             </b-row>
