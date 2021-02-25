@@ -21,7 +21,7 @@
                 >
                     <b-dropdown-form @submit.stop.prevent="() => {}">
                         <b-form-group
-                            style="min-width: available;"
+                            style="min-width: 15em;"
                             class="mb-0"
                             :description="searchDesc"
                         >
