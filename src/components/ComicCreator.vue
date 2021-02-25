@@ -1,20 +1,23 @@
 <template>
     <div>
-        <b-form-row class="pl-1 pr-1">
+        <b-form-row class="pl-1 pr-1 w-100">
             <b-input-group class="pt-2">
                 <!-- role -->
                 <b-form-select
                     :options="roles"
-                    v-model="role"
+                    :value="this.localValue.role.id"
                     value-field="id"
                     text-field="name"
                     style="background-color: #E4E7EB; max-width: 15%"
+                    @change="roleUpdated"
                 >
-                    <!--<option value="" disabled>-- Please select a role --</option>-->
                 </b-form-select>
 
                 <!-- name -->
-                <b-dropdown variant="outline-secondary" block>
+                <b-dropdown
+                    variant="outline-secondary"
+                    :text="fullName(this.localValue.name)"
+                >
                     <b-dropdown-form @submit.stop.prevent="() => {}">
                         <b-form-group
                             style="min-width: available"
@@ -28,7 +31,6 @@
 
                                 <b-form-input
                                     v-model="search"
-                                    id="tag-search-input"
                                     type="search"
                                     size="sm"
                                     autocomplete="off"
@@ -36,7 +38,7 @@
                             </b-input-group>
                         </b-form-group>
                     </b-dropdown-form>
-                    <b-dropdown-divider></b-dropdown-divider>
+                    <b-dropdown-divider />
                     <b-dropdown-item-button
                         v-for="option in availableOptions"
                         :key="option.id"
@@ -58,6 +60,7 @@
             </b-input-group>
         </b-form-row>
 
+        <!--
         <div>
             <b-row class="mt-4">
                 <b-col id="json">
@@ -67,6 +70,7 @@
                 </b-col>
             </b-row>
         </div>
+        -->
     </div>
 </template>
 
@@ -78,9 +82,11 @@ export default {
     name: 'ComicCreator',
     mixins: [PersonService, RoleService],
     props: {
-        creator: {
+        value: {
             name: {},
-            role: {},
+            role: {
+                id: null,
+            },
         },
         removable: {
             type: Boolean,
@@ -89,13 +95,10 @@ export default {
     },
     data: function() {
         return {
-            role: 'artist',
             roles: [],
             names: [],
-            name: null,
             search: '',
             loading: true,
-            tagNames: [],
         };
     },
     mounted() {
@@ -105,7 +108,7 @@ export default {
     computed: {
         localValue: {
             get() {
-                return this.creator;
+                return this.value;
             },
             set(val) {
                 this.$emit('input', val);
@@ -137,25 +140,32 @@ export default {
         },
     },
     methods: {
-        roleChanged: function() {
-            console.log('selectedRole:' + this.role);
-        },
-        personUpdated: function() {
-            console.log('selectedPerson:' + this.name);
-            this.$emit('changed', this.name);
+        roleUpdated(roleId) {
+            this.$log.debug('id=' + roleId);
+            this.roles.forEach(role => {
+                if (role.id === roleId) {
+                    this.localValue.role = role;
+                }
+            });
         },
         removeValue() {
             this.$log.debug('remove creator');
-            this.localValue = null;
+            this.$emit('remove', this.localValue);
         },
         fullName(creatorName) {
             if (creatorName.name != null) {
                 return creatorName.name;
             }
-            return creatorName.firstName + ' ' + creatorName.lastName;
+            if (creatorName.firstName != null && creatorName.lastName != null) {
+                return creatorName.firstName + ' ' + creatorName.lastName;
+            }
+            return '-- please select --';
         },
         onOptionClick(option) {
-            this.$log.debug('option clicked: ' + option.id);
+            this.$log.debug(
+                'id=' + option.id + ', fullName=' + this.fullName(option)
+            );
+            this.localValue.name = option;
             this.search = '';
         },
     },

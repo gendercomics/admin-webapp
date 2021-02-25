@@ -42,9 +42,18 @@
                                 :disabled="this.showIssue"
                                 >issue
                             </b-button>
-                            <b-button variant="outline-dark" @click="addCreator"
-                                >creator+
-                            </b-button>
+                            <!-- creator button -->
+                            <b-button-group>
+                                <b-button disabled :variant="creatorBtnVariant"
+                                    >creator
+                                </b-button>
+                                <b-button
+                                    variant="outline-dark"
+                                    @click="addCreator"
+                                    >+
+                                </b-button>
+                            </b-button-group>
+                            <!-- typ button -->
                             <b-button
                                 :variant="typeBtnVariant"
                                 @click="addType"
@@ -167,58 +176,12 @@
                             v-for="(creator, idx) in comic.creators"
                             v-bind:key="idx"
                         >
-                            <!-- creator -->
-                            <b-form-row class="pl-1 pr-1">
-                                <b-input-group class="pt-2" prepend="creator">
-                                    <div class="w-50">
-                                        <b-form-select
-                                            v-model="
-                                                comic.creators[idx].name.id
-                                            "
-                                            @change="nameUpdated(idx)"
-                                        >
-                                            <option
-                                                v-for="name in names"
-                                                v-bind:key="name.id"
-                                                :value="name.id"
-                                                >{{ creatorName(name) }}
-                                            </option>
-                                        </b-form-select>
-                                    </div>
-
-                                    <b-form-select
-                                        :options="roles"
-                                        value-field="id"
-                                        text-field="name"
-                                        v-model="comic.creators[idx].role.id"
-                                        @change="roleUpdated(idx)"
-                                    >
-                                        <!--<option value="" disabled>-- Please select a role --</option>-->
-                                    </b-form-select>
-
-                                    <template v-slot:append>
-                                        <b-button @click="removeCreator(idx)">
-                                            <font-awesome-icon
-                                                icon="times-circle"
-                                            />
-                                        </b-button>
-                                    </template>
-                                </b-input-group>
-                            </b-form-row>
-                        </div>
-
-                        <!-- creators v2 -->
-                        <!--
-                        <div
-                            v-for="(creator, idx) in comic.creators"
-                            v-bind:key="idx"
-                        >
                             <comic-creator
                                 v-model="comic.creators[idx]"
                                 removable
+                                @remove="removeCreator(idx)"
                             />
                         </div>
-                        -->
 
                         <!-- type -->
                         <select-field
@@ -238,6 +201,13 @@
                             prepend="publisher"
                             v-if="showPublisher"
                         >
+                            <!--
+                            <searchable-dropdown
+                                v-model="this.comic.publisher"
+                                options-path="/publishers"
+                            />
+                            -->
+
                             <b-form-select
                                 id="input-publisher"
                                 :options="publishers"
@@ -381,17 +351,9 @@
             </b-row>
 
             <b-row class="mt-4" v-if="showJson">
-                <b-col id="json-names">
-                    <b-card header="names">
-                        <pre class="mt-0">{{ $data.names }}</pre>
-                    </b-card>
-                </b-col>
-            </b-row>
-
-            <b-row class="mt-4" v-if="showJson">
-                <b-col id="json-roles">
-                    <b-card header="roles">
-                        <pre class="mt-0">{{ $data.roles }}</pre>
+                <b-col id="json-publishers">
+                    <b-card header="publishers">
+                        <pre class="mt-0">{{ $data.publishers }}</pre>
                     </b-card>
                 </b-col>
             </b-row>
@@ -401,11 +363,11 @@
 
 <script>
 import Header from '@/components/Header';
-import InputField from '../components/InputField';
-import { httpClient } from '../services/httpclient';
-import TagInput from '../components/TagInput';
-import SelectField from '../components/SelectField';
-//import ComicCreator from '@/components/ComicCreator';
+import InputField from '@/components/InputField';
+import { httpClient } from '@/services/httpclient';
+import TagInput from '@/components/TagInput';
+import SelectField from '@/components/SelectField';
+import ComicCreator from '@/components/ComicCreator';
 import RoleService from '@/mixins/roleservice';
 import PersonService from '@/mixins/personservice';
 
@@ -413,7 +375,7 @@ export default {
     name: 'ComicForm',
     mixins: [PersonService, RoleService],
     components: {
-        // ComicCreator,
+        ComicCreator,
         TagInput,
         InputField,
         SelectField,
@@ -468,6 +430,14 @@ export default {
         subtitleBtnVariant() {
             if (!this.showSubtitle) return 'outline-dark';
             return 'dark';
+        },
+        creatorsExist() {
+            if (this.comic.creators != null && this.comic.creators.length > 0)
+                return true;
+            return false;
+        },
+        creatorBtnVariant() {
+            return this.creatorsExist ? 'dark' : 'outline-dark';
         },
         issueBtnVariant() {
             if (!this.showIssue) return 'outline-dark';
@@ -605,13 +575,13 @@ export default {
             this.comic.issue = '';
         },
         addCreator() {
-            console.log('add creator');
             if (this.comic.creators === null) {
                 this.comic.creators = [];
             }
             this.comic.creators.push({ name: {}, role: {} });
         },
         removeCreator(idx) {
+            this.$log.debug('idx=' + idx);
             this.comic.creators.splice(idx, 1);
         },
         addType() {
