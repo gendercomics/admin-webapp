@@ -272,7 +272,7 @@ export default {
             if (row.creators !== null) {
                 row.creators.forEach(function(creator) {
                     let filterName = '';
-                    if (creator != null) {
+                    if (creator.name != null) {
                         if (creator.name.name !== null) {
                             filterName = creator.name.name;
                         } else {
