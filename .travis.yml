@@ -47,7 +47,7 @@ before_deploy:
 deploy:
   - provider: script
     skip_cleanup: true
-    script: ssh deploy@gendercomics.net 'docker pull gendercomics/admin-webapp-stage:latest && cd /var/gendercomics/admin-webapp-stage && docker-compose up -d gendercomics-admin-webapp-stage'
+    script: ssh deploy@gendercomics.net 'docker pull gendercomics/admin-webapp-stage:latest && cd /var/gendercomics/admin-webapp-stage && docker-compose up -d gendercomics-admin-webapp-stage && docker image prune -a'
     on:
       branch: develop
   - provider: script
