@@ -1,8 +1,8 @@
 <template>
-    <b-dropdown variant="outline-secondary" :text="this.localValue.name">
+    <b-dropdown variant="outline-secondary" no-flip :text="displayName(localValue.name)">
         <b-dropdown-form @submit.stop.prevent="() => {}">
             <b-form-group
-                style="min-width: available"
+                style="min-width: 15em"
                 class="mb-0"
                 :description="searchDesc"
             >
@@ -21,16 +21,18 @@
             </b-form-group>
         </b-dropdown-form>
         <b-dropdown-divider />
-        <b-dropdown-item-button
-            v-for="option in availableOptions"
-            :key="option.id"
-            @click="onOptionClick(option)"
-        >
-            {{ option.name }}
-        </b-dropdown-item-button>
-        <b-dropdown-text v-if="availableOptions.length === 0">
-            no value available to select
-        </b-dropdown-text>
+        <div style="max-height: 20em; overflow-y: auto">
+            <b-dropdown-item-button
+                v-for="option in availableOptions"
+                :key="option.id"
+                @click="onOptionClick(option)"
+            >
+                {{ option.name }}
+            </b-dropdown-item-button>
+            <b-dropdown-text v-if="availableOptions.length === 0">
+                no value available to select
+            </b-dropdown-text>
+        </div>
     </b-dropdown>
 </template>
 
@@ -100,6 +102,12 @@ export default {
                     this.errored = true;
                 })
                 .finally(() => (this.loading = false));
+        },
+        displayName(name) {
+            if (name != null && name.length > 0) {
+                return name;
+            }
+            return '-- please select --';
         },
     },
 };

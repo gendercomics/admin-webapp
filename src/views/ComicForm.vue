@@ -201,21 +201,11 @@
                             prepend="publisher"
                             v-if="showPublisher"
                         >
-                            <!--
                             <searchable-dropdown
-                                v-model="this.comic.publisher"
+                                v-model="comic.publisher"
                                 options-path="/publishers"
                             />
-                            -->
 
-                            <b-form-select
-                                id="input-publisher"
-                                :options="publishers"
-                                value-field="id"
-                                text-field="name"
-                                v-model="selectedPublisher"
-                                @change="changePublisher()"
-                            />
                             <template v-slot:append>
                                 <b-button @click="removePublisher()">
                                     <font-awesome-icon icon="times-circle" />
@@ -228,9 +218,8 @@
                             label="year"
                             v-model="comic.year"
                             v-if="showYear"
-                            type="number"
                             removable
-                            class="mt-2"
+                            class="mt-2 w-25"
                         />
 
                         <!-- edition -->
@@ -370,11 +359,13 @@ import SelectField from '@/components/SelectField';
 import ComicCreator from '@/components/ComicCreator';
 import RoleService from '@/mixins/roleservice';
 import PersonService from '@/mixins/personservice';
+import SearchableDropdown from '@/components/SearchableDropdown';
 
 export default {
     name: 'ComicForm',
     mixins: [PersonService, RoleService],
     components: {
+        SearchableDropdown,
         ComicCreator,
         TagInput,
         InputField,
@@ -620,28 +611,12 @@ export default {
         addGenres() {
             this.comic.genres = [];
         },
-        changePublisher() {
-            console.log(this.selectedPublisher);
-            this.publishers.forEach(publisher => {
-                if (this.selectedPublisher === publisher.id) {
-                    this.comic.publisher = publisher;
-                }
-            });
-        },
         removePublisher() {
             this.comic.publisher = null;
             this.selectedPublisher = null;
         },
         removeIn() {
             this.comic.partOf = null;
-        },
-        nameUpdated(idx) {
-            console.log('nameUpdated=' + idx);
-            this.names.forEach(name => {
-                if (this.comic.creators[idx].name.id === name.id) {
-                    this.comic.creators[idx].name = name;
-                }
-            });
         },
         roleUpdated(idx) {
             console.log('roleUpdated=' + idx);

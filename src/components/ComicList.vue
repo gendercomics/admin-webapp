@@ -225,8 +225,8 @@ export default {
             filterOn: [],
             totalRows: 1,
             currentPage: 1,
-            perPage: 10,
-            pageOptions: [10, 20, 50],
+            perPage: 20,
+            pageOptions: [10, 20, 50, 100],
         };
     },
     mounted() {
@@ -272,13 +272,15 @@ export default {
             if (row.creators !== null) {
                 row.creators.forEach(function(creator) {
                     let filterName = '';
-                    if (creator.name.name !== null) {
-                        filterName = creator.name.name;
-                    } else {
-                        filterName =
-                            creator.name.firstName +
-                            ' ' +
-                            creator.name.lastName;
+                    if (creator != null) {
+                        if (creator.name.name !== null) {
+                            filterName = creator.name.name;
+                        } else {
+                            filterName =
+                                creator.name.firstName +
+                                ' ' +
+                                creator.name.lastName;
+                        }
                     }
                     filterCreator =
                         filterCreator ||
