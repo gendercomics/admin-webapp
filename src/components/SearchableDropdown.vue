@@ -1,5 +1,9 @@
 <template>
-    <b-dropdown variant="outline-secondary" no-flip :text="displayName(localValue.name)">
+    <b-dropdown
+        variant="outline-secondary"
+        no-flip
+        :text="displayName(localValue.name)"
+    >
         <b-dropdown-form @submit.stop.prevent="() => {}">
             <b-form-group
                 style="min-width: 15em"
