@@ -303,10 +303,13 @@ export default {
             return filterParent;
         },
         fullName(creator) {
-            if (creator.name != null) {
-                return creator.name;
+            if (creator != null) {
+                if (creator.name != null) {
+                    return creator.name;
+                }
+                return creator.firstName + ' ' + creator.lastName;
             }
-            return creator.firstName + ' ' + creator.lastName;
+            return '';
         },
         titleDisplayText(item) {
             return item.issue !== null
