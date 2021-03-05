@@ -1,5 +1,51 @@
 <template>
     <div>
+        <editor-menu-bubble
+            class="menububble"
+            :editor="editor"
+            @hide="hideLinkMenu"
+            v-slot="{ commands, isActive, getMarkAttrs, menu }"
+        >
+            <div
+                class="menububble"
+                :class="{ 'is-active': menu.isActive }"
+                :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`"
+            >
+                <form
+                    class="menububble__form"
+                    v-if="linkMenuIsActive"
+                    @submit.prevent="setLinkUrl(commands.link, linkUrl)"
+                >
+                    <input
+                        class="menububble__input"
+                        type="text"
+                        v-model="linkUrl"
+                        placeholder="https://"
+                        ref="linkInput"
+                        @keydown.esc="hideLinkMenu"
+                    />
+                    <button
+                        class="menububble__button"
+                        @click="setLinkUrl(commands.link, null)"
+                        type="button"
+                    >
+                        <font-awesome-icon icon="times-circle" />
+                    </button>
+                </form>
+
+                <template v-else>
+                    <button
+                        class="menububble__button"
+                        @click="showLinkMenu(getMarkAttrs('link'))"
+                        :class="{ 'is-active': isActive.link() }"
+                    >
+                        <span>{{
+                            isActive.link() ? 'Update Link' : 'Add Link'
+                        }}</span>
+                    </button>
+                </template>
+            </div>
+        </editor-menu-bubble>
         <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
             <div class="menubar mt-2">
                 <!-- bold -->
@@ -117,13 +163,14 @@
 </template>
 
 <script>
-import { Editor, EditorContent, EditorMenuBar } from 'tiptap';
+import { Editor, EditorContent, EditorMenuBar, EditorMenuBubble } from 'tiptap';
 import {
     Bold,
     BulletList,
     HardBreak,
     Heading,
     History,
+    Link,
     ListItem,
     OrderedList,
     Underline,
@@ -136,6 +183,7 @@ import {
     faListUl,
     faParagraph,
     faRedo,
+    faTimesCircle,
     faUnderline,
     faUndo,
 } from '@fortawesome/free-solid-svg-icons';
@@ -147,6 +195,7 @@ library.add(
     faListUl,
     faParagraph,
     faRedo,
+    faTimesCircle,
     faUnderline,
     faUndo
 );
@@ -155,6 +204,7 @@ export default {
     components: {
         EditorContent,
         EditorMenuBar,
+        EditorMenuBubble,
     },
     props: {
         value: null,
@@ -172,6 +222,7 @@ export default {
                     }),
                     new History(),
                     new Italic(),
+                    new Link(),
                     new ListItem(),
                     new OrderedList(),
                     new Underline(),
@@ -182,6 +233,8 @@ export default {
                 },
             }),
             localValue: null,
+            linkUrl: null,
+            linkMenuIsActive: false,
         };
     },
     watch: {
@@ -193,9 +246,31 @@ export default {
             },
         },
     },
+    methods: {
+        showLinkMenu(attrs) {
+            this.linkUrl = attrs.href;
+            this.linkMenuIsActive = true;
+            this.$nextTick(() => {
+                this.$refs.linkInput.focus();
+            });
+        },
+        hideLinkMenu() {
+            this.linkUrl = null;
+            this.linkMenuIsActive = false;
+        },
+        setLinkUrl(command, url) {
+            command({ href: url });
+            this.hideLinkMenu();
+        },
+    },
     beforeDestroy() {
         // Always destroy your editor instance when it's no longer needed
         this.editor.destroy();
     },
 };
 </script>
+
+<style lang="scss">
+@import './src/styles/tiptap/variables';
+@import './src/styles/tiptap/menububble';
+</style>
