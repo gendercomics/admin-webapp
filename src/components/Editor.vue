@@ -72,6 +72,26 @@
                 >
                     <b>H3</b>
                 </b-button>
+                <!-- bullet list -->
+                <b-button
+                    class="m-1"
+                    variant="light"
+                    size="sm"
+                    @click="commands.bullet_list"
+                    :pressed="isActive.bullet_list()"
+                >
+                    <font-awesome-icon icon="list-ul" />
+                </b-button>
+                <!-- ordered list -->
+                <b-button
+                    class="m-1"
+                    variant="light"
+                    size="sm"
+                    @click="commands.ordered_list"
+                    :pressed="isActive.ordered_list()"
+                >
+                    <font-awesome-icon icon="list-ol" />
+                </b-button>
                 <!-- undo -->
                 <b-button
                     class="m-1"
@@ -100,22 +120,36 @@
 import { Editor, EditorContent, EditorMenuBar } from 'tiptap';
 import {
     Bold,
+    BulletList,
     HardBreak,
     Heading,
     History,
+    ListItem,
+    OrderedList,
     Underline,
     Italic,
 } from 'tiptap-extensions';
 import {
     faBold,
     faItalic,
+    faListOl,
+    faListUl,
     faParagraph,
     faRedo,
     faUnderline,
     faUndo,
 } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
-library.add(faBold, faItalic, faParagraph, faRedo, faUnderline, faUndo);
+library.add(
+    faBold,
+    faItalic,
+    faListOl,
+    faListUl,
+    faParagraph,
+    faRedo,
+    faUnderline,
+    faUndo
+);
 export default {
     name: 'Editor',
     components: {
@@ -131,13 +165,16 @@ export default {
                 content: '',
                 extensions: [
                     new Bold(),
+                    new BulletList(),
                     new HardBreak(),
                     new Heading({
                         levels: [1, 2, 3],
                     }),
-                    new Italic(),
-                    new Underline(),
                     new History(),
+                    new Italic(),
+                    new ListItem(),
+                    new OrderedList(),
+                    new Underline(),
                 ],
                 onUpdate: ({ getHTML }) => {
                     this.localValue = getHTML();
