@@ -99,6 +99,8 @@
                                 v-if="this.showInButtons"
                                 >in
                             </b-button>
+
+                            <!-- pages -->
                             <b-button
                                 :variant="pagesBtnVariant"
                                 @click="addPages"
@@ -122,6 +124,19 @@
                                 :disabled="this.showKeywords"
                                 >keywords
                             </b-button>
+
+                            <!-- comments -->
+                            <b-button-group>
+                                <b-button disabled :variant="commentBtnVariant"
+                                    >comment
+                                </b-button>
+                                <b-button
+                                    variant="outline-dark"
+                                    @click="addComment"
+                                    >+
+                                </b-button>
+                            </b-button-group>
+
                             <!-- toggle JSON view -->
                             <b-button
                                 variant="outline-dark"
@@ -304,6 +319,18 @@
                             v-if="showKeywords"
                         />
 
+                        <!-- comments -->
+                        <div
+                            v-for="(comment, idx_comment) in comic.comments"
+                            v-bind:key="'comment' + idx_comment"
+                        >
+                            <comment-field
+                                v-model="comic.comments[idx_comment]"
+                                removable
+                                @remove="removeComment(idx_comment)"
+                            />
+                        </div>
+
                         <!-- status -->
                         <b-form-group>
                             <!-- action buttons -->
@@ -339,6 +366,7 @@
                 </b-col>
             </b-row>
 
+            <!--
             <b-row class="mt-4" v-if="showJson">
                 <b-col id="json-publishers">
                     <b-card header="publishers">
@@ -346,6 +374,7 @@
                     </b-card>
                 </b-col>
             </b-row>
+            -->
         </b-container>
     </div>
 </template>
@@ -360,11 +389,13 @@ import ComicCreator from '@/components/ComicCreator';
 import RoleService from '@/mixins/roleservice';
 import PersonService from '@/mixins/personservice';
 import SearchableDropdown from '@/components/SearchableDropdown';
+import CommentField from '@/components/CommentField';
 
 export default {
     name: 'ComicForm',
     mixins: [PersonService, RoleService],
     components: {
+        CommentField,
         SearchableDropdown,
         ComicCreator,
         TagInput,
@@ -395,6 +426,7 @@ export default {
                     changedBy: null,
                     status: 'DRAFT',
                 },
+                comments: [],
             },
             names: [],
             roles: [],
@@ -477,6 +509,9 @@ export default {
             if (!this.showGenres) return 'outline-dark';
             return 'dark';
         },
+        commentBtnVariant() {
+            return this.commentsExist ? 'dark' : 'outline-dark';
+        },
         showSubtitle() {
             return this.comic.subTitle != null;
         },
@@ -523,6 +558,11 @@ export default {
         },
         showGenres() {
             return this.comic.genres != null;
+        },
+        commentsExist() {
+            if (this.comic.comments != null && this.comic.comments.length > 0)
+                return true;
+            return false;
         },
     },
     methods: {
@@ -574,6 +614,11 @@ export default {
         removeCreator(idx) {
             this.$log.debug('idx=' + idx);
             this.comic.creators.splice(idx, 1);
+        },
+        removeComment(idx) {
+            // TODO remove only owned comment?
+            this.$log.debug('idx=' + idx);
+            this.comic.comments.splice(idx, 1);
         },
         addType() {
             this.comic.type = '';
@@ -666,6 +711,12 @@ export default {
                 return name.name;
             }
             return name.firstName + ' ' + name.lastName;
+        },
+        addComment() {
+            if (this.comic.comments === null) {
+                this.comic.comments = [];
+            }
+            this.comic.comments.push({ comment: {} });
         },
     },
     mounted() {
