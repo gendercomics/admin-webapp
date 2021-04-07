@@ -9,9 +9,12 @@ import moment from 'moment';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import {
+    faCheckCircle,
     faEdit,
+    faExclamationTriangle,
     faExternalLinkAlt,
     faFilter,
+    faSave,
     faSearch,
     faTags,
     faTimesCircle,
@@ -24,9 +27,12 @@ import {
 import AuthService from './services/authservice';
 
 library.add(
+    faCheckCircle,
     faEdit,
+    faExclamationTriangle,
     faExternalLinkAlt,
     faFilter,
+    faSave,
     faSearch,
     faTags,
     faTimesCircle,
