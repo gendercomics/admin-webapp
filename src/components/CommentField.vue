@@ -4,9 +4,17 @@
             <b-card no-body>
                 <template #header>
                     <div class="float-left">
-                        <span>
-                            {{ headerText }}
-                        </span>
+                        <span> {{ headerText }} on </span>
+                        <span v-if="localValue.metaData.changedOn == null">{{
+                            moment(localValue.metaData.createdOn).format(
+                                'DD.MM.YYYY HH:mm'
+                            )
+                        }}</span>
+                        <span v-else>{{
+                            moment(localValue.metaData.changedOn).format(
+                                'DD.MM.YYYY HH:mm'
+                            )
+                        }}</span>
                     </div>
                     <div class="float-right">
                         <b-button
@@ -34,7 +42,6 @@
             </b-card>
         </div>
 
-        <!--
         <b-container fluid class="mt-4 ml-4 mr-4">
             <b-row class="mt-4 mr-4">
                 <b-col id="json-text">
@@ -47,7 +54,6 @@
                 </b-col>
             </b-row>
         </b-container>
-        -->
     </div>
 </template>
 
@@ -94,10 +100,7 @@ export default {
         headerText() {
             let userName = '...';
             let timestamp = '';
-            if (
-                this.localValue.metaData != null &&
-                this.localValue.metaData.createdBy != null
-            ) {
+            if (this.localValue.metaData != null) {
                 userName = this.localValue.metaData.createdBy;
             }
             return 'comment by ' + userName + timestamp;
@@ -121,7 +124,7 @@ export default {
     },
     mounted() {
         this.$data.text = this.localValue;
-        if (this.localValue.value != null && this.localValue.value.length > 0) {
+        if (this.localValue.value != null && this.localValue.value.id != null) {
             this.saved = true;
         }
     },
