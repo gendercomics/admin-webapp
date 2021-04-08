@@ -43,12 +43,16 @@
                             <font-awesome-icon icon="check-circle" />
                         </b-button>
                         -->
-                        <b-button @click="removeComment">
+                        <b-button @click="removeComment" v-if="editable">
                             <font-awesome-icon icon="times-circle" />
                         </b-button>
                     </div>
                 </template>
-                <editor v-model="text.value" @input="saveComment" />
+                <editor
+                    v-model="text.value"
+                    @input="saveComment"
+                    editable="editable"
+                />
             </b-card>
         </div>
 
@@ -97,6 +101,7 @@ export default {
                 value: null,
                 metadata: null,
             },
+            loggedInUser: null,
         };
     },
     computed: {
@@ -115,6 +120,9 @@ export default {
                 userName = this.localValue.metaData.createdBy;
             }
             return ' by ' + userName + timestamp;
+        },
+        editable: function() {
+            return this.loggedInUser === this.localValue.metaData.createdBy;
         },
     },
     watch: {
@@ -138,6 +146,9 @@ export default {
                 this.$emit('remove', this.localValue);
             });
         },
+    },
+    created() {
+        this.loggedInUser = this.keycloak.idTokenParsed.preferred_username;
     },
     mounted() {
         this.$nextTick(() => {
