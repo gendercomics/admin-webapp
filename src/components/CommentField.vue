@@ -7,11 +7,11 @@
                         <span
                             ><font-awesome-icon :icon="['far', 'comment']"
                         /></span>
-                        <span> {{ headerText }} on </span>
+                        <span> {{ headerText }} </span>
                         <span v-if="localValue.metaData != null">
-                            <span
-                                v-if="localValue.metaData.changedOn == null"
-                                >{{
+                            on
+                            <span v-if="localValue.metaData.changedOn == null">
+                                {{
                                     moment(
                                         localValue.metaData.createdOn
                                     ).format('DD.MM.YYYY HH:mm')
@@ -115,14 +115,17 @@ export default {
         },
         headerText() {
             let userName = '...';
-            let timestamp = '';
             if (this.localValue.metaData != null) {
                 userName = this.localValue.metaData.createdBy;
             }
-            return ' by ' + userName + timestamp;
+            return ' by ' + userName;
         },
         editable: function() {
-            return this.loggedInUser === this.localValue.metaData.createdBy;
+            if (this.$data.text.metadata == null) {
+                return true;
+            } else {
+                return this.loggedInUser === this.localValue.metadata.createdBy;
+            }
         },
     },
     watch: {

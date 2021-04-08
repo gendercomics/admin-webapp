@@ -716,7 +716,7 @@ export default {
             if (this.comic.comments === null) {
                 this.comic.comments = [];
             }
-            this.comic.comments.push({ comment: {} });
+            this.comic.comments.push({ value: null });
         },
     },
     mounted() {
