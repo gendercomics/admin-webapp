@@ -97,7 +97,6 @@ export default {
                 value: null,
                 metadata: null,
             },
-            originalValue: null,
         };
     },
     computed: {
@@ -116,14 +115,6 @@ export default {
                 userName = this.localValue.metaData.createdBy;
             }
             return ' by ' + userName + timestamp;
-        },
-        dirty: function() {
-            let changed =
-                this.localValue === null && this.localValue.id === null;
-            changed =
-                changed && this.originalValue.value != this.localValue.value;
-            this.$log.debug('dirty=', changed);
-            return changed;
         },
     },
     watch: {
@@ -151,7 +142,6 @@ export default {
     mounted() {
         this.$nextTick(() => {
             this.$data.text = this.localValue;
-            this.originalValue = this.localValue;
         });
     },
 };
