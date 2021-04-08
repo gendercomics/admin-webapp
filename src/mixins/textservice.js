@@ -14,15 +14,10 @@ export default {
     created: function() {},
     methods: {
         saveText() {
-            this.saved = false;
             if (this.text.id === null) {
                 httpClient
                     .post('/texts/', this.text)
-                    .then(
-                        response => (
-                            (this.text = response.data), (this.saved = true)
-                        )
-                    )
+                    .then(response => (this.text = response.data))
                     .catch(error => {
                         console.log(error);
                         this.errored = true;
@@ -31,17 +26,17 @@ export default {
             } else {
                 httpClient
                     .put('/texts/' + this.text.id, this.text)
-                    .then(
-                        response => (
-                            (this.text = response.data), (this.saved = true)
-                        )
-                    )
+                    .then(response => (this.text = response.data))
                     .catch(error => {
                         console.log(error);
                         this.errored = true;
                     })
                     .finally(() => (this.loading = false));
             }
+        },
+        deleteText(id) {
+            this.$log.debug('delete comment: id=' + id);
+            // TODO add REST call
         },
     },
 };

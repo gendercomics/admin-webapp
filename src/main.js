@@ -22,12 +22,13 @@ import {
     faUser,
     faUserSecret,
 } from '@fortawesome/free-solid-svg-icons';
-//import { faPlusSquare } from '@fortawesome/free-regular-svg-icons';
+import { faComment } from '@fortawesome/free-regular-svg-icons';
 
 import AuthService from './services/authservice';
 
 library.add(
     faCheckCircle,
+    faComment,
     faEdit,
     faExclamationTriangle,
     faExternalLinkAlt,

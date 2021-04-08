@@ -4,6 +4,7 @@
             class="menububble"
             :editor="editor"
             @hide="hideLinkMenu"
+            v-if="editable"
             v-slot="{ commands, isActive, getMarkAttrs, menu }"
         >
             <div
@@ -46,7 +47,11 @@
                 </template>
             </div>
         </editor-menu-bubble>
-        <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
+        <editor-menu-bar
+            v-if="editable"
+            :editor="editor"
+            v-slot="{ commands, isActive }"
+        >
             <div class="menubar mt-2">
                 <!-- bold -->
                 <b-button
@@ -208,6 +213,10 @@ export default {
     },
     props: {
         value: null,
+        editable: {
+            type: Boolean,
+            default: true,
+        },
     },
     data() {
         return {
@@ -243,6 +252,13 @@ export default {
                 if (this.localValue == null) {
                     this.editor.setContent(value);
                 }
+            },
+        },
+        watch: {
+            editable() {
+                this.editor.setOptions({
+                    editable: this.editable,
+                });
             },
         },
     },

@@ -4,16 +4,33 @@
             <b-card no-body>
                 <template #header>
                     <div class="float-left">
-                        <span>
-                            {{ headerText }}
+                        <span
+                            ><font-awesome-icon :icon="['far', 'comment']"
+                        /></span>
+                        <span> {{ headerText }} </span>
+                        <span v-if="localValue.metaData != null">
+                            on
+                            <span v-if="localValue.metaData.changedOn == null">
+                                {{
+                                    moment(
+                                        localValue.metaData.createdOn
+                                    ).format('DD.MM.YYYY HH:mm')
+                                }}</span
+                            >
+                            <span v-else>{{
+                                moment(localValue.metaData.changedOn).format(
+                                    'DD.MM.YYYY HH:mm'
+                                )
+                            }}</span>
                         </span>
                     </div>
                     <div class="float-right">
+                        <!--
                         <b-button
                             class="mr-1"
                             disabled
                             variant="warning"
-                            v-if="!saved"
+                            v-if="dirty"
                         >
                             <font-awesome-icon icon="exclamation-triangle" />
                         </b-button>
@@ -25,12 +42,17 @@
                         >
                             <font-awesome-icon icon="check-circle" />
                         </b-button>
-                        <b-button @click="removeComment">
+                        -->
+                        <b-button @click="removeComment" v-if="editable">
                             <font-awesome-icon icon="times-circle" />
                         </b-button>
                     </div>
                 </template>
-                <editor v-model="text.value" @input="saveComment" />
+                <editor
+                    v-model="text.value"
+                    @input="saveComment"
+                    editable="editable"
+                />
             </b-card>
         </div>
 
@@ -41,8 +63,8 @@
                     <b-card header="localvalue">
                         <pre class="mt-0">{{ localValue }}</pre>
                     </b-card>
-                    <b-card header="text">
-                        <pre class="mt-0">{{ $data.text }}</pre>
+                    <b-card header="originalValue">
+                        <pre class="mt-0">{{ originalValue }}</pre>
                     </b-card>
                 </b-col>
             </b-row>
@@ -79,7 +101,7 @@ export default {
                 value: null,
                 metadata: null,
             },
-            saved: false,
+            loggedInUser: null,
         };
     },
     computed: {
@@ -93,14 +115,22 @@ export default {
         },
         headerText() {
             let userName = '...';
-            let timestamp = '';
-            if (
-                this.localValue.metaData != null &&
-                this.localValue.metaData.createdBy != null
-            ) {
+            if (this.localValue.metaData != null) {
                 userName = this.localValue.metaData.createdBy;
             }
-            return 'comment by ' + userName + timestamp;
+            return ' by ' + userName;
+        },
+        editable: function() {
+            if (this.$data.text.metadata == null) {
+                return true;
+            } else {
+                return this.loggedInUser === this.localValue.metadata.createdBy;
+            }
+        },
+    },
+    watch: {
+        '$data.text': function(newValue) {
+            this.localValue = newValue;
         },
     },
     methods: {
@@ -108,22 +138,25 @@ export default {
             this.$log.debug('comment-value=' + val);
             this.$data.text.value = val;
             this.saveText();
-            this.$nextTick(function() {
-                this.localValue = this.$data.text;
-            });
-            // TODO set localvalue (emit change)
         }, 1000),
         removeComment() {
             this.$log.debug('remove comment');
-            // TODO delete comment in database
-            this.$emit('remove', this.localValue);
+            // delete comment in database - if already stored
+            if (this.localValue.id != null) {
+                this.deleteText(this.localValue.id);
+            }
+            this.$nextTick(() => {
+                this.$emit('remove', this.localValue);
+            });
         },
     },
+    created() {
+        this.loggedInUser = this.keycloak.idTokenParsed.preferred_username;
+    },
     mounted() {
-        this.$data.text = this.localValue;
-        if (this.localValue.value != null && this.localValue.value.length > 0) {
-            this.saved = true;
-        }
+        this.$nextTick(() => {
+            this.$data.text = this.localValue;
+        });
     },
 };
 </script>
