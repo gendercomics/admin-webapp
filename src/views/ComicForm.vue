@@ -16,42 +16,6 @@
 
         <b-form @submit="onSubmit" v-if="show">
             <b-container class="mt-2" fluid>
-                <!-- comic summary on top TODO: improve summary -->
-                <b-row>
-                    <b-col>
-                        <input-field
-                            :label="comic.type"
-                            :value="comic.title"
-                            size="lg"
-                            disabled
-                            style="width: 43em"
-                        />
-                    </b-col>
-                    <b-col>
-                        <!-- status -->
-                        <b-form-group>
-                            <!-- action buttons -->
-                            <b-button-group>
-                                <!-- editing status -->
-                                <b-form-select
-                                    :options="this.$statusOptions"
-                                    v-model="comic.metaData.status"
-                                />
-
-                                <b-button type="submit" variant="primary"
-                                    >save
-                                </b-button>
-                                <b-button
-                                    to="/comics"
-                                    type="reset"
-                                    :variant="backBtnVariant"
-                                    >back
-                                </b-button>
-                            </b-button-group>
-                        </b-form-group>
-                    </b-col>
-                </b-row>
-
                 <b-row class="ml-0">
                     <div id="button-col" class="mt-2 mb-2">
                         <b-button-group vertical>
@@ -188,6 +152,33 @@
                                 placeholder="Enter title"
                                 :state="titleState"
                             />
+
+                            <div class="ml-1 float-right">
+                                <!-- status -->
+                                <b-form-group class="m-0">
+                                    <!-- action buttons -->
+                                    <b-button-group>
+                                        <!-- editing status -->
+                                        <b-form-select
+                                            :options="this.$statusOptions"
+                                            v-model="comic.metaData.status"
+                                        />
+
+                                        <b-button
+                                            type="submit"
+                                            variant="primary"
+                                            >save
+                                        </b-button>
+                                        <b-button
+                                            to="/comics"
+                                            type="reset"
+                                            :variant="backBtnVariant"
+                                            >back
+                                        </b-button>
+                                    </b-button-group>
+                                </b-form-group>
+                            </div>
+
                             <b-form-invalid-feedback
                                 >Enter at least 1 character
                             </b-form-invalid-feedback>
