@@ -120,6 +120,9 @@
                         <span v-if="row.item.metaData.status === 'DRAFT'"
                             ><b-badge variant="secondary">draft</b-badge></span
                         >
+                        <span v-if="row.item.metaData.status === 'CLARIFICATION'"
+                            ><b-badge variant="info">clarification</b-badge></span
+                        >
                         <span v-if="row.item.metaData.status === 'REVIEW'"
                             ><b-badge variant="warning">review</b-badge></span
                         >
