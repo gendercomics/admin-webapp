@@ -17,14 +17,36 @@
         <b-form @submit="onSubmit" v-if="show">
             <b-container class="mt-2" fluid>
                 <!-- comic summary on top TODO: improve summary -->
-                <div class="m-2">
-                    <input-field
+                <b-row class="ml-0">
+                    <input-field class="m-2"
                         label="comic"
                         :value="comic.title"
                         size="lg"
                         disabled
+                        style="width: 44em"
                     />
-                </div>
+                    <!-- status -->
+                    <b-form-group class="ml-2 mt-2">
+                        <!-- action buttons -->
+                        <b-button-group>
+                            <!-- editing status -->
+                            <b-form-select
+                                :options="this.$statusOptions"
+                                v-model="comic.metaData.status"
+                            />
+
+                            <b-button type="submit" variant="primary"
+                                >save
+                            </b-button>
+                            <b-button
+                                to="/comics"
+                                type="reset"
+                                :variant="backBtnVariant"
+                                >back
+                            </b-button>
+                        </b-button-group>
+                    </b-form-group>
+                </b-row>
 
                 <b-row class="ml-2">
                     <div id="button-col" class="mt-2 mb-2">
@@ -330,28 +352,6 @@
                                 @remove="removeComment(idx_comment)"
                             />
                         </div>
-
-                        <!-- status -->
-                        <b-form-group>
-                            <!-- action buttons -->
-                            <b-button-group class="mt-3 float-right">
-                                <!-- editing status -->
-                                <b-form-select
-                                    :options="statusOptions"
-                                    v-model="comic.metaData.status"
-                                />
-
-                                <b-button type="submit" variant="primary"
-                                    >save
-                                </b-button>
-                                <b-button
-                                    to="/comics"
-                                    type="reset"
-                                    :variant="backBtnVariant"
-                                    >back
-                                </b-button>
-                            </b-button-group>
-                        </b-form-group>
                     </b-col>
                 </b-row>
             </b-container>
@@ -438,7 +438,6 @@ export default {
             selectedPublisher: null,
             selectedPublication: null,
             types: ['anthology', 'comic', 'magazine', 'webcomic'],
-            statusOptions: ['DRAFT', 'REVIEW', 'FINAL'],
             parents: null,
             showJson: false,
         };
