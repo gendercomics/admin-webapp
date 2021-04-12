@@ -17,35 +17,41 @@
         <b-form @submit="onSubmit" v-if="show">
             <b-container class="mt-2" fluid>
                 <!-- comic summary on top TODO: improve summary -->
-                <b-row class="ml-0">
-                    <input-field class="m-2"
-                        label="comic"
-                        :value="comic.title"
-                        size="lg"
-                        disabled
-                        style="width: 44em"
-                    />
-                    <!-- status -->
-                    <b-form-group class="ml-2 mt-2">
-                        <!-- action buttons -->
-                        <b-button-group>
-                            <!-- editing status -->
-                            <b-form-select
-                                :options="this.$statusOptions"
-                                v-model="comic.metaData.status"
-                            />
+                <b-row>
+                    <b-col>
+                        <input-field
+                            label="comic"
+                            :value="comic.title"
+                            size="lg"
+                            disabled
+                            style="width: 43em"
+                        />
+                    </b-col>
+                    <b-col>
+                        <!-- status -->
+                        <b-form-group>
+                            <!-- action buttons -->
+                            <b-button-group>
+                                <!-- editing status -->
+                                <b-form-select
+                                    :options="this.$statusOptions"
+                                    v-model="comic.metaData.status"
+                                />
 
-                            <b-button type="submit" variant="primary"
-                                >save
-                            </b-button>
-                            <b-button
-                                to="/comics"
-                                type="reset"
-                                :variant="backBtnVariant"
-                                >back
-                            </b-button>
-                        </b-button-group>
-                    </b-form-group>
+                                <b-button
+                                    type="submit"
+                                    variant="primary"
+                                    >save
+                                </b-button>
+                                <b-button
+                                    to="/comics"
+                                    type="reset"
+                                    :variant="backBtnVariant"
+                                    >back
+                                </b-button>
+                            </b-button-group>
+                        </b-form-group>
+                    </b-col>
                 </b-row>
 
                 <b-row class="ml-2">
