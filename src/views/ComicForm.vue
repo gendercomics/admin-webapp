@@ -420,7 +420,7 @@ export default {
             saveSuccessful: false,
             selectedPublisher: null,
             selectedPublication: null,
-            types: ['anthology', 'comic', 'magazine', 'webcomic'],
+            types: ['anthology', 'comic', 'magazine', 'series', 'webcomic'],
             parents: null,
             showJson: false,
         };
