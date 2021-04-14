@@ -144,6 +144,7 @@
                         <span>{{ titleDisplayText(row.item) }}</span>
                     </template>
 
+                    <!-- creators -->
                     <template v-slot:cell(creators)="data">
                         <div
                             v-for="creator in data.item.creators"
@@ -153,6 +154,7 @@
                         </div>
                     </template>
 
+                    <!-- in -->
                     <template v-slot:cell(partOf)="row">
                         <div v-if="row.item.partOf !== null">
                             <span>{{ parentDisplayText(row.item) }}</span>
@@ -182,6 +184,13 @@
                                 />
                             </b-button>
                         </div>
+                    </template>
+
+                    <!-- publisher -->
+                    <template v-slot:cell(publisher)="row">
+                        <span v-if="row.item.publisher != null">{{
+                            row.item.publisher.name
+                        }}</span>
                     </template>
 
                     <template v-slot:cell(metaData.changedOn)="data">
@@ -227,6 +236,7 @@ export default {
                 { key: 'title', label: 'title' },
                 { key: 'creators', label: 'creator(s)' },
                 { key: 'partOf', label: 'in' },
+                { key: 'publisher', label: 'publisher' },
                 { key: 'metaData.changedOn', label: 'created/modified' },
                 { key: 'metaData.changedBy', label: 'by' },
             ],
@@ -271,7 +281,8 @@ export default {
                 this.filterStatus(row) &&
                 (this.filterTitle(row, filter) ||
                     this.filterCreators(row, filter) ||
-                    this.filterParent(row, filter))
+                    this.filterParent(row, filter) ||
+                    this.filterPublisher(row, filter))
             );
         },
         filterTitle(row, filter) {
@@ -318,6 +329,15 @@ export default {
         },
         filterStatus(row) {
             return this.statusFilter.indexOf(row.metaData.status) !== -1;
+        },
+        filterPublisher(row, filter) {
+            let filterPublisher = false;
+            if (row.publisher != null) {
+                filterPublisher = row.publisher.name
+                    .toLowerCase()
+                    .includes(filter[0].toLowerCase());
+            }
+            return filterPublisher;
         },
         fullName(creator) {
             if (creator != null) {
