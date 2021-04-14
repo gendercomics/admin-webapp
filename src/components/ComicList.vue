@@ -13,11 +13,11 @@
                     >
                         <b-input-group size="sm">
                             <b-form-input
-                                v-model="filter"
+                                v-model="textFilter"
                                 type="search"
                                 id="filterInput"
                                 placeholder="Type to Search"
-                            ></b-form-input>
+                            />
                             <b-input-group-append>
                                 <b-button
                                     :disabled="!filter"
@@ -28,10 +28,16 @@
                         </b-input-group>
                     </b-form-group>
                 </b-col>
+
                 <b-col lg="6" class="my-1">
-                    <b-button to="comics/new" variant="outline-primary"
-                        >new comic</b-button
-                    >
+                    <b-form-group>
+                        <b-form-checkbox-group
+                            :options="this.$statusOptions"
+                            v-model="statusFilter"
+                            switches
+                            size="sm"
+                        />
+                    </b-form-group>
                 </b-col>
             </b-row>
             <b-row>
@@ -120,8 +126,11 @@
                         <span v-if="row.item.metaData.status === 'DRAFT'"
                             ><b-badge variant="secondary">draft</b-badge></span
                         >
-                        <span v-if="row.item.metaData.status === 'CLARIFICATION'"
-                            ><b-badge variant="info">clarification</b-badge></span
+                        <span
+                            v-if="row.item.metaData.status === 'CLARIFICATION'"
+                            ><b-badge variant="info"
+                                >clarification</b-badge
+                            ></span
                         >
                         <span v-if="row.item.metaData.status === 'REVIEW'"
                             ><b-badge variant="warning">review</b-badge></span
@@ -224,7 +233,8 @@ export default {
             comics: null,
             loading: true,
             errored: false,
-            filter: null,
+            textFilter: '',
+            statusFilter: ['DRAFT', 'CLARIFICATION', 'REVIEW', 'FINAL'],
             filterOn: [],
             totalRows: 1,
             currentPage: 1,
@@ -258,16 +268,17 @@ export default {
         },
         customFilter(row, filter) {
             return (
-                this.filterTitle(row, filter) ||
-                this.filterCreators(row, filter) ||
-                this.filterParent(row, filter)
+                this.filterStatus(row) &&
+                (this.filterTitle(row, filter) ||
+                    this.filterCreators(row, filter) ||
+                    this.filterParent(row, filter))
             );
         },
         filterTitle(row, filter) {
             let titleAndIssue = this.titleDisplayText(row);
             let filterTitle = titleAndIssue
                 .toLowerCase()
-                .includes(filter.toLowerCase());
+                .includes(filter[0].toLowerCase());
             return filterTitle;
         },
         filterCreators(row, filter) {
@@ -290,7 +301,7 @@ export default {
                         filterName
                             .trim()
                             .toLowerCase()
-                            .includes(filter.toLowerCase());
+                            .includes(filter[0].toLowerCase());
                 });
             }
             return filterCreator;
@@ -301,9 +312,12 @@ export default {
             if (parentString != null) {
                 filterParent = parentString
                     .toLowerCase()
-                    .includes(filter.toLowerCase());
+                    .includes(filter[0].toLowerCase());
             }
             return filterParent;
+        },
+        filterStatus(row) {
+            return this.statusFilter.indexOf(row.metaData.status) !== -1;
         },
         fullName(creator) {
             if (creator != null) {
@@ -345,6 +359,15 @@ export default {
                 })
                 .finally(() => (this.loading = false));
             this.comics.splice(this.comics.indexOf(item), 1);
+        },
+    },
+    computed: {
+        filter: function() {
+            if (this.textFilter === null && this.statusFilter === null) {
+                return null;
+            }
+
+            return [this.textFilter, this.statusFilter];
         },
     },
 };
