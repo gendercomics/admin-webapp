@@ -12,9 +12,9 @@
                 <b-nav-item to="/roles">Roles</b-nav-item>
                 <b-nav-item to="/keywords">Keywords</b-nav-item>
                 <b-nav-item-dropdown text="NEW">
-                    <b-dropdown-item to="comics/new">comic</b-dropdown-item>
-                    <b-dropdown-item to="persons/new">person</b-dropdown-item>
-                    <b-dropdown-item to="publishers/new"
+                    <b-dropdown-item to="/comics/new">comic</b-dropdown-item>
+                    <b-dropdown-item to="/persons/new">person</b-dropdown-item>
+                    <b-dropdown-item to="/publishers/new"
                         >publisher</b-dropdown-item
                     >
                 </b-nav-item-dropdown>
