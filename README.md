@@ -1,8 +1,8 @@
 # gendercomics-admin-webapp
 
-## URLS
-production: https://gendercomics.net/admin/
-staging: https://stage.gendercomics.net/admin/
+## URLs
+### production: https://gendercomics.net/admin/ [![Build Status](https://travis-ci.com/gendercomics/admin-webapp.svg?branch=master)](https://travis-ci.com/gendercomics/admin-webapp)
+### stage: https://stage.gendercomics.net/admin/ [![Build Status](https://travis-ci.com/gendercomics/admin-webapp.svg?branch=master)](https://travis-ci.com/gendercomics/admin-webapp)
 
 ## Release Notes
 
