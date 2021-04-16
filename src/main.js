@@ -72,6 +72,7 @@ let initOptions = {
 
 Vue.prototype.keycloak = Keycloak(initOptions);
 Vue.prototype.moment = moment;
+Vue.prototype.$statusOptions = ['DRAFT', 'CLARIFICATION', 'REVIEW', 'FINAL'];
 
 Vue.use(BootstrapVue);
 

@@ -16,17 +16,7 @@
 
         <b-form @submit="onSubmit" v-if="show">
             <b-container class="mt-2" fluid>
-                <!-- comic summary on top TODO: improve summary -->
-                <div class="m-2">
-                    <input-field
-                        label="comic"
-                        :value="comic.title"
-                        size="lg"
-                        disabled
-                    />
-                </div>
-
-                <b-row class="ml-2">
+                <b-row class="ml-0">
                     <div id="button-col" class="mt-2 mb-2">
                         <b-button-group vertical>
                             <b-button disabled>title</b-button>
@@ -53,13 +43,7 @@
                                     >+
                                 </b-button>
                             </b-button-group>
-                            <!-- typ button -->
-                            <b-button
-                                :variant="typeBtnVariant"
-                                @click="addType"
-                                :disabled="this.showType"
-                                >type
-                            </b-button>
+                            <!-- publisher button -->
                             <b-button
                                 :variant="publisherBtnVariant"
                                 @click="addPublisher"
@@ -149,11 +133,18 @@
                     <b-col id="form-col" class="mt-2 mr-2">
                         <!-- title -->
                         <b-input-group
-                            prepend="title"
                             id="input-group-title"
                             label-for="input-title"
                             size="md"
                         >
+                            <!-- type -->
+                            <b-form-select
+                                :options="this.types"
+                                v-model="comic.type"
+                                style="background-color: #E4E7EB; max-width: 15%"
+                            >
+                            </b-form-select>
+
                             <b-form-input
                                 id="input-title"
                                 v-model="comic.title"
@@ -161,6 +152,33 @@
                                 placeholder="Enter title"
                                 :state="titleState"
                             />
+
+                            <div class="ml-1 float-right">
+                                <!-- status -->
+                                <b-form-group class="m-0">
+                                    <!-- action buttons -->
+                                    <b-button-group>
+                                        <!-- editing status -->
+                                        <b-form-select
+                                            :options="this.$statusOptions"
+                                            v-model="comic.metaData.status"
+                                        />
+
+                                        <b-button
+                                            type="submit"
+                                            variant="primary"
+                                            >save
+                                        </b-button>
+                                        <b-button
+                                            to="/comics"
+                                            type="reset"
+                                            :variant="backBtnVariant"
+                                            >back
+                                        </b-button>
+                                    </b-button-group>
+                                </b-form-group>
+                            </div>
+
                             <b-form-invalid-feedback
                                 >Enter at least 1 character
                             </b-form-invalid-feedback>
@@ -197,17 +215,6 @@
                                 @remove="removeCreator(idx)"
                             />
                         </div>
-
-                        <!-- type -->
-                        <select-field
-                            label="type"
-                            :options="this.types"
-                            v-if="showType"
-                            v-model="comic.type"
-                            :selected="comic.type"
-                            removable
-                            class="mt-2"
-                        />
 
                         <!-- publisher -->
                         <b-input-group
@@ -330,28 +337,6 @@
                                 @remove="removeComment(idx_comment)"
                             />
                         </div>
-
-                        <!-- status -->
-                        <b-form-group>
-                            <!-- action buttons -->
-                            <b-button-group class="mt-3 float-right">
-                                <!-- editing status -->
-                                <b-form-select
-                                    :options="statusOptions"
-                                    v-model="comic.metaData.status"
-                                />
-
-                                <b-button type="submit" variant="primary"
-                                    >save
-                                </b-button>
-                                <b-button
-                                    to="/comics"
-                                    type="reset"
-                                    :variant="backBtnVariant"
-                                    >back
-                                </b-button>
-                            </b-button-group>
-                        </b-form-group>
                     </b-col>
                 </b-row>
             </b-container>
@@ -384,7 +369,6 @@ import Header from '@/components/Header';
 import InputField from '@/components/InputField';
 import { httpClient } from '@/services/httpclient';
 import TagInput from '@/components/TagInput';
-import SelectField from '@/components/SelectField';
 import ComicCreator from '@/components/ComicCreator';
 import RoleService from '@/mixins/roleservice';
 import PersonService from '@/mixins/personservice';
@@ -400,7 +384,6 @@ export default {
         ComicCreator,
         TagInput,
         InputField,
-        SelectField,
         Header,
     },
     data() {
@@ -410,7 +393,7 @@ export default {
                 subTitle: null,
                 issue: null,
                 creators: [],
-                type: null,
+                type: 'comic',
                 publisher: null,
                 year: null,
                 edition: null,
@@ -437,8 +420,7 @@ export default {
             saveSuccessful: false,
             selectedPublisher: null,
             selectedPublication: null,
-            types: ['anthology', 'comic', 'magazine', 'webcomic'],
-            statusOptions: ['DRAFT', 'REVIEW', 'FINAL'],
+            types: ['anthology', 'comic', 'magazine', 'series', 'webcomic'],
             parents: null,
             showJson: false,
         };
@@ -464,10 +446,6 @@ export default {
         },
         issueBtnVariant() {
             if (!this.showIssue) return 'outline-dark';
-            return 'dark';
-        },
-        typeBtnVariant() {
-            if (!this.showType) return 'outline-dark';
             return 'dark';
         },
         publisherBtnVariant() {
@@ -517,9 +495,6 @@ export default {
         },
         showIssue() {
             return this.comic.issue != null;
-        },
-        showType() {
-            return this.comic.type != null;
         },
         showPublisher() {
             return this.comic.publisher != null;
@@ -619,9 +594,6 @@ export default {
             // TODO remove only owned comment?
             this.$log.debug('idx=' + idx);
             this.comic.comments.splice(idx, 1);
-        },
-        addType() {
-            this.comic.type = '';
         },
         addPublisher() {
             this.comic.publisher = '';
