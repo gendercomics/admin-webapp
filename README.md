@@ -7,7 +7,11 @@
 ## Release Notes
 
 ---
-### gendercomics-admin-webapp-1.4.2-SNAPSHOT
+### gendercomics-admin-webapp-1.5.0-SNAPSHOT
+- TODO
+
+---
+### gendercomics-admin-webapp-1.4.2
 
 #### Comic Liste
 - Button "new comic" in Header-Dropdown verschoben
