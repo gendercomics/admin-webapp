@@ -26,10 +26,12 @@
                                 :disabled="this.showSubtitle"
                                 >subtitle
                             </b-button>
+                            <!-- issue button -->
                             <b-button
                                 :variant="issueBtnVariant"
                                 @click="addIssue"
                                 :disabled="this.showIssue"
+                                v-if="this.isComicType"
                                 >issue
                             </b-button>
                             <!-- creator button -->
@@ -50,28 +52,34 @@
                                 :disabled="this.showPublisher"
                                 >publisher
                             </b-button>
+                            <!-- year button -->
                             <b-button
                                 :variant="yearBtnVariant"
                                 @click="addYear"
                                 :disabled="this.showYear"
                                 >year
                             </b-button>
+                            <!-- edition button -->
                             <b-button
                                 :variant="editionBtnVariant"
                                 @click="addEdition"
                                 :disabled="this.showEdition"
+                                v-if="this.isComicType"
                                 >edition
                             </b-button>
+                            <!-- link button -->
                             <b-button
                                 :variant="linkBtnVariant"
                                 @click="addLink"
                                 :disabled="this.showLink"
                                 >link
                             </b-button>
+                            <!-- isbn button -->
                             <b-button
                                 :variant="isbnBtnVariant"
                                 @click="addIsbn"
                                 :disabled="this.showIsbn"
+                                v-if="this.isComicType"
                                 >isbn
                             </b-button>
 
@@ -80,7 +88,7 @@
                                 :variant="inBtnVariant"
                                 @click="addIn"
                                 :disabled="this.showIn"
-                                v-if="this.showInButtons"
+                                v-if="this.isComicType"
                                 >in
                             </b-button>
 
@@ -89,7 +97,7 @@
                                 :variant="pagesBtnVariant"
                                 @click="addPages"
                                 :disabled="this.showPages"
-                                v-if="this.showInButtons"
+                                v-if="this.isComicType"
                                 >pages
                             </b-button>
 
@@ -125,8 +133,8 @@
                             <b-button
                                 variant="outline-dark"
                                 :pressed.sync="showJson"
-                                >JSON</b-button
-                            >
+                                >JSON
+                            </b-button>
                         </b-button-group>
                     </div>
 
@@ -205,10 +213,7 @@
                         />
 
                         <!-- creators -->
-                        <div
-                            v-for="(creator, idx) in comic.creators"
-                            v-bind:key="idx"
-                        >
+                        <div v-for="idx in comic.creators" v-bind:key="idx">
                             <comic-creator
                                 v-model="comic.creators[idx]"
                                 removable
@@ -258,6 +263,7 @@
                         <input-field
                             label="link"
                             v-model="comic.link"
+                            :link="comic.link"
                             v-if="showLink"
                             type="url"
                             removable
@@ -328,7 +334,7 @@
 
                         <!-- comments -->
                         <div
-                            v-for="(comment, idx_comment) in comic.comments"
+                            v-for="idx_comment in comic.comments"
                             v-bind:key="'comment' + idx_comment"
                         >
                             <comment-field
@@ -352,14 +358,14 @@
             </b-row>
 
             <!--
-            <b-row class="mt-4" v-if="showJson">
-                <b-col id="json-publishers">
-                    <b-card header="publishers">
-                        <pre class="mt-0">{{ $data.publishers }}</pre>
-                    </b-card>
-                </b-col>
-            </b-row>
-            -->
+      <b-row class="mt-4" v-if="showJson">
+          <b-col id="json-publishers">
+              <b-card header="publishers">
+                  <pre class="mt-0">{{ $data.publishers }}</pre>
+              </b-card>
+          </b-col>
+      </b-row>
+      -->
         </b-container>
     </div>
 </template>
@@ -437,9 +443,9 @@ export default {
             return 'dark';
         },
         creatorsExist() {
-            if (this.comic.creators != null && this.comic.creators.length > 0)
-                return true;
-            return false;
+            return (
+                this.comic.creators != null && this.comic.creators.length > 0
+            );
         },
         creatorBtnVariant() {
             return this.creatorsExist ? 'dark' : 'outline-dark';
@@ -521,7 +527,7 @@ export default {
                 this.comic.partOf !== null && this.comic.partOf.pages !== null
             );
         },
-        showInButtons() {
+        isComicType() {
             return (
                 this.comic.type === null ||
                 this.comic.type === '' ||
@@ -535,9 +541,9 @@ export default {
             return this.comic.genres != null;
         },
         commentsExist() {
-            if (this.comic.comments != null && this.comic.comments.length > 0)
-                return true;
-            return false;
+            return (
+                this.comic.comments != null && this.comic.comments.length > 0
+            );
         },
     },
     methods: {
@@ -666,10 +672,10 @@ export default {
             let optionText = parent.title;
 
             /*
-  parent.subtitle !== null
-      ? (optionText += '. ' + parent.subTitle)
-      : optionText;
-  */
+parent.subtitle !== null
+? (optionText += '. ' + parent.subTitle)
+: optionText;
+*/
             parent.publisher != null
                 ? (optionText += '. ' + parent.publisher.name)
                 : optionText;
