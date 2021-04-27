@@ -213,7 +213,10 @@
                         />
 
                         <!-- creators -->
-                        <div v-for="idx in comic.creators" v-bind:key="idx">
+                        <div
+                            v-for="(creator, idx) in comic.creators"
+                            v-bind:key="idx"
+                        >
                             <comic-creator
                                 v-model="comic.creators[idx]"
                                 removable
@@ -334,7 +337,7 @@
 
                         <!-- comments -->
                         <div
-                            v-for="idx_comment in comic.comments"
+                            v-for="(comment, idx_comment) in comic.comments"
                             v-bind:key="'comment' + idx_comment"
                         >
                             <comment-field
@@ -356,16 +359,6 @@
                     </b-card>
                 </b-col>
             </b-row>
-
-            <!--
-      <b-row class="mt-4" v-if="showJson">
-          <b-col id="json-publishers">
-              <b-card header="publishers">
-                  <pre class="mt-0">{{ $data.publishers }}</pre>
-              </b-card>
-          </b-col>
-      </b-row>
-      -->
         </b-container>
     </div>
 </template>
