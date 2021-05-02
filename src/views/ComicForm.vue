@@ -16,17 +16,7 @@
 
         <b-form @submit="onSubmit" v-if="show">
             <b-container class="mt-2" fluid>
-                <!-- comic summary on top TODO: improve summary -->
-                <div class="m-2">
-                    <input-field
-                        label="comic"
-                        :value="comic.title"
-                        size="lg"
-                        disabled
-                    />
-                </div>
-
-                <b-row class="ml-2">
+                <b-row class="ml-0">
                     <div id="button-col" class="mt-2 mb-2">
                         <b-button-group vertical>
                             <b-button disabled>title</b-button>
@@ -36,10 +26,12 @@
                                 :disabled="this.showSubtitle"
                                 >subtitle
                             </b-button>
+                            <!-- issue button -->
                             <b-button
                                 :variant="issueBtnVariant"
                                 @click="addIssue"
                                 :disabled="this.showIssue"
+                                v-if="this.isComicType"
                                 >issue
                             </b-button>
                             <!-- creator button -->
@@ -53,41 +45,41 @@
                                     >+
                                 </b-button>
                             </b-button-group>
-                            <!-- typ button -->
-                            <b-button
-                                :variant="typeBtnVariant"
-                                @click="addType"
-                                :disabled="this.showType"
-                                >type
-                            </b-button>
+                            <!-- publisher button -->
                             <b-button
                                 :variant="publisherBtnVariant"
                                 @click="addPublisher"
                                 :disabled="this.showPublisher"
                                 >publisher
                             </b-button>
+                            <!-- year button -->
                             <b-button
                                 :variant="yearBtnVariant"
                                 @click="addYear"
                                 :disabled="this.showYear"
                                 >year
                             </b-button>
+                            <!-- edition button -->
                             <b-button
                                 :variant="editionBtnVariant"
                                 @click="addEdition"
                                 :disabled="this.showEdition"
+                                v-if="this.isComicType"
                                 >edition
                             </b-button>
+                            <!-- link button -->
                             <b-button
                                 :variant="linkBtnVariant"
                                 @click="addLink"
                                 :disabled="this.showLink"
                                 >link
                             </b-button>
+                            <!-- isbn button -->
                             <b-button
                                 :variant="isbnBtnVariant"
                                 @click="addIsbn"
                                 :disabled="this.showIsbn"
+                                v-if="this.isComicType"
                                 >isbn
                             </b-button>
 
@@ -96,14 +88,16 @@
                                 :variant="inBtnVariant"
                                 @click="addIn"
                                 :disabled="this.showIn"
-                                v-if="this.showInButtons"
+                                v-if="this.isComicType"
                                 >in
                             </b-button>
+
+                            <!-- pages -->
                             <b-button
                                 :variant="pagesBtnVariant"
                                 @click="addPages"
                                 :disabled="this.showPages"
-                                v-if="this.showInButtons"
+                                v-if="this.isComicType"
                                 >pages
                             </b-button>
 
@@ -122,23 +116,43 @@
                                 :disabled="this.showKeywords"
                                 >keywords
                             </b-button>
+
+                            <!-- comments -->
+                            <b-button-group>
+                                <b-button disabled :variant="commentBtnVariant"
+                                    >comment
+                                </b-button>
+                                <b-button
+                                    variant="outline-dark"
+                                    @click="addComment"
+                                    >+
+                                </b-button>
+                            </b-button-group>
+
                             <!-- toggle JSON view -->
                             <b-button
                                 variant="outline-dark"
                                 :pressed.sync="showJson"
-                                >JSON</b-button
-                            >
+                                >JSON
+                            </b-button>
                         </b-button-group>
                     </div>
 
                     <b-col id="form-col" class="mt-2 mr-2">
                         <!-- title -->
                         <b-input-group
-                            prepend="title"
                             id="input-group-title"
                             label-for="input-title"
                             size="md"
                         >
+                            <!-- type -->
+                            <b-form-select
+                                :options="this.types"
+                                v-model="comic.type"
+                                style="background-color: #E4E7EB; max-width: 15%"
+                            >
+                            </b-form-select>
+
                             <b-form-input
                                 id="input-title"
                                 v-model="comic.title"
@@ -146,6 +160,33 @@
                                 placeholder="Enter title"
                                 :state="titleState"
                             />
+
+                            <div class="ml-1 float-right">
+                                <!-- status -->
+                                <b-form-group class="m-0">
+                                    <!-- action buttons -->
+                                    <b-button-group>
+                                        <!-- editing status -->
+                                        <b-form-select
+                                            :options="this.$statusOptions"
+                                            v-model="comic.metaData.status"
+                                        />
+
+                                        <b-button
+                                            type="submit"
+                                            variant="primary"
+                                            >save
+                                        </b-button>
+                                        <b-button
+                                            to="/comics"
+                                            type="reset"
+                                            :variant="backBtnVariant"
+                                            >back
+                                        </b-button>
+                                    </b-button-group>
+                                </b-form-group>
+                            </div>
+
                             <b-form-invalid-feedback
                                 >Enter at least 1 character
                             </b-form-invalid-feedback>
@@ -183,17 +224,6 @@
                             />
                         </div>
 
-                        <!-- type -->
-                        <select-field
-                            label="type"
-                            :options="this.types"
-                            v-if="showType"
-                            v-model="comic.type"
-                            :selected="comic.type"
-                            removable
-                            class="mt-2"
-                        />
-
                         <!-- publisher -->
                         <b-input-group
                             id="input-group-publisher"
@@ -201,14 +231,11 @@
                             prepend="publisher"
                             v-if="showPublisher"
                         >
-                            <b-form-select
-                                id="input-publisher"
-                                :options="publishers"
-                                value-field="id"
-                                text-field="name"
-                                v-model="selectedPublisher"
-                                @change="changePublisher()"
+                            <searchable-dropdown
+                                v-model="comic.publisher"
+                                options-path="/publishers"
                             />
+
                             <template v-slot:append>
                                 <b-button @click="removePublisher()">
                                     <font-awesome-icon icon="times-circle" />
@@ -221,9 +248,8 @@
                             label="year"
                             v-model="comic.year"
                             v-if="showYear"
-                            type="number"
                             removable
-                            class="mt-2"
+                            class="mt-2 w-25"
                         />
 
                         <!-- edition -->
@@ -240,6 +266,7 @@
                         <input-field
                             label="link"
                             v-model="comic.link"
+                            :link="comic.link"
                             v-if="showLink"
                             type="url"
                             removable
@@ -308,27 +335,17 @@
                             v-if="showKeywords"
                         />
 
-                        <!-- status -->
-                        <b-form-group>
-                            <!-- action buttons -->
-                            <b-button-group class="mt-3 float-right">
-                                <!-- editing status -->
-                                <b-form-select
-                                    :options="statusOptions"
-                                    v-model="comic.metaData.status"
-                                />
-
-                                <b-button type="submit" variant="primary"
-                                    >save
-                                </b-button>
-                                <b-button
-                                    to="/comics"
-                                    type="reset"
-                                    :variant="backBtnVariant"
-                                    >back
-                                </b-button>
-                            </b-button-group>
-                        </b-form-group>
+                        <!-- comments -->
+                        <div
+                            v-for="(comment, idx_comment) in comic.comments"
+                            v-bind:key="'comment' + idx_comment"
+                        >
+                            <comment-field
+                                v-model="comic.comments[idx_comment]"
+                                removable
+                                @remove="removeComment(idx_comment)"
+                            />
+                        </div>
                     </b-col>
                 </b-row>
             </b-container>
@@ -342,22 +359,6 @@
                     </b-card>
                 </b-col>
             </b-row>
-
-            <b-row class="mt-4" v-if="showJson">
-                <b-col id="json-names">
-                    <b-card header="names">
-                        <pre class="mt-0">{{ $data.names }}</pre>
-                    </b-card>
-                </b-col>
-            </b-row>
-
-            <b-row class="mt-4" v-if="showJson">
-                <b-col id="json-roles">
-                    <b-card header="roles">
-                        <pre class="mt-0">{{ $data.roles }}</pre>
-                    </b-card>
-                </b-col>
-            </b-row>
         </b-container>
     </div>
 </template>
@@ -367,19 +368,21 @@ import Header from '@/components/Header';
 import InputField from '@/components/InputField';
 import { httpClient } from '@/services/httpclient';
 import TagInput from '@/components/TagInput';
-import SelectField from '@/components/SelectField';
 import ComicCreator from '@/components/ComicCreator';
 import RoleService from '@/mixins/roleservice';
 import PersonService from '@/mixins/personservice';
+import SearchableDropdown from '@/components/SearchableDropdown';
+import CommentField from '@/components/CommentField';
 
 export default {
     name: 'ComicForm',
     mixins: [PersonService, RoleService],
     components: {
+        CommentField,
+        SearchableDropdown,
         ComicCreator,
         TagInput,
         InputField,
-        SelectField,
         Header,
     },
     data() {
@@ -389,7 +392,7 @@ export default {
                 subTitle: null,
                 issue: null,
                 creators: [],
-                type: null,
+                type: 'comic',
                 publisher: null,
                 year: null,
                 edition: null,
@@ -405,6 +408,7 @@ export default {
                     changedBy: null,
                     status: 'DRAFT',
                 },
+                comments: [],
             },
             names: [],
             roles: [],
@@ -415,8 +419,7 @@ export default {
             saveSuccessful: false,
             selectedPublisher: null,
             selectedPublication: null,
-            types: ['anthology', 'comic', 'magazine', 'webcomic'],
-            statusOptions: ['DRAFT', 'REVIEW', 'FINAL'],
+            types: ['anthology', 'comic', 'magazine', 'series', 'webcomic'],
             parents: null,
             showJson: false,
         };
@@ -433,19 +436,15 @@ export default {
             return 'dark';
         },
         creatorsExist() {
-            if (this.comic.creators != null && this.comic.creators.length > 0)
-                return true;
-            return false;
+            return (
+                this.comic.creators != null && this.comic.creators.length > 0
+            );
         },
         creatorBtnVariant() {
             return this.creatorsExist ? 'dark' : 'outline-dark';
         },
         issueBtnVariant() {
             if (!this.showIssue) return 'outline-dark';
-            return 'dark';
-        },
-        typeBtnVariant() {
-            if (!this.showType) return 'outline-dark';
             return 'dark';
         },
         publisherBtnVariant() {
@@ -487,14 +486,14 @@ export default {
             if (!this.showGenres) return 'outline-dark';
             return 'dark';
         },
+        commentBtnVariant() {
+            return this.commentsExist ? 'dark' : 'outline-dark';
+        },
         showSubtitle() {
             return this.comic.subTitle != null;
         },
         showIssue() {
             return this.comic.issue != null;
-        },
-        showType() {
-            return this.comic.type != null;
         },
         showPublisher() {
             return this.comic.publisher != null;
@@ -521,7 +520,7 @@ export default {
                 this.comic.partOf !== null && this.comic.partOf.pages !== null
             );
         },
-        showInButtons() {
+        isComicType() {
             return (
                 this.comic.type === null ||
                 this.comic.type === '' ||
@@ -533,6 +532,11 @@ export default {
         },
         showGenres() {
             return this.comic.genres != null;
+        },
+        commentsExist() {
+            return (
+                this.comic.comments != null && this.comic.comments.length > 0
+            );
         },
     },
     methods: {
@@ -585,8 +589,10 @@ export default {
             this.$log.debug('idx=' + idx);
             this.comic.creators.splice(idx, 1);
         },
-        addType() {
-            this.comic.type = '';
+        removeComment(idx) {
+            // TODO remove only owned comment?
+            this.$log.debug('idx=' + idx);
+            this.comic.comments.splice(idx, 1);
         },
         addPublisher() {
             this.comic.publisher = '';
@@ -621,28 +627,12 @@ export default {
         addGenres() {
             this.comic.genres = [];
         },
-        changePublisher() {
-            console.log(this.selectedPublisher);
-            this.publishers.forEach(publisher => {
-                if (this.selectedPublisher === publisher.id) {
-                    this.comic.publisher = publisher;
-                }
-            });
-        },
         removePublisher() {
             this.comic.publisher = null;
             this.selectedPublisher = null;
         },
         removeIn() {
             this.comic.partOf = null;
-        },
-        nameUpdated(idx) {
-            console.log('nameUpdated=' + idx);
-            this.names.forEach(name => {
-                if (this.comic.creators[idx].name.id === name.id) {
-                    this.comic.creators[idx].name = name;
-                }
-            });
         },
         roleUpdated(idx) {
             console.log('roleUpdated=' + idx);
@@ -675,10 +665,10 @@ export default {
             let optionText = parent.title;
 
             /*
-  parent.subtitle !== null
-      ? (optionText += '. ' + parent.subTitle)
-      : optionText;
-  */
+parent.subtitle !== null
+? (optionText += '. ' + parent.subTitle)
+: optionText;
+*/
             parent.publisher != null
                 ? (optionText += '. ' + parent.publisher.name)
                 : optionText;
@@ -692,6 +682,12 @@ export default {
                 return name.name;
             }
             return name.firstName + ' ' + name.lastName;
+        },
+        addComment() {
+            if (this.comic.comments === null) {
+                this.comic.comments = [];
+            }
+            this.comic.comments.push({ value: null });
         },
     },
     mounted() {

@@ -9,9 +9,12 @@ import moment from 'moment';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import {
+    faCheckCircle,
     faEdit,
+    faExclamationTriangle,
     faExternalLinkAlt,
     faFilter,
+    faSave,
     faSearch,
     faTags,
     faTimesCircle,
@@ -19,14 +22,18 @@ import {
     faUser,
     faUserSecret,
 } from '@fortawesome/free-solid-svg-icons';
-//import { faPlusSquare } from '@fortawesome/free-regular-svg-icons';
+import { faComment } from '@fortawesome/free-regular-svg-icons';
 
 import AuthService from './services/authservice';
 
 library.add(
+    faCheckCircle,
+    faComment,
     faEdit,
+    faExclamationTriangle,
     faExternalLinkAlt,
     faFilter,
+    faSave,
     faSearch,
     faTags,
     faTimesCircle,
@@ -65,6 +72,7 @@ let initOptions = {
 
 Vue.prototype.keycloak = Keycloak(initOptions);
 Vue.prototype.moment = moment;
+Vue.prototype.$statusOptions = ['DRAFT', 'CLARIFICATION', 'REVIEW', 'FINAL'];
 
 Vue.use(BootstrapVue);
 

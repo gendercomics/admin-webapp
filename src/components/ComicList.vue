@@ -13,11 +13,11 @@
                     >
                         <b-input-group size="sm">
                             <b-form-input
-                                v-model="filter"
+                                v-model="textFilter"
                                 type="search"
                                 id="filterInput"
                                 placeholder="Type to Search"
-                            ></b-form-input>
+                            />
                             <b-input-group-append>
                                 <b-button
                                     :disabled="!filter"
@@ -28,10 +28,16 @@
                         </b-input-group>
                     </b-form-group>
                 </b-col>
+
                 <b-col lg="6" class="my-1">
-                    <b-button to="comics/new" variant="outline-primary"
-                        >new comic</b-button
-                    >
+                    <b-form-group>
+                        <b-form-checkbox-group
+                            :options="this.$statusOptions"
+                            v-model="statusFilter"
+                            switches
+                            size="sm"
+                        />
+                    </b-form-group>
                 </b-col>
             </b-row>
             <b-row>
@@ -120,6 +126,12 @@
                         <span v-if="row.item.metaData.status === 'DRAFT'"
                             ><b-badge variant="secondary">draft</b-badge></span
                         >
+                        <span
+                            v-if="row.item.metaData.status === 'CLARIFICATION'"
+                            ><b-badge variant="info"
+                                >clarification</b-badge
+                            ></span
+                        >
                         <span v-if="row.item.metaData.status === 'REVIEW'"
                             ><b-badge variant="warning">review</b-badge></span
                         >
@@ -132,6 +144,7 @@
                         <span>{{ titleDisplayText(row.item) }}</span>
                     </template>
 
+                    <!-- creators -->
                     <template v-slot:cell(creators)="data">
                         <div
                             v-for="creator in data.item.creators"
@@ -141,6 +154,7 @@
                         </div>
                     </template>
 
+                    <!-- in -->
                     <template v-slot:cell(partOf)="row">
                         <div v-if="row.item.partOf !== null">
                             <span>{{ parentDisplayText(row.item) }}</span>
@@ -170,6 +184,13 @@
                                 />
                             </b-button>
                         </div>
+                    </template>
+
+                    <!-- publisher -->
+                    <template v-slot:cell(publisher)="row">
+                        <span v-if="row.item.publisher != null">{{
+                            row.item.publisher.name
+                        }}</span>
                     </template>
 
                     <template v-slot:cell(metaData.changedOn)="data">
@@ -215,18 +236,20 @@ export default {
                 { key: 'title', label: 'title' },
                 { key: 'creators', label: 'creator(s)' },
                 { key: 'partOf', label: 'in' },
+                { key: 'publisher', label: 'publisher' },
                 { key: 'metaData.changedOn', label: 'created/modified' },
                 { key: 'metaData.changedBy', label: 'by' },
             ],
             comics: null,
             loading: true,
             errored: false,
-            filter: null,
+            textFilter: '',
+            statusFilter: ['DRAFT', 'CLARIFICATION', 'REVIEW', 'FINAL'],
             filterOn: [],
             totalRows: 1,
             currentPage: 1,
-            perPage: 10,
-            pageOptions: [10, 20, 50],
+            perPage: 20,
+            pageOptions: [10, 20, 50, 100],
         };
     },
     mounted() {
@@ -255,16 +278,18 @@ export default {
         },
         customFilter(row, filter) {
             return (
-                this.filterTitle(row, filter) ||
-                this.filterCreators(row, filter) ||
-                this.filterParent(row, filter)
+                this.filterStatus(row) &&
+                (this.filterTitle(row, filter) ||
+                    this.filterCreators(row, filter) ||
+                    this.filterParent(row, filter) ||
+                    this.filterPublisher(row, filter))
             );
         },
         filterTitle(row, filter) {
             let titleAndIssue = this.titleDisplayText(row);
             let filterTitle = titleAndIssue
                 .toLowerCase()
-                .includes(filter.toLowerCase());
+                .includes(filter[0].toLowerCase());
             return filterTitle;
         },
         filterCreators(row, filter) {
@@ -272,20 +297,22 @@ export default {
             if (row.creators !== null) {
                 row.creators.forEach(function(creator) {
                     let filterName = '';
-                    if (creator.name.name !== null) {
-                        filterName = creator.name.name;
-                    } else {
-                        filterName =
-                            creator.name.firstName +
-                            ' ' +
-                            creator.name.lastName;
+                    if (creator.name != null) {
+                        if (creator.name.name !== null) {
+                            filterName = creator.name.name;
+                        } else {
+                            filterName =
+                                creator.name.firstName +
+                                ' ' +
+                                creator.name.lastName;
+                        }
                     }
                     filterCreator =
                         filterCreator ||
                         filterName
                             .trim()
                             .toLowerCase()
-                            .includes(filter.toLowerCase());
+                            .includes(filter[0].toLowerCase());
                 });
             }
             return filterCreator;
@@ -296,15 +323,30 @@ export default {
             if (parentString != null) {
                 filterParent = parentString
                     .toLowerCase()
-                    .includes(filter.toLowerCase());
+                    .includes(filter[0].toLowerCase());
             }
             return filterParent;
         },
-        fullName(creator) {
-            if (creator.name != null) {
-                return creator.name;
+        filterStatus(row) {
+            return this.statusFilter.indexOf(row.metaData.status) !== -1;
+        },
+        filterPublisher(row, filter) {
+            let filterPublisher = false;
+            if (row.publisher != null) {
+                filterPublisher = row.publisher.name
+                    .toLowerCase()
+                    .includes(filter[0].toLowerCase());
             }
-            return creator.firstName + ' ' + creator.lastName;
+            return filterPublisher;
+        },
+        fullName(creator) {
+            if (creator != null) {
+                if (creator.name != null) {
+                    return creator.name;
+                }
+                return creator.firstName + ' ' + creator.lastName;
+            }
+            return '';
         },
         titleDisplayText(item) {
             return item.issue !== null
@@ -337,6 +379,15 @@ export default {
                 })
                 .finally(() => (this.loading = false));
             this.comics.splice(this.comics.indexOf(item), 1);
+        },
+    },
+    computed: {
+        filter: function() {
+            if (this.textFilter === null && this.statusFilter === null) {
+                return null;
+            }
+
+            return [this.textFilter, this.statusFilter];
         },
     },
 };
