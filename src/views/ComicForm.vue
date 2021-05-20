@@ -19,7 +19,9 @@
                 <b-row class="ml-0">
                     <div id="button-col" class="mt-2 mb-2">
                         <b-button-group vertical>
+                            <!-- title -->
                             <b-button disabled>title</b-button>
+                            <!-- subtitle -->
                             <b-button
                                 :variant="subtitleBtnVariant"
                                 @click="addSubtitle"
