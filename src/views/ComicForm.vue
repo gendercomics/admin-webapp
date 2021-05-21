@@ -85,6 +85,14 @@
                                 >isbn
                             </b-button>
 
+                            <!-- series (part of publishing series) -->
+                            <b-button
+                                :variant="seriesBtnVariant"
+                                @click="addSeries"
+                                :disabled="this.hasSeries"
+                                >series
+                            </b-button>
+
                             <!-- in (part of publication) -->
                             <b-button
                                 :variant="inBtnVariant"
@@ -98,7 +106,7 @@
                             <b-button
                                 :variant="pagesBtnVariant"
                                 @click="addPages"
-                                :disabled="this.showPages"
+                                :disabled="this.hasPages"
                                 v-if="this.isComicType"
                                 >pages
                             </b-button>
@@ -285,6 +293,22 @@
                             class="mt-2"
                         />
 
+                        <!-- series -->
+                        <b-input-group
+                            id="input-group-series"
+                            class="pt-2"
+                            prepend="series"
+                            v-if="hasSeries"
+                        >
+                            <searchable-dropdown v-model="comic.series.comic" />
+
+                            <template v-slot:append>
+                                <b-button @click="removeSeries()">
+                                    <font-awesome-icon icon="times-circle" />
+                                </b-button>
+                            </template>
+                        </b-input-group>
+
                         <!-- in (part of publication) -->
                         <b-input-group
                             id="input-group-in"
@@ -315,7 +339,7 @@
                         <input-field
                             label="pages"
                             v-model="comic.partOf.pages"
-                            v-if="showPages"
+                            v-if="hasPages"
                             type="text"
                             removable
                             class="mt-2"
@@ -400,6 +424,7 @@ export default {
                 edition: null,
                 link: null,
                 isbn: null,
+                series: null,
                 partOf: null,
                 genres: null,
                 keywords: null,
@@ -474,7 +499,7 @@ export default {
             return 'dark';
         },
         pagesBtnVariant() {
-            if (!this.showPages) return 'outline-dark';
+            if (!this.hasPages) return 'outline-dark';
             return 'dark';
         },
         backBtnVariant() {
@@ -490,6 +515,10 @@ export default {
         },
         commentBtnVariant() {
             return this.commentsExist ? 'dark' : 'outline-dark';
+        },
+        seriesBtnVariant() {
+            if (!this.hasSeries) return 'outline-dark';
+            return 'dark';
         },
         showSubtitle() {
             return this.comic.subTitle != null;
@@ -517,7 +546,7 @@ export default {
                 this.comic.partOf !== null && this.comic.partOf.comic !== null
             );
         },
-        showPages() {
+        hasPages() {
             return (
                 this.comic.partOf !== null && this.comic.partOf.pages !== null
             );
@@ -534,6 +563,11 @@ export default {
         },
         showGenres() {
             return this.comic.genres != null;
+        },
+        hasSeries() {
+            return (
+                this.comic.series !== null && this.comic.series.comic !== null
+            );
         },
         commentsExist() {
             return (
@@ -633,8 +667,17 @@ export default {
             this.comic.publisher = null;
             this.selectedPublisher = null;
         },
+        removeSeries() {
+            this.comic.series = null;
+        },
         removeIn() {
             this.comic.partOf = null;
+        },
+        addSeries() {
+            if (this.comic.series === null) {
+                this.comic.series = { comic: null, volume: null };
+            }
+            this.comic.series.comic = '';
         },
         roleUpdated(idx) {
             console.log('roleUpdated=' + idx);
