@@ -93,6 +93,15 @@
                                 >series
                             </b-button>
 
+                            <!-- series volume (part of publishing series) -->
+                            <b-button
+                                v-if="hasSeries"
+                                @click="addSeriesVolume"
+                                :variant="seriesVolumeBtnVariant"
+                                :disabled="this.hasSeriesVolume"
+                                >volume
+                            </b-button>
+
                             <!-- in (part of publication) -->
                             <b-button
                                 :variant="inBtnVariant"
@@ -294,20 +303,40 @@
                         />
 
                         <!-- series -->
-                        <b-input-group
-                            id="input-group-series"
-                            class="pt-2"
-                            prepend="series"
-                            v-if="hasSeries"
-                        >
-                            <searchable-dropdown v-model="comic.series.comic" />
+                        <b-form-row>
+                            <b-col>
+                                <b-input-group
+                                    id="input-group-series"
+                                    class="pt-2"
+                                    prepend="series"
+                                    v-if="hasSeries"
+                                >
+                                    <searchable-dropdown
+                                        v-model="comic.series.comic"
+                                        options-path="/comics/type/series"
+                                        class="flex-fill"
+                                    />
 
-                            <template v-slot:append>
-                                <b-button @click="removeSeries()">
-                                    <font-awesome-icon icon="times-circle" />
-                                </b-button>
-                            </template>
-                        </b-input-group>
+                                    <template v-slot:append>
+                                        <b-button @click="removeSeries()">
+                                            <font-awesome-icon
+                                                icon="times-circle"
+                                            />
+                                        </b-button>
+                                    </template>
+                                </b-input-group>
+                            </b-col>
+                            <b-col>
+                                <input-field
+                                    label="volume"
+                                    v-model="comic.series.volume"
+                                    v-if="hasSeriesVolume"
+                                    type="text"
+                                    class="mt-2"
+                                    removable
+                                />
+                            </b-col>
+                        </b-form-row>
 
                         <!-- in (part of publication) -->
                         <b-input-group
@@ -520,6 +549,10 @@ export default {
             if (!this.hasSeries) return 'outline-dark';
             return 'dark';
         },
+        seriesVolumeBtnVariant() {
+            if (!this.hasSeriesVolume) return 'outline-dark';
+            return 'dark';
+        },
         showSubtitle() {
             return this.comic.subTitle != null;
         },
@@ -567,6 +600,11 @@ export default {
         hasSeries() {
             return (
                 this.comic.series !== null && this.comic.series.comic !== null
+            );
+        },
+        hasSeriesVolume() {
+            return (
+                this.comic.series !== null && this.comic.series.volume !== null
             );
         },
         commentsExist() {
@@ -678,6 +716,10 @@ export default {
                 this.comic.series = { comic: null, volume: null };
             }
             this.comic.series.comic = '';
+            this.comic.series.volume = '';
+        },
+        addSeriesVolume() {
+            this.comic.series.volume = '';
         },
         roleUpdated(idx) {
             console.log('roleUpdated=' + idx);
