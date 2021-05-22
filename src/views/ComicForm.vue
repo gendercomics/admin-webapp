@@ -90,12 +90,13 @@
                                 :variant="seriesBtnVariant"
                                 @click="addSeries"
                                 :disabled="this.hasSeries"
+                                v-if="this.isNotSeries"
                                 >series
                             </b-button>
 
                             <!-- series volume (part of publishing series) -->
                             <b-button
-                                v-if="hasSeries"
+                                v-if="this.hasSeries"
                                 @click="addSeriesVolume"
                                 :variant="seriesVolumeBtnVariant"
                                 :disabled="this.hasSeriesVolume"
@@ -116,7 +117,7 @@
                                 :variant="pagesBtnVariant"
                                 @click="addPages"
                                 :disabled="this.hasPages"
-                                v-if="this.isComicType"
+                                v-if="this.showIn"
                                 >pages
                             </b-button>
 
@@ -339,40 +340,41 @@
                         </b-form-row>
 
                         <!-- in (part of publication) -->
-                        <b-input-group
-                            id="input-group-in"
-                            class="pt-2"
-                            prepend="in"
-                            v-if="showIn"
-                        >
-                            <b-form-select
-                                id="input-publication"
-                                v-model="selectedPublication"
-                                @change="changePublication()"
-                            >
-                                <option
-                                    v-for="parent in this.parents"
-                                    v-bind:key="parent.id"
-                                    :value="parent.id"
-                                    >{{ parentOptionText(parent) }}
-                                </option>
-                            </b-form-select>
-                            <template v-slot:append>
-                                <b-button @click="removeIn()">
-                                    <font-awesome-icon icon="times-circle" />
-                                </b-button>
-                            </template>
-                        </b-input-group>
+                        <b-form-row>
+                            <b-col>
+                                <b-input-group
+                                    id="input-group-in"
+                                    class="pt-2"
+                                    prepend="in"
+                                    v-if="showIn"
+                                >
+                                    <searchable-dropdown
+                                        v-model="comic.partOf.comic"
+                                        options-path="/comics/parents"
+                                        class="flex-fill"
+                                    />
 
-                        <!-- pages -->
-                        <input-field
-                            label="pages"
-                            v-model="comic.partOf.pages"
-                            v-if="hasPages"
-                            type="text"
-                            removable
-                            class="mt-2"
-                        />
+                                    <template v-slot:append>
+                                        <b-button @click="removeIn()">
+                                            <font-awesome-icon
+                                                icon="times-circle"
+                                            />
+                                        </b-button>
+                                    </template>
+                                </b-input-group>
+                            </b-col>
+                            <!-- pages -->
+                            <b-col>
+                                <input-field
+                                    label="pages"
+                                    v-model="comic.partOf.pages"
+                                    v-if="hasPages"
+                                    type="text"
+                                    removable
+                                    class="mt-2"
+                                />
+                            </b-col>
+                        </b-form-row>
 
                         <!-- keywords (genres) -->
                         <TagInput
@@ -474,9 +476,7 @@ export default {
             errored: false,
             saveSuccessful: false,
             selectedPublisher: null,
-            selectedPublication: null,
             types: ['anthology', 'comic', 'magazine', 'series', 'webcomic'],
-            parents: null,
             showJson: false,
         };
     },
@@ -612,6 +612,9 @@ export default {
                 this.comic.comments != null && this.comic.comments.length > 0
             );
         },
+        isNotSeries() {
+            return this.comic.type !== 'series';
+        },
     },
     methods: {
         onSubmit(evt) {
@@ -688,6 +691,7 @@ export default {
                 this.comic.partOf = { comic: null, pages: null };
             }
             this.comic.partOf.comic = '';
+            this.comic.partOf.pages = '';
         },
         addPages() {
             if (this.comic.partOf === null) {
@@ -729,41 +733,6 @@ export default {
                 }
             });
         },
-        changePublication() {
-            console.log(this.selectedPublication);
-            this.parents.forEach(parent => {
-                if (this.selectedPublication === parent.id) {
-                    this.comic.partOf.comic = parent;
-                }
-            });
-        },
-        loadParents() {
-            httpClient
-                .get('/comics/parents')
-                .then(response => {
-                    this.parents = response.data;
-                })
-                .catch(error => {
-                    console.log(error);
-                    this.errored = true;
-                });
-        },
-        parentOptionText(parent) {
-            let optionText = parent.title;
-
-            /*
-parent.subtitle !== null
-? (optionText += '. ' + parent.subTitle)
-: optionText;
-*/
-            parent.publisher != null
-                ? (optionText += '. ' + parent.publisher.name)
-                : optionText;
-            parent.year != null
-                ? (optionText += '. ' + parent.year)
-                : optionText;
-            return optionText;
-        },
         creatorName(name) {
             if (name.name !== null) {
                 return name.name;
@@ -778,8 +747,6 @@ parent.subtitle !== null
         },
     },
     mounted() {
-        // load parents (anthologies, magazines)
-        this.loadParents();
         // load roles
         this.loadRoles();
         // load creators (creators = searchable persons)
