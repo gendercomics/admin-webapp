@@ -14,6 +14,15 @@
             </b-alert>
         </div>
 
+        <div class="mt-3 ml-3 mr-3">
+            <b-alert variant="warning" dismissible v-model="duplicateTitle"
+                ><font-awesome-icon icon="exclamation-triangle" /><span
+                    class="ml-2"
+                    >{{ comic.title }} already exists!</span
+                >
+            </b-alert>
+        </div>
+
         <b-form @submit="onSubmit" v-if="show">
             <b-container class="mt-2" fluid>
                 <b-row class="ml-0">
@@ -179,6 +188,7 @@
                                 required
                                 placeholder="Enter title"
                                 :state="titleState"
+                                @input="verifyTitle"
                             />
 
                             <div class="ml-1 float-right">
@@ -426,14 +436,16 @@ import InputField from '@/components/InputField';
 import { httpClient } from '@/services/httpclient';
 import TagInput from '@/components/TagInput';
 import ComicCreator from '@/components/ComicCreator';
+import ComicService from '@/mixins/comicservice';
 import RoleService from '@/mixins/roleservice';
 import PersonService from '@/mixins/personservice';
 import SearchableDropdown from '@/components/SearchableDropdown';
 import CommentField from '@/components/CommentField';
+import _ from 'lodash';
 
 export default {
     name: 'ComicForm',
-    mixins: [PersonService, RoleService],
+    mixins: [ComicService, PersonService, RoleService],
     components: {
         CommentField,
         SearchableDropdown,
@@ -478,6 +490,7 @@ export default {
             selectedPublisher: null,
             types: ['anthology', 'comic', 'magazine', 'series', 'webcomic'],
             showJson: false,
+            duplicateTitle: false,
         };
     },
     computed: {
@@ -745,6 +758,14 @@ export default {
             }
             this.comic.comments.push({ value: null });
         },
+        verifyTitle: _.debounce(function(val) {
+            this.$log.debug('verifyTitle=' + val);
+            let vm = this;
+            this.titleExists(val).then(function(response) {
+                vm.$log.debug('titleExits=' + response);
+                vm.$data.duplicateTitle = response;
+            });
+        }, 1000),
     },
     mounted() {
         // load roles

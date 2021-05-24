@@ -20,8 +20,8 @@
                             />
                             <b-input-group-append>
                                 <b-button
-                                    :disabled="!filter"
-                                    @click="filter = ''"
+                                    :disabled="!textFilter"
+                                    @click="textFilter = ''"
                                     >Clear
                                 </b-button>
                             </b-input-group-append>
@@ -142,6 +142,9 @@
 
                     <template v-slot:cell(title)="row">
                         <span>{{ titleDisplayText(row.item) }}</span>
+                        <div v-if="row.item.subTitle !== null">
+                            <span class="small">{{ row.item.subTitle }}</span>
+                        </div>
                     </template>
 
                     <!-- creators -->
@@ -280,6 +283,7 @@ export default {
             return (
                 this.filterStatus(row) &&
                 (this.filterTitle(row, filter) ||
+                    this.filterSubTitle(row, filter) ||
                     this.filterCreators(row, filter) ||
                     this.filterParent(row, filter) ||
                     this.filterPublisher(row, filter))
@@ -291,6 +295,16 @@ export default {
                 .toLowerCase()
                 .includes(filter[0].toLowerCase());
             return filterTitle;
+        },
+        filterSubTitle(row, filter) {
+            let subTitleForFilter = '';
+            if (row.subTitle != null) {
+                subTitleForFilter = row.subTitle;
+            }
+            let filterSubTitle = subTitleForFilter
+                .toLowerCase()
+                .includes(filter[0].toLowerCase());
+            return filterSubTitle;
         },
         filterCreators(row, filter) {
             let filterCreator = false;
@@ -366,7 +380,7 @@ export default {
             if (item.partOf.comic.issue != null) {
                 filterString += ', ' + item.partOf.comic.issue;
             }
-            this.filter = filterString;
+            this.textFilter = filterString;
         },
         deleteComic(item) {
             console.log('delete comic: ' + item.title);
@@ -386,7 +400,6 @@ export default {
             if (this.textFilter === null && this.statusFilter === null) {
                 return null;
             }
-
             return [this.textFilter, this.statusFilter];
         },
     },
