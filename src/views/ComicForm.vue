@@ -451,13 +451,11 @@ import PersonService from '@/mixins/personservice';
 import SearchableDropdown from '@/components/SearchableDropdown';
 import CommentField from '@/components/CommentField';
 import _ from 'lodash';
-import LinkField from '@/components/LinkField';
 
 export default {
     name: 'ComicForm',
     mixins: [ComicService, PersonService, RoleService],
     components: {
-        LinkField,
         CommentField,
         SearchableDropdown,
         ComicCreator,
@@ -499,7 +497,15 @@ export default {
             errored: false,
             saveSuccessful: false,
             selectedPublisher: null,
-            types: ['anthology', 'comic', 'magazine', 'series', 'webcomic'],
+            types: [
+                'anthology',
+                'comic',
+                'magazine',
+                'series',
+                'comic_series',
+                'publishing_series',
+                'webcomic',
+            ],
             showJson: false,
             duplicateTitle: false,
         };
