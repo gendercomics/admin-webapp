@@ -1,20 +1,10 @@
 <template>
-    <b-input-group :prepend="this.label" :size="this.size">
-        <b-form-input
-            v-model="localValue"
-            :type="this.type"
-            :disabled="this.disabled"
-        />
+    <b-input-group>
+        <input-field :label="this.label" v-model="localValue" type="url" />
 
-        <b-input-group-append v-if="localValue">
-            <b-button
-                @click="openLink"
-                variant="dark-outline"
-                style="background-color: #e9ecef"
-                ><font-awesome-icon icon="external-link-alt"
-            /></b-button>
-        </b-input-group-append>
-
+        <!--
+        <b-form-datepicker placeholder="last access"/>
+-->
         <template v-slot:append v-if="removable">
             <b-button @click="deleteValue"
                 ><font-awesome-icon icon="times-circle"
@@ -24,12 +14,14 @@
 </template>
 
 <script>
+import InputField from '@/components/InputField';
 export default {
-    name: 'InputField',
+    name: 'LinkField',
+    components: { InputField },
     props: {
         label: null,
-        value: null,
-        type: null,
+        url: null,
+        lastAccess: null,
         removable: {
             type: Boolean,
             default: false,
@@ -46,7 +38,7 @@ export default {
     computed: {
         localValue: {
             get() {
-                return this.value;
+                return this.url;
             },
             set(val) {
                 this.$emit('input', val);
@@ -57,10 +49,6 @@ export default {
         deleteValue() {
             this.$log.debug('delete ' + this.label);
             this.localValue = null;
-        },
-        openLink() {
-            this.$log.debug('open link: ' + this.localValue);
-            window.open(this.localValue, '_blank');
         },
     },
 };

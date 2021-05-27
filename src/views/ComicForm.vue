@@ -294,14 +294,23 @@
 
                         <!-- link -->
                         <input-field
-                            label="link"
+                            label="link_"
                             v-model="comic.link"
-                            :link="comic.link"
                             v-if="showLink"
                             type="url"
                             removable
                             class="mt-2"
                         />
+
+                        <!--
+                        <link-field
+                            label="link"
+                            v-model="comic.link"
+                            v-if="showLink"
+                            removable
+                            class="mt-2"
+                        />
+                        -->
 
                         <!-- isbn -->
                         <input-field
@@ -442,11 +451,13 @@ import PersonService from '@/mixins/personservice';
 import SearchableDropdown from '@/components/SearchableDropdown';
 import CommentField from '@/components/CommentField';
 import _ from 'lodash';
+import LinkField from '@/components/LinkField';
 
 export default {
     name: 'ComicForm',
     mixins: [ComicService, PersonService, RoleService],
     components: {
+        LinkField,
         CommentField,
         SearchableDropdown,
         ComicCreator,
