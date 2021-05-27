@@ -42,9 +42,19 @@
                                 :variant="issueBtnVariant"
                                 @click="addIssue"
                                 :disabled="this.showIssue"
-                                v-if="this.isComicType"
+                                v-if="this.isNotSeries"
                                 >issue
                             </b-button>
+
+                            <!-- issue button -->
+                            <b-button
+                                :variant="issueTitleBtnVariant"
+                                @click="addIssueTitle"
+                                :disabled="this.showIssueTitle"
+                                v-if="this.showIssue"
+                                >issue title
+                            </b-button>
+
                             <!-- creator button -->
                             <b-button-group>
                                 <b-button disabled :variant="creatorBtnVariant"
@@ -233,14 +243,28 @@
                         />
 
                         <!-- issue -->
-                        <input-field
-                            label="issue"
-                            v-model="comic.issue"
-                            v-if="showIssue"
-                            type="text"
-                            removable
-                            class="mt-2"
-                        />
+                        <b-form-row>
+                            <b-col cols="3">
+                                <input-field
+                                    label="issue"
+                                    v-model="comic.issue"
+                                    v-if="showIssue"
+                                    type="text"
+                                    removable
+                                    class="mt-2"
+                                />
+                            </b-col>
+                            <b-col>
+                                <input-field
+                                    label="issue title"
+                                    v-model="comic.issueTitle"
+                                    v-if="showIssueTitle"
+                                    type="text"
+                                    removable
+                                    class="mt-2 float-left"
+                                />
+                            </b-col>
+                        </b-form-row>
 
                         <!-- creators -->
                         <div
@@ -469,6 +493,7 @@ export default {
                 title: '',
                 subTitle: null,
                 issue: null,
+                issueTitle: null,
                 creators: [],
                 type: 'comic',
                 publisher: null,
@@ -533,6 +558,10 @@ export default {
             if (!this.showIssue) return 'outline-dark';
             return 'dark';
         },
+        issueTitleBtnVariant() {
+            if (!this.showIssueTitle) return 'outline-dark';
+            return 'dark';
+        },
         publisherBtnVariant() {
             if (!this.showPublisher) return 'outline-dark';
             return 'dark';
@@ -589,6 +618,9 @@ export default {
         showIssue() {
             return this.comic.issue != null;
         },
+        showIssueTitle() {
+            return this.comic.issueTitle != null;
+        },
         showPublisher() {
             return this.comic.publisher != null;
         },
@@ -643,7 +675,10 @@ export default {
             );
         },
         isNotSeries() {
-            return this.comic.type !== 'series';
+            return (
+                this.comic.type !== 'comic_series' &&
+                this.comic.type !== 'publishing_series'
+            );
         },
     },
     methods: {
@@ -685,6 +720,10 @@ export default {
         },
         addIssue() {
             this.comic.issue = '';
+            this.comic.issueTitle = '';
+        },
+        addIssueTitle() {
+            this.comic.issueTitle = '';
         },
         addCreator() {
             if (this.comic.creators === null) {

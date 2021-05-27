@@ -6,7 +6,7 @@
             :disabled="this.disabled"
         />
 
-        <b-input-group-append v-if="localValue">
+        <b-input-group-append v-if="isUrl">
             <b-button
                 @click="openLink"
                 variant="dark-outline"
@@ -51,6 +51,9 @@ export default {
             set(val) {
                 this.$emit('input', val);
             },
+        },
+        isUrl() {
+            return this.type === 'url';
         },
     },
     methods: {
