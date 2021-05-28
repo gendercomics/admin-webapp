@@ -318,7 +318,7 @@
 
                         <!-- link -->
                         <input-field
-                            label="link_"
+                            label="link"
                             v-model="comic.link"
                             v-if="showLink"
                             type="url"

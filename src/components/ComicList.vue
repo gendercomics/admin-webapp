@@ -92,6 +92,7 @@
                     :filter-function="customFilter"
                     @filtered="onFiltered"
                 >
+                    <!-- action buttons -->
                     <template v-slot:cell(actions)="row">
                         <b-button
                             variant="light"
@@ -99,6 +100,7 @@
                             @click="edit(row.item)"
                             class="mr-1"
                         >
+                            <!-- edit button -->
                             <font-awesome-icon
                                 icon="edit"
                                 v-b-tooltip
@@ -122,6 +124,7 @@
                         </b-button>
                     </template>
 
+                    <!-- status -->
                     <template v-slot:cell(metaData.status)="row">
                         <span v-if="row.item.metaData.status === 'DRAFT'"
                             ><b-badge variant="secondary">draft</b-badge></span
@@ -140,6 +143,14 @@
                         >
                     </template>
 
+                    <!-- type -->
+                    <template v-slot:cell(publisher)="row">
+                        <span v-if="row.item.type != null">
+                            {{ row.item.type }}</span
+                        >
+                    </template>
+
+                    <!-- title (+ subtitle) -->
                     <template v-slot:cell(title)="row">
                         <span>{{ row.item.nameForWebAppList }}</span>
                         <div v-if="row.item.subTitle !== null">
@@ -196,6 +207,7 @@
                         }}</span>
                     </template>
 
+                    <!-- creation/change date -->
                     <template v-slot:cell(metaData.changedOn)="data">
                         <span
                             v-if="
@@ -214,6 +226,7 @@
                         }}</span>
                     </template>
 
+                    <!-- creatin/change user -->
                     <template v-slot:cell(metaData.changedBy)="data">
                         <span v-if="data.item.metaData.changedBy == null">{{
                             data.item.metaData.createdBy
@@ -236,6 +249,7 @@ export default {
             fields: [
                 { key: 'actions', label: 'actions' },
                 { key: 'metaData.status', label: 'status' },
+                { key: 'type', label: 'type' },
                 { key: 'title', label: 'title' },
                 { key: 'creators', label: 'creator(s)' },
                 { key: 'partOf', label: 'in' },
@@ -359,11 +373,6 @@ export default {
                 return creator.firstName + ' ' + creator.lastName;
             }
             return '';
-        },
-        titleDisplayText(item) {
-            return item.issue !== null
-                ? item.title + ', ' + item.issue
-                : item.title;
         },
         parentDisplayText(item) {
             if (item.partOf !== null && item.partOf.comic.title !== null) {
