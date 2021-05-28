@@ -141,7 +141,7 @@
                     </template>
 
                     <template v-slot:cell(title)="row">
-                        <span>{{ titleDisplayText(row.item) }}</span>
+                        <span>{{ row.item.nameForWebAppList }}</span>
                         <div v-if="row.item.subTitle !== null">
                             <span class="small">{{ row.item.subTitle }}</span>
                         </div>
@@ -290,11 +290,9 @@ export default {
             );
         },
         filterTitle(row, filter) {
-            let titleAndIssue = this.titleDisplayText(row);
-            let filterTitle = titleAndIssue
+            return row.nameForWebAppList
                 .toLowerCase()
                 .includes(filter[0].toLowerCase());
-            return filterTitle;
         },
         filterSubTitle(row, filter) {
             let subTitleForFilter = '';
