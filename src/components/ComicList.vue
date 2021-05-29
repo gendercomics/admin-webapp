@@ -144,10 +144,12 @@
                     </template>
 
                     <!-- type -->
-                    <template v-slot:cell(publisher)="row">
+                    <template v-slot:cell(type)="row">
                         <span v-if="row.item.type != null">
-                            {{ row.item.type }}</span
-                        >
+                            <b-badge variant="secondary">{{
+                                typeAbbreviation(row.item.type)
+                            }}</b-badge>
+                        </span>
                     </template>
 
                     <!-- title (+ subtitle) -->
@@ -226,7 +228,7 @@
                         }}</span>
                     </template>
 
-                    <!-- creatin/change user -->
+                    <!-- creation/change user -->
                     <template v-slot:cell(metaData.changedBy)="data">
                         <span v-if="data.item.metaData.changedBy == null">{{
                             data.item.metaData.createdBy
@@ -400,6 +402,24 @@ export default {
                 })
                 .finally(() => (this.loading = false));
             this.comics.splice(this.comics.indexOf(item), 1);
+        },
+        typeAbbreviation(type) {
+            switch (type) {
+                case 'comic':
+                    return 'C';
+                case 'anthology':
+                    return 'A';
+                case 'magazine':
+                    return 'M';
+                case 'webcomic':
+                    return 'W';
+                case 'comic_series':
+                    return 'S';
+                case 'publishing_series':
+                    return 'R';
+                default:
+                    return '';
+            }
         },
     },
     computed: {
