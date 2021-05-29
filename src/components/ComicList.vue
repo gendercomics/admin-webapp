@@ -146,7 +146,7 @@
                     <!-- type -->
                     <template v-slot:cell(type)="row">
                         <span v-if="row.item.type != null">
-                            <b-badge variant="secondary">{{
+                            <b-badge pill variant="secondary">{{
                                 typeAbbreviation(row.item.type)
                             }}</b-badge>
                         </span>

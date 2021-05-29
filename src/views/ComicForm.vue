@@ -326,15 +326,14 @@
                             class="mt-2"
                         />
 
-                        <!--
+                        <!-- link including last access date -->
                         <link-field
                             label="link"
-                            v-model="comic.link"
-                            v-if="showLink"
+                            v-model="comic.hyperLink"
+                            v-if="showHyperLink"
                             removable
                             class="mt-2"
                         />
-                        -->
 
                         <!-- isbn -->
                         <input-field
@@ -474,6 +473,7 @@ import RoleService from '@/mixins/roleservice';
 import PersonService from '@/mixins/personservice';
 import SearchableDropdown from '@/components/SearchableDropdown';
 import CommentField from '@/components/CommentField';
+import LinkField from '@/components/LinkField';
 import _ from 'lodash';
 
 export default {
@@ -486,6 +486,7 @@ export default {
         TagInput,
         InputField,
         Header,
+        LinkField,
     },
     data() {
         return {
@@ -500,6 +501,10 @@ export default {
                 year: null,
                 edition: null,
                 link: null,
+                hyperLink: {
+                    url: null,
+                    lastAccess: null,
+                },
                 isbn: null,
                 series: null,
                 partOf: null,
@@ -633,6 +638,12 @@ export default {
         showLink() {
             return this.comic.link != null;
         },
+        showHyperLink() {
+            if (this.comic.hyperLink == null) {
+                return false;
+            }
+            return this.comic.hyperLink.url != null;
+        },
         showIsbn() {
             return this.comic.isbn != null;
         },
@@ -750,7 +761,8 @@ export default {
             this.comic.edition = '';
         },
         addLink() {
-            this.comic.link = '';
+            //this.comic.link = '';
+            this.comic.hyperLink = { url: '', lastAccess: new Date() };
         },
         addIsbn() {
             this.comic.isbn = '';
