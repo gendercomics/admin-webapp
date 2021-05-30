@@ -154,7 +154,10 @@
 
                     <!-- title (+ subtitle) -->
                     <template v-slot:cell(title)="row">
-                        <span>{{ row.item.nameForWebAppList }}</span>
+                        <b-link :to="'/comics/' + row.item.id">{{
+                            row.item.nameForWebAppList
+                        }}</b-link>
+                        <!--span>{{ row.item.nameForWebAppList }}</span-->
                         <div v-if="row.item.subTitle !== null">
                             <span class="small">{{ row.item.subTitle }}</span>
                         </div>
@@ -235,6 +238,24 @@
                         }}</span>
                         <span v-else>{{ data.item.metaData.changedBy }}</span>
                     </template>
+
+                    <!-- action buttons -->
+                    <template v-slot:cell(actions)="row">
+                        <!-- delete button -->
+                        <b-button
+                            v-show="row.item.metaData.status === 'DRAFT'"
+                            variant="light"
+                            size="sm"
+                            class="mr-1"
+                            @click="deleteComic(row.item)"
+                        >
+                            <font-awesome-icon
+                                icon="trash-alt"
+                                v-b-tooltip
+                                title="delete"
+                            />
+                        </b-button>
+                    </template>
                 </b-table>
             </b-row>
         </b-container>
@@ -249,7 +270,6 @@ export default {
     data() {
         return {
             fields: [
-                { key: 'actions', label: 'actions' },
                 { key: 'metaData.status', label: 'status' },
                 { key: 'type', label: 'type' },
                 { key: 'title', label: 'title' },
@@ -258,6 +278,7 @@ export default {
                 { key: 'publisher', label: 'publisher' },
                 { key: 'metaData.changedOn', label: 'created/modified' },
                 { key: 'metaData.changedBy', label: 'by' },
+                { key: 'actions', label: '' },
             ],
             comics: null,
             loading: true,

@@ -73,6 +73,14 @@
                                 :disabled="this.showPublisher"
                                 >publisher
                             </b-button>
+                            <!-- printer button -->
+                            <b-button
+                                :variant="printerBtnVariant"
+                                @click="addPrinter"
+                                :disabled="this.hasPrinter"
+                                v-if="!this.showPublisher"
+                                >printer
+                            </b-button>
                             <!-- year button -->
                             <b-button
                                 :variant="yearBtnVariant"
@@ -297,6 +305,15 @@
                             </template>
                         </b-input-group>
 
+                        <!-- printer -->
+                        <input-field
+                            label="printer"
+                            v-model="comic.printer"
+                            v-if="hasPrinter"
+                            removable
+                            class="mt-2 w-50"
+                        />
+
                         <!-- year -->
                         <input-field
                             label="year"
@@ -498,6 +515,7 @@ export default {
                 creators: [],
                 type: 'comic',
                 publisher: null,
+                printer: null,
                 year: null,
                 edition: null,
                 link: null,
@@ -617,6 +635,10 @@ export default {
             if (!this.hasSeriesVolume) return 'outline-dark';
             return 'dark';
         },
+        printerBtnVariant() {
+            if (!this.hasPrinter) return 'outline-dark';
+            return 'dark';
+        },
         showSubtitle() {
             return this.comic.subTitle != null;
         },
@@ -691,6 +713,9 @@ export default {
                 this.comic.type !== 'publishing_series'
             );
         },
+        hasPrinter() {
+            return this.comic.printer != null;
+        },
     },
     methods: {
         onSubmit(evt) {
@@ -754,6 +779,9 @@ export default {
         addPublisher() {
             this.comic.publisher = '';
         },
+        addPrinter() {
+            this.comic.printer = '';
+        },
         addYear() {
             this.comic.year = '';
         },
@@ -761,7 +789,6 @@ export default {
             this.comic.edition = '';
         },
         addLink() {
-            //this.comic.link = '';
             this.comic.hyperLink = { url: '', lastAccess: new Date() };
         },
         addIsbn() {
