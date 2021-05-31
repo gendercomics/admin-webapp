@@ -73,6 +73,14 @@ let initOptions = {
 Vue.prototype.keycloak = Keycloak(initOptions);
 Vue.prototype.moment = moment;
 Vue.prototype.$statusOptions = ['DRAFT', 'CLARIFICATION', 'REVIEW', 'FINAL'];
+Vue.prototype.$typeOptions = [
+    { text: 'A', value: 'anthology' },
+    { text: 'C', value: 'comic' },
+    { text: 'S', value: 'comic_series' },
+    { text: 'M', value: 'magazine' },
+    { text: 'R', value: 'publishing_series' },
+    { text: 'W', value: 'webcomic' },
+];
 
 Vue.use(BootstrapVue);
 

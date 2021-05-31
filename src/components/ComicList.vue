@@ -2,15 +2,8 @@
     <div>
         <b-container fluid class="mt-4">
             <b-row>
-                <b-col lg="6" class="my-1">
-                    <b-form-group
-                        label="Filter"
-                        label-cols-sm="3"
-                        label-align-sm="right"
-                        label-size="sm"
-                        label-for="filterInput"
-                        class="mb-0"
-                    >
+                <b-col lg="5" class="my-1">
+                    <b-form-group label-for="filterInput">
                         <b-input-group size="sm">
                             <b-form-input
                                 v-model="textFilter"
@@ -29,39 +22,30 @@
                     </b-form-group>
                 </b-col>
 
-                <b-col lg="6" class="my-1">
-                    <b-form-group>
-                        <b-form-checkbox-group
-                            :options="this.$statusOptions"
-                            v-model="statusFilter"
-                            switches
-                            size="sm"
-                        />
-                    </b-form-group>
-                </b-col>
-            </b-row>
-            <b-row>
-                <b-col sm="5" md="6" class="my-1">
-                    <b-form-group
-                        label="Per page"
-                        label-cols-sm="6"
-                        label-cols-md="4"
-                        label-cols-lg="3"
-                        label-align-sm="right"
-                        label-size="sm"
-                        label-for="perPageSelect"
-                        class="mb-0"
+                <b-col>
+                    <b-button
+                        sm="1"
+                        size="sm"
+                        v-b-toggle.filter-collapse
+                        class="m-1"
+                        >filter ...</b-button
                     >
-                        <b-form-select
-                            v-model="perPage"
-                            id="perPageSelect"
-                            size="sm"
-                            :options="pageOptions"
-                        ></b-form-select>
-                    </b-form-group>
                 </b-col>
 
-                <b-col sm="7" md="6" class="my-1">
+                <b-col sm="1" md="1" class="my-1">
+                    <!-- pagination size -->
+                    <b-form-select
+                        v-model="perPage"
+                        id="perPageSelect"
+                        size="sm"
+                        v-b-tooltip.hover
+                        title="records per page"
+                        :options="pageOptions"
+                    ></b-form-select>
+                </b-col>
+
+                <b-col sm="5" md="5" class="my-1">
+                    <!-- pagination buttons -->
                     <b-pagination
                         v-model="currentPage"
                         :total-rows="totalRows"
@@ -72,12 +56,40 @@
                     ></b-pagination>
                 </b-col>
             </b-row>
+
+            <b-collapse id="filter-collapse">
+                <b-row>
+                    <b-col lg="5" class="my-1">
+                        <!-- status filter -->
+                        <b-form-group>
+                            <b-badge>status</b-badge>
+                            <b-form-checkbox-group
+                                :options="this.$statusOptions"
+                                v-model="statusFilter"
+                                switches
+                                size="sm"
+                            />
+                        </b-form-group>
+                    </b-col>
+                    <b-col lg="6" class="my-1">
+                        <!-- type filter -->
+                        <b-form-group>
+                            <b-badge>type</b-badge>
+                            <b-form-checkbox-group
+                                :options="this.$typeOptions"
+                                v-model="typeFilter"
+                                switches
+                                size="sm"
+                            />
+                        </b-form-group>
+                    </b-col>
+                </b-row>
+            </b-collapse>
         </b-container>
 
-        <b-container fluid class="mt-4 pl-4 pr-4">
+        <b-container fluid class="mt-1 pl-4 pr-4">
             <b-row>
                 <b-table
-                    class="mt-4"
                     show-empty
                     small
                     striped
@@ -257,6 +269,15 @@ export default {
             errored: false,
             textFilter: '',
             statusFilter: ['DRAFT', 'CLARIFICATION', 'REVIEW', 'FINAL'],
+            typeFilter: [
+                'anthology',
+                'comic',
+                'comic_series',
+                'magazine',
+                'publishing_series',
+
+                'webcomic',
+            ],
             filterOn: [],
             totalRows: 1,
             currentPage: 1,
@@ -291,6 +312,7 @@ export default {
         customFilter(row, filter) {
             return (
                 this.filterStatus(row) &&
+                this.filterType(row) &&
                 (this.filterTitle(row, filter) ||
                     this.filterSubTitle(row, filter) ||
                     this.filterCreators(row, filter) ||
@@ -350,6 +372,9 @@ export default {
         },
         filterStatus(row) {
             return this.statusFilter.indexOf(row.metaData.status) !== -1;
+        },
+        filterType(row) {
+            return this.typeFilter.indexOf(row.type) !== -1;
         },
         filterPublisher(row, filter) {
             let filterPublisher = false;
