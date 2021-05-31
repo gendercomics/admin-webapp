@@ -21,6 +21,7 @@
 - Delete-Button ans Ende der Zeile verschoben
 - Untertitel werden unterhalb des Titels angezeigt
 - Neue Spalte: "type" = comic_type: C=comic, A=anthology, W=webcomic, S=comic_series, R=publishing_series (Reihe), M=magazine
+- Bestätigungsdialog beim Löschen eines Comic
 
 #### Comic Detailansicht
 - issue: Ergänzt um zweites Feld "issue title"
