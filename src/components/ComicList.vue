@@ -398,7 +398,11 @@ export default {
             return '';
         },
         parentDisplayText(item) {
-            if (item.partOf !== null && item.partOf.comic.title !== null) {
+            if (
+                item.partOf !== null &&
+                item.partOf.comic !== null &&
+                item.partOf.comic.title !== null
+            ) {
                 return item.partOf.comic.issue !== null
                     ? item.partOf.comic.title + ', ' + item.partOf.comic.issue
                     : item.partOf.comic.title;
