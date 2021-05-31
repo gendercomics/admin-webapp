@@ -92,38 +92,6 @@
                     :filter-function="customFilter"
                     @filtered="onFiltered"
                 >
-                    <!-- action buttons -->
-                    <template v-slot:cell(actions)="row">
-                        <b-button
-                            variant="light"
-                            size="sm"
-                            @click="edit(row.item)"
-                            class="mr-1"
-                        >
-                            <!-- edit button -->
-                            <font-awesome-icon
-                                icon="edit"
-                                v-b-tooltip
-                                title="edit"
-                            />
-                        </b-button>
-
-                        <!-- delete button -->
-                        <b-button
-                            v-show="row.item.metaData.status === 'DRAFT'"
-                            variant="light"
-                            size="sm"
-                            class="mr-1"
-                            @click="deleteComic(row.item)"
-                        >
-                            <font-awesome-icon
-                                icon="trash-alt"
-                                v-b-tooltip
-                                title="delete"
-                            />
-                        </b-button>
-                    </template>
-
                     <!-- status -->
                     <template v-slot:cell(metaData.status)="row">
                         <span v-if="row.item.metaData.status === 'DRAFT'"
@@ -247,7 +215,7 @@
                             variant="light"
                             size="sm"
                             class="mr-1"
-                            @click="deleteComic(row.item)"
+                            @click="showDeleteModal(row.item)"
                         >
                             <font-awesome-icon
                                 icon="trash-alt"
@@ -259,6 +227,10 @@
                 </b-table>
             </b-row>
         </b-container>
+
+        <b-modal id="confirm-delete" title="delete comic?">
+            <span>oida?</span>
+        </b-modal>
     </div>
 </template>
 
@@ -445,6 +417,14 @@ export default {
                 default:
                     return '';
             }
+        },
+        showDeleteModal(item) {
+            this.$bvModal.msgBoxConfirm('sure???').then(confirmed => {
+                this.$log.debug('delete id:' + item.id + ': ' + confirmed);
+                if (confirmed) {
+                    this.deleteComic(item);
+                }
+            });
         },
     },
     computed: {
