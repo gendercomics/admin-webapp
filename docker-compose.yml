@@ -14,7 +14,7 @@ services:
       - "traefik.docker.network=proxy"
 
   gendercomics-admin-webapp:
-    image: gendercomics/admin-webapp:1.4.2
+    image: gendercomics/admin-webapp:1.5.0
     container_name: gendercomics-admin-webapp
     networks:
       - proxy

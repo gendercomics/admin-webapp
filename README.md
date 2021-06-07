@@ -14,7 +14,7 @@
 
 
 ---
-### gendercomics-admin-webapp-1.5.0-SNAPSHOT
+### gendercomics-admin-webapp-1.5.0
 
 #### Comic Liste
 - Edit-Button durch Link in Titel ersetzt
