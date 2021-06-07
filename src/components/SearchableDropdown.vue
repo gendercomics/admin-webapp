@@ -2,7 +2,7 @@
     <b-dropdown
         variant="outline-secondary"
         no-flip
-        :text="displayName(localValue.name)"
+        :text="displayName(localValue.nameForWebAppList)"
     >
         <b-dropdown-form @submit.stop.prevent="() => {}">
             <b-form-group
@@ -31,7 +31,7 @@
                 :key="option.id"
                 @click="onOptionClick(option)"
             >
-                {{ option.name }}
+                {{ option.nameForWebAppList }}
             </b-dropdown-item-button>
             <b-dropdown-text v-if="availableOptions.length === 0">
                 no value available to select
@@ -48,6 +48,7 @@ export default {
     props: {
         value: null,
         optionsPath: null,
+        displayProperty: null,
     },
     data: function() {
         return {
@@ -74,7 +75,9 @@ export default {
             if (criteria) {
                 this.$log.debug('criteria=' + criteria);
                 return this.options.filter(
-                    opt => opt.name.toLowerCase().indexOf(criteria) > -1
+                    opt =>
+                        opt.nameForWebAppList.toLowerCase().indexOf(criteria) >
+                        -1
                 );
             }
             // Show all options available
@@ -92,7 +95,9 @@ export default {
     },
     methods: {
         onOptionClick(option) {
-            this.$log.debug('id=' + option.id + ', name=' + option.name);
+            this.$log.debug(
+                'id=' + option.id + ', name=' + option.nameForWebAppList
+            );
             this.localValue = option;
             this.search = '';
         },

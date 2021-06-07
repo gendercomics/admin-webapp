@@ -1,12 +1,14 @@
 <template>
     <b-input-group :prepend="this.label" :size="this.size">
         <b-form-input
-            v-model="localValue"
-            :type="this.type"
+            v-model="localValue.url"
+            type="url"
             :disabled="this.disabled"
+            style="width: max-content"
         />
+        <b-form-datepicker v-model="localValue.lastAccess" start-weekday="1" />
 
-        <b-input-group-append v-if="isUrl">
+        <b-input-group-append>
             <b-button
                 @click="openLink"
                 variant="dark-outline"
@@ -25,11 +27,13 @@
 
 <script>
 export default {
-    name: 'InputField',
+    name: 'LinkField',
     props: {
         label: null,
-        value: null,
-        type: null,
+        value: {
+            url: null,
+            lastAccess: null,
+        },
         removable: {
             type: Boolean,
             default: false,
@@ -52,18 +56,16 @@ export default {
                 this.$emit('input', val);
             },
         },
-        isUrl() {
-            return this.type === 'url';
-        },
     },
     methods: {
         deleteValue() {
             this.$log.debug('delete ' + this.label);
-            this.localValue = null;
+            this.localValue.url = null;
+            this.localValue.lastAccess = null;
         },
         openLink() {
-            this.$log.debug('open link: ' + this.localValue);
-            window.open(this.localValue, '_blank');
+            this.$log.debug('open link: ' + this.localValue.url);
+            window.open(this.localValue.url, '_blank');
         },
     },
 };

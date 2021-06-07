@@ -35,8 +35,11 @@ export default {
             }
         },
         deleteText(id) {
-            this.$log.debug('delete comment: id=' + id);
-            // TODO add REST call
+            this.$log.debug('delete text: id=' + id);
+            httpClient.delete('/texts/' + id).catch(error => {
+                console.log(error);
+                this.errored = true;
+            });
         },
     },
 };
