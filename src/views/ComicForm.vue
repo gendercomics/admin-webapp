@@ -549,7 +549,6 @@ export default {
                 'anthology',
                 'comic',
                 'magazine',
-                'series',
                 'comic_series',
                 'publishing_series',
                 'webcomic',
