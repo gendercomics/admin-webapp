@@ -134,6 +134,8 @@
 
                     <!-- title (+ subtitle) -->
                     <template v-slot:cell(title)="row">
+                        <span>{{ seriesNameAndVolume(row.item) }}</span>
+
                         <b-link :to="'/comics/' + row.item.id">{{
                             row.item.nameForWebAppList
                         }}</b-link>
@@ -248,6 +250,7 @@
 
 <script>
 import { httpClient } from '../services/httpclient';
+//import { getters, mutations } from '@/services/store';
 export default {
     name: 'ComicList',
 
@@ -275,7 +278,6 @@ export default {
                 'comic_series',
                 'magazine',
                 'publishing_series',
-
                 'webcomic',
             ],
             filterOn: [],
@@ -451,6 +453,23 @@ export default {
                 }
             });
         },
+        seriesNameAndVolume(item) {
+            if (
+                item.series != null &&
+                item.series.comic != null &&
+                item.series.comic.type === 'comic_series'
+            ) {
+                let text = item.series.comic.title + '. ';
+                if (item.series.comic.subTitle != null) {
+                    text += item.series.comic.subTitle + '. ';
+                }
+                if (item.series.volume != null) {
+                    text += item.series.volume + ': ';
+                }
+                return text;
+            }
+            return null;
+        },
     },
     computed: {
         filter: function() {
@@ -459,6 +478,15 @@ export default {
             }
             return [this.textFilter, this.statusFilter];
         },
+        //statusFilter: ['DRAFT', 'CLARIFICATION', 'REVIEW', 'FINAL'],
+        //statusFilter: {
+        //    get() {
+        //        return getters.filter.statusFilter;
+        //    },
+        //    set(val) {
+        //        mutations.setStatusFilter(val);
+        //    },
+        //},
     },
 };
 </script>
