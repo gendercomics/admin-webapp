@@ -319,7 +319,8 @@ export default {
                     this.filterSubTitle(row, filter) ||
                     this.filterCreators(row, filter) ||
                     this.filterParent(row, filter) ||
-                    this.filterPublisher(row, filter))
+                    this.filterPublisher(row, filter) ||
+                    this.filterSeries(row, filter))
             );
         },
         filterTitle(row, filter) {
@@ -386,6 +387,15 @@ export default {
                     .includes(filter[0].toLowerCase());
             }
             return filterPublisher;
+        },
+        filterSeries(row, filter) {
+            let filterSeries = false;
+            if (row.series != null) {
+                filterSeries = row.series.comic.title
+                    .toLowerCase()
+                    .includes(filter[0].toLowerCase());
+            }
+            return filterSeries;
         },
         fullName(creator) {
             if (creator != null) {
