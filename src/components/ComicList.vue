@@ -390,7 +390,7 @@ export default {
         },
         filterSeries(row, filter) {
             let filterSeries = false;
-            if (row.series != null) {
+            if (row.series != null && row.series.comic != null) {
                 filterSeries = row.series.comic.title
                     .toLowerCase()
                     .includes(filter[0].toLowerCase());
