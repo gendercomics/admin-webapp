@@ -134,14 +134,29 @@
 
                     <!-- title (+ subtitle) -->
                     <template v-slot:cell(title)="row">
-                        <span>{{ seriesNameAndVolume(row.item) }}</span>
+                        <b-link
+                            v-if="hasComicSeries(row.item)"
+                            :to="'/comics/' + row.item.series.comic.id"
+                        >
+                            {{ seriesTitleAndSubtitle(row.item) }}
+                        </b-link>
+                        <span v-if="hasComicSeries(row.item)">{{ seriesVolume(row.item) }}</span>
 
                         <b-link :to="'/comics/' + row.item.id">{{
                             row.item.nameForWebAppList
                         }}</b-link>
-                        <!--span>{{ row.item.nameForWebAppList }}</span-->
                         <div v-if="row.item.subTitle !== null">
                             <span class="small">{{ row.item.subTitle }}</span>
+                        </div>
+                        <div v-if="row.item.partOf !== null">
+                            <span class="small"
+                                >in:
+                                <b-link
+                                    :to="'/comics/' + row.item.partOf.comic.id"
+                                >
+                                    {{ parentDisplayText(row.item) }}
+                                </b-link>
+                            </span>
                         </div>
                     </template>
 
@@ -152,38 +167,6 @@
                             v-bind:key="creator.id"
                         >
                             <span>{{ fullName(creator.name) }}</span>
-                        </div>
-                    </template>
-
-                    <!-- in -->
-                    <template v-slot:cell(partOf)="row">
-                        <div v-if="row.item.partOf !== null">
-                            <span>{{ parentDisplayText(row.item) }}</span>
-                            <b-button
-                                variant="light"
-                                size="sm"
-                                @click="filterOnParentTitleAndIssue(row.item)"
-                                class="ml-2 mr-1"
-                            >
-                                <font-awesome-icon
-                                    icon="filter"
-                                    v-b-tooltip
-                                    title="filter"
-                                />
-                            </b-button>
-
-                            <b-button
-                                variant="light"
-                                size="sm"
-                                @click="edit(row.item.partOf.comic)"
-                                class="mr-1"
-                            >
-                                <font-awesome-icon
-                                    icon="edit"
-                                    v-b-tooltip
-                                    title="edit"
-                                />
-                            </b-button>
                         </div>
                     </template>
 
@@ -261,7 +244,7 @@ export default {
                 { key: 'type', label: 'type' },
                 { key: 'title', label: 'title' },
                 { key: 'creators', label: 'creator(s)' },
-                { key: 'partOf', label: 'in' },
+                /* { key: 'partOf', label: 'in' },*/
                 { key: 'publisher', label: 'publisher' },
                 { key: 'metaData.changedOn', label: 'created/modified' },
                 { key: 'metaData.changedBy', label: 'by' },
@@ -463,22 +446,25 @@ export default {
                 }
             });
         },
-        seriesNameAndVolume(item) {
-            if (
+        hasComicSeries(item) {
+            return (
                 item.series != null &&
                 item.series.comic != null &&
                 item.series.comic.type === 'comic_series'
-            ) {
-                let text = item.series.comic.title + '. ';
-                if (item.series.comic.subTitle != null) {
-                    text += item.series.comic.subTitle + '. ';
-                }
-                if (item.series.volume != null) {
-                    text += item.series.volume + ': ';
-                }
-                return text;
+            );
+        },
+        seriesTitleAndSubtitle(item) {
+            let text = item.series.comic.title + '. ';
+            if (item.series.comic.subTitle != null) {
+                text += item.series.comic.subTitle + '. ';
             }
-            return null;
+            return text;
+        },
+        seriesVolume(item) {
+            if (item.series.volume != null) {
+                return item.series.volume + ': ';
+            }
+            return '';
         },
     },
     computed: {
