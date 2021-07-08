@@ -140,7 +140,9 @@
                         >
                             {{ seriesTitleAndSubtitle(row.item) }}
                         </b-link>
-                        <span v-if="hasComicSeries(row.item)">{{ seriesVolume(row.item) }}</span>
+                        <span v-if="hasComicSeries(row.item)">{{
+                            seriesVolume(row.item)
+                        }}</span>
 
                         <b-link :to="'/comics/' + row.item.id">{{
                             row.item.nameForWebAppList
