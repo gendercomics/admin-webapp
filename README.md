@@ -7,11 +7,13 @@
 ## Release Notes
 
 ---
-### gendercomics-admin-webapp-1.6.0-SNAPSHOT
+### gendercomics-admin-webapp-1.6.0
 
 #### Comic Liste
-- TODO
-
+- Anzeige und Filterung von Serien & Reihen (inkludiert Titel-Spalte)
+- Serie wird als Link vor dem Titel angezeigt  
+- "in" Spalte entfernt
+- "in" wird unter Titel/Subtitel als Link angezeigt
 
 ---
 ### gendercomics-admin-webapp-1.5.0
