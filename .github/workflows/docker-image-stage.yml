@@ -54,17 +54,17 @@ jobs:
           # runs this on remove server
           ssh_before: |
             echo 'STAGE: deploying ${{ github.ref }}'
-            cd /var/gendercomics/api
+            cd /var/gendercomics/admin-webapp-stage
             ls -lath
 
           # then upload docker-compose.yml
           scp: |
-            ./docker-compose.yml ${{ secrets.DEPLOY_USER }}@${{ secrets.APP_HOST }}:/var/gendercomics/admin-webapp
+            ./docker-compose.yml ${{ secrets.DEPLOY_USER }}@${{ secrets.APP_HOST }}:/var/gendercomics/admin-webapp-stage
 
           # then run these commands
           ssh_after: |
             echo 'running docker-compose'
             docker pull gendercomics/admin-webapp-stage:latest
-            cd /var/gendercomics/admin-webapp
+            cd /var/gendercomics/admin-webapp-stage
             docker-compose up -d gendercomics-admin-webapp-stage
             echo 'DONE!!!'
