@@ -3,7 +3,9 @@
 name: build, publish & deploy docker image [production]
 
 on:
-  push: [tags]
+  push:
+    tags:
+      - '*'
 
 jobs:
   push_to_registry:
