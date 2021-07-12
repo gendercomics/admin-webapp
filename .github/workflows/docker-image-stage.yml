@@ -1,6 +1,6 @@
 # build, publis and deploy an API docker image
 
-name: [stage]: build, publish & deploy docker image
+name: stage - build, publish & deploy docker image
 
 on: [push]
 

@@ -1,6 +1,6 @@
 # build, publish and deploy an API docker image
 
-name: [production]: build, publish & deploy docker image
+name: production - build, publish & deploy docker image
 
 on:
   push:
