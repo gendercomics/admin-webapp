@@ -173,10 +173,13 @@
                     </template>
 
                     <!-- publisher -->
-                    <template v-slot:cell(publisher)="row">
-                        <span v-if="row.item.publisher != null">{{
-                            row.item.publisher.name
-                        }}</span>
+                    <template v-slot:cell(publisher)="data">
+                        <div
+                            v-for="publisher in data.item.publishers"
+                            v-bind:key="publisher.id"
+                        >
+                            <span>{{ publisher.name }}</span>
+                        </div>
                     </template>
 
                     <!-- creation/change date -->

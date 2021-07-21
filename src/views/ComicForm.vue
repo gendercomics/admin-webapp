@@ -67,12 +67,19 @@
                                 </b-button>
                             </b-button-group>
                             <!-- publisher button -->
-                            <b-button
-                                :variant="publisherBtnVariant"
-                                @click="addPublisher"
-                                :disabled="this.showPublisher"
-                                >publisher
-                            </b-button>
+                            <b-button-group>
+                                <b-button
+                                    :variant="publisherBtnVariant"
+                                    @click="addPublisher"
+                                    :disabled="this.showPublisher"
+                                    >publisher
+                                </b-button>
+                                <b-button
+                                    variant="outline-dark"
+                                    @click="addPublisher()"
+                                    >+
+                                </b-button>
+                            </b-button-group>
                             <!-- printer button -->
                             <b-button
                                 :variant="printerBtnVariant"
@@ -287,6 +294,7 @@
                         </div>
 
                         <!-- publisher -->
+                        <!--
                         <b-input-group
                             id="input-group-publisher"
                             class="pt-2"
@@ -304,6 +312,28 @@
                                 </b-button>
                             </template>
                         </b-input-group>
+                      -->
+
+                        <!-- publishers NEW -->
+                        <div
+                            v-for="(creator, idx) in comic.publishers"
+                            v-bind:key="idx"
+                        >
+                            <b-input-group class="pt-2" prepend="publisher">
+                                <searchable-dropdown
+                                    v-model="comic.publishers[idx]"
+                                    options-path="/publishers"
+                                />
+
+                                <template v-slot:append>
+                                    <b-button @click="removePublisher(idx)">
+                                        <font-awesome-icon
+                                            icon="times-circle"
+                                        />
+                                    </b-button>
+                                </template>
+                            </b-input-group>
+                        </div>
 
                         <!-- printer -->
                         <input-field
@@ -515,6 +545,7 @@ export default {
                 creators: [],
                 type: 'comic',
                 publisher: null,
+                publishers: [],
                 printer: null,
                 year: null,
                 edition: null,
@@ -544,7 +575,7 @@ export default {
             loading: true,
             errored: false,
             saveSuccessful: false,
-            selectedPublisher: null,
+            //selectedPublisher: null,
             types: [
                 'anthology',
                 'comic',
@@ -776,7 +807,10 @@ export default {
             this.comic.comments.splice(idx, 1);
         },
         addPublisher() {
-            this.comic.publisher = '';
+            if (this.comic.publishers === null) {
+                this.comic.publishers = [];
+            }
+            this.comic.publishers.push({ name: '' });
         },
         addPrinter() {
             this.comic.printer = '';
@@ -812,9 +846,9 @@ export default {
         addGenres() {
             this.comic.genres = [];
         },
-        removePublisher() {
-            this.comic.publisher = null;
-            this.selectedPublisher = null;
+        removePublisher(idx) {
+            this.$log.debug('removePublisher(idx)=' + idx);
+            this.comic.publishers.splice(idx, 1);
         },
         removeSeries() {
             this.comic.series = null;
@@ -872,15 +906,6 @@ export default {
                 .get(this.$route.path)
                 .then(response => {
                     this.comic = response.data;
-                    if (this.comic.publisher != null) {
-                        this.selectedPublisher = this.comic.publisher.id;
-                    }
-                    if (
-                        this.comic.partOf != null &&
-                        this.comic.partOf.comic != null
-                    ) {
-                        this.selectedPublication = this.comic.partOf.comic.id;
-                    }
                     if (this.comic.metaData.status === null) {
                         this.comic.metaData.status = 'DRAFT';
                     }
