@@ -69,14 +69,13 @@
                             <!-- publisher button -->
                             <b-button-group>
                                 <b-button
+                                    disabled
                                     :variant="publisherBtnVariant"
-                                    @click="addPublisher"
-                                    :disabled="this.showPublisher"
                                     >publisher
                                 </b-button>
                                 <b-button
                                     variant="outline-dark"
-                                    @click="addPublisher()"
+                                    @click="addPublisher"
                                     >+
                                 </b-button>
                             </b-button-group>
@@ -679,7 +678,10 @@ export default {
             return this.comic.issueTitle != null;
         },
         showPublisher() {
-            return this.comic.publisher != null;
+            return (
+                this.comic.publishers != null &&
+                this.comic.publishers.length > 0
+            );
         },
         showYear() {
             return this.comic.year != null;
