@@ -797,7 +797,7 @@ export default {
             if (this.comic.creators === null) {
                 this.comic.creators = [];
             }
-            this.comic.creators.push({ name: {}, role: {} });
+            this.comic.creators.push({ name: {}, roles: [] });
         },
         removeCreator(idx) {
             this.$log.debug('idx=' + idx);
