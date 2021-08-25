@@ -283,7 +283,7 @@
                         <!-- creators -->
                         <div
                             v-for="(creator, idx) in comic.creators"
-                            v-bind:key="idx"
+                            v-bind:key="'creator-' + idx"
                         >
                             <comic-creator
                                 v-model="comic.creators[idx]"
@@ -292,31 +292,10 @@
                             />
                         </div>
 
-                        <!-- publisher -->
-                        <!--
-                        <b-input-group
-                            id="input-group-publisher"
-                            class="pt-2"
-                            prepend="publisher"
-                            v-if="showPublisher"
-                        >
-                            <searchable-dropdown
-                                v-model="comic.publisher"
-                                options-path="/publishers"
-                            />
-
-                            <template v-slot:append>
-                                <b-button @click="removePublisher()">
-                                    <font-awesome-icon icon="times-circle" />
-                                </b-button>
-                            </template>
-                        </b-input-group>
-                      -->
-
-                        <!-- publishers NEW -->
+                        <!-- publishers -->
                         <div
-                            v-for="(creator, idx) in comic.publishers"
-                            v-bind:key="idx"
+                            v-for="(publisher, idx) in comic.publishers"
+                            v-bind:key="'publisher-' + idx"
                         >
                             <b-input-group class="pt-2" prepend="publisher">
                                 <searchable-dropdown
@@ -812,7 +791,7 @@ export default {
             if (this.comic.publishers === null) {
                 this.comic.publishers = [];
             }
-            this.comic.publishers.push({ name: '' });
+            this.comic.publishers.push({ name: null });
         },
         addPrinter() {
             this.comic.printer = '';
