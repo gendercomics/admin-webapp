@@ -868,14 +868,6 @@ export default {
         addSeriesVolume() {
             this.comic.series.volume = '';
         },
-        roleUpdated(idx) {
-            console.log('roleUpdated=' + idx);
-            this.roles.forEach(role => {
-                if (this.comic.creators[idx].role.id === role.id) {
-                    this.comic.creators[idx].role = role;
-                }
-            });
-        },
         creatorName(name) {
             if (name.name !== null) {
                 return name.name;

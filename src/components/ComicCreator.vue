@@ -77,7 +77,6 @@
                 </template>
             </b-input-group>
         </b-form-row>
-
     </div>
 </template>
 
@@ -148,14 +147,6 @@ export default {
         },
     },
     methods: {
-        roleUpdated(idx) {
-            this.$log.debug('idx=' + idx);
-            this.roleOptions.forEach(role => {
-                if (role.id === this.localValue.roles[idx].id) {
-                    this.localValue.roles[idx] = role;
-                }
-            });
-        },
         removeValue() {
             this.$log.debug('remove creator');
             this.$emit('remove', this.localValue);
