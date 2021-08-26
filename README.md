@@ -7,6 +7,13 @@
 ## Release Notes
 
 ---
+### gendercomics-admin-webapp-1.7.0
+
+#### Comic Detailansicht
+- Einem Comic können mehrere Publisher zugewiesen werden
+- Einem Creator können mehrere Rollen zugewiesen werden
+
+---
 ### gendercomics-admin-webapp-1.6.0
 
 #### Comic Liste
