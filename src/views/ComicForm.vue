@@ -67,12 +67,18 @@
                                 </b-button>
                             </b-button-group>
                             <!-- publisher button -->
-                            <b-button
-                                :variant="publisherBtnVariant"
-                                @click="addPublisher"
-                                :disabled="this.showPublisher"
-                                >publisher
-                            </b-button>
+                            <b-button-group>
+                                <b-button
+                                    disabled
+                                    :variant="publisherBtnVariant"
+                                    >publisher
+                                </b-button>
+                                <b-button
+                                    variant="outline-dark"
+                                    @click="addPublisher"
+                                    >+
+                                </b-button>
+                            </b-button-group>
                             <!-- printer button -->
                             <b-button
                                 :variant="printerBtnVariant"
@@ -277,7 +283,7 @@
                         <!-- creators -->
                         <div
                             v-for="(creator, idx) in comic.creators"
-                            v-bind:key="idx"
+                            v-bind:key="'creator-' + idx"
                         >
                             <comic-creator
                                 v-model="comic.creators[idx]"
@@ -286,24 +292,26 @@
                             />
                         </div>
 
-                        <!-- publisher -->
-                        <b-input-group
-                            id="input-group-publisher"
-                            class="pt-2"
-                            prepend="publisher"
-                            v-if="showPublisher"
+                        <!-- publishers -->
+                        <div
+                            v-for="(publisher, idx) in comic.publishers"
+                            v-bind:key="'publisher-' + idx"
                         >
-                            <searchable-dropdown
-                                v-model="comic.publisher"
-                                options-path="/publishers"
-                            />
+                            <b-input-group class="pt-2" prepend="publisher">
+                                <searchable-dropdown
+                                    v-model="comic.publishers[idx]"
+                                    options-path="/publishers"
+                                />
 
-                            <template v-slot:append>
-                                <b-button @click="removePublisher()">
-                                    <font-awesome-icon icon="times-circle" />
-                                </b-button>
-                            </template>
-                        </b-input-group>
+                                <template v-slot:append>
+                                    <b-button @click="removePublisher(idx)">
+                                        <font-awesome-icon
+                                            icon="times-circle"
+                                        />
+                                    </b-button>
+                                </template>
+                            </b-input-group>
+                        </div>
 
                         <!-- printer -->
                         <input-field
@@ -515,6 +523,7 @@ export default {
                 creators: [],
                 type: 'comic',
                 publisher: null,
+                publishers: [],
                 printer: null,
                 year: null,
                 edition: null,
@@ -544,7 +553,7 @@ export default {
             loading: true,
             errored: false,
             saveSuccessful: false,
-            selectedPublisher: null,
+            //selectedPublisher: null,
             types: [
                 'anthology',
                 'comic',
@@ -648,7 +657,10 @@ export default {
             return this.comic.issueTitle != null;
         },
         showPublisher() {
-            return this.comic.publisher != null;
+            return (
+                this.comic.publishers != null &&
+                this.comic.publishers.length > 0
+            );
         },
         showYear() {
             return this.comic.year != null;
@@ -764,7 +776,7 @@ export default {
             if (this.comic.creators === null) {
                 this.comic.creators = [];
             }
-            this.comic.creators.push({ name: {}, role: {} });
+            this.comic.creators.push({ name: {}, roles: [] });
         },
         removeCreator(idx) {
             this.$log.debug('idx=' + idx);
@@ -776,7 +788,10 @@ export default {
             this.comic.comments.splice(idx, 1);
         },
         addPublisher() {
-            this.comic.publisher = '';
+            if (this.comic.publishers === null) {
+                this.comic.publishers = [];
+            }
+            this.comic.publishers.push({ name: null });
         },
         addPrinter() {
             this.comic.printer = '';
@@ -812,9 +827,9 @@ export default {
         addGenres() {
             this.comic.genres = [];
         },
-        removePublisher() {
-            this.comic.publisher = null;
-            this.selectedPublisher = null;
+        removePublisher(idx) {
+            this.$log.debug('removePublisher(idx)=' + idx);
+            this.comic.publishers.splice(idx, 1);
         },
         removeSeries() {
             this.comic.series = null;
@@ -831,14 +846,6 @@ export default {
         },
         addSeriesVolume() {
             this.comic.series.volume = '';
-        },
-        roleUpdated(idx) {
-            console.log('roleUpdated=' + idx);
-            this.roles.forEach(role => {
-                if (this.comic.creators[idx].role.id === role.id) {
-                    this.comic.creators[idx].role = role;
-                }
-            });
         },
         creatorName(name) {
             if (name.name !== null) {
@@ -872,15 +879,6 @@ export default {
                 .get(this.$route.path)
                 .then(response => {
                     this.comic = response.data;
-                    if (this.comic.publisher != null) {
-                        this.selectedPublisher = this.comic.publisher.id;
-                    }
-                    if (
-                        this.comic.partOf != null &&
-                        this.comic.partOf.comic != null
-                    ) {
-                        this.selectedPublication = this.comic.partOf.comic.id;
-                    }
                     if (this.comic.metaData.status === null) {
                         this.comic.metaData.status = 'DRAFT';
                     }

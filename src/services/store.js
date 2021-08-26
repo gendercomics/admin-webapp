@@ -7,12 +7,14 @@ const state = Vue.observable({
     },
     language: 'de',
     searchTerm: null,
+    page: 1,
 });
 
 export const getters = {
     language: () => state.language,
     searchTerm: () => state.searchTerm,
     filter: () => state.filter,
+    page: () => state.page,
 };
 
 export const mutations = {
@@ -21,4 +23,5 @@ export const mutations = {
     setTypeFilter: val => (state.filter.typeFilter = val),
     setLanguage: val => (state.language = val),
     setSearchTerm: val => (state.searchTerm = val),
+    setPage: val => (state.page = val),
 };

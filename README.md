@@ -7,11 +7,18 @@
 ## Release Notes
 
 ---
+### gendercomics-admin-webapp-1.7.0
+
+#### Comic Detailansicht
+- Einem Comic können mehrere Publisher zugewiesen werden
+- Einem Creator können mehrere Rollen zugewiesen werden
+
+---
 ### gendercomics-admin-webapp-1.6.0
 
 #### Comic Liste
 - Anzeige und Filterung von Serien & Reihen (inkludiert Titel-Spalte)
-- Serie wird als Link vor dem Titel angezeigt  
+- Serie wird als Link vor dem Titel angezeigt
 - "in" Spalte entfernt
 - "in" wird unter Titel/Subtitel als Link angezeigt
 

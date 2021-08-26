@@ -3,15 +3,30 @@
         <b-form-row class="pl-1 pr-1 w-100">
             <b-input-group class="pt-2">
                 <!-- role -->
-                <b-form-select
-                    :options="roles"
-                    :value="this.localValue.role.id"
-                    value-field="id"
-                    text-field="name"
-                    style="background-color: #E4E7EB; max-width: 15%"
-                    @change="roleUpdated"
+                <div
+                    v-for="(role, idx) in localValue.roles"
+                    v-bind:key="role.id"
                 >
-                </b-form-select>
+                    <b-form-select
+                        v-model="localValue.roles[idx]"
+                        :options="roleOptions"
+                        text-field="value.name"
+                        style="background-color: #E4E7EB;"
+                    >
+                    </b-form-select>
+                </div>
+
+                <b-button
+                    variant="secondary"
+                    v-if="localValue.roles.length > 1"
+                    @click="removeLastRole"
+                    ><font-awesome-icon icon="backspace"
+                /></b-button>
+
+                <!-- add role -->
+                <b-button variant="secondary" @click="addRole"
+                    ><font-awesome-icon icon="plus"
+                /></b-button>
 
                 <!-- name -->
                 <b-dropdown
@@ -62,18 +77,6 @@
                 </template>
             </b-input-group>
         </b-form-row>
-
-        <!--
-        <div>
-            <b-row class="mt-4">
-                <b-col id="json">
-                    <b-card header="localValue">
-                        <pre class="mt-0">{{ localValue }}</pre>
-                    </b-card>
-                </b-col>
-            </b-row>
-        </div>
-        -->
     </div>
 </template>
 
@@ -90,6 +93,7 @@ export default {
             role: {
                 id: null,
             },
+            roles: [],
         },
         removable: {
             type: Boolean,
@@ -98,7 +102,7 @@ export default {
     },
     data: function() {
         return {
-            roles: [],
+            roleOptions: [],
             names: [],
             search: '',
             loading: true,
@@ -137,20 +141,12 @@ export default {
         },
         searchDesc() {
             if (this.criteria && this.availableOptions.length === 0) {
-                return 'no keywords matching your search criteria';
+                return 'no creator matching your search criteria';
             }
             return '';
         },
     },
     methods: {
-        roleUpdated(roleId) {
-            this.$log.debug('id=' + roleId);
-            this.roles.forEach(role => {
-                if (role.id === roleId) {
-                    this.localValue.role = role;
-                }
-            });
-        },
         removeValue() {
             this.$log.debug('remove creator');
             this.$emit('remove', this.localValue);
@@ -170,6 +166,14 @@ export default {
             );
             this.localValue.name = option;
             this.search = '';
+        },
+        addRole() {
+            this.$log.debug('addRole');
+            this.localValue.roles.push({ id: null });
+        },
+        removeLastRole() {
+            this.$log.debug('removeLastRole');
+            this.localValue.roles.splice(this.localValue.roles.length - 1, 1);
         },
     },
 };

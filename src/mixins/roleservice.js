@@ -3,7 +3,7 @@ import { httpClient } from '@/services/httpclient';
 export default {
     data: function() {
         return {
-            roles: [],
+            roleOptions: [],
             loading: false,
         };
     },
@@ -13,11 +13,19 @@ export default {
             this.loading = true;
             httpClient
                 .get('/roles')
-                .then(response => (this.roles = response.data))
+                .then(response =>
+                    response.data.forEach(role => this.addRoleOption(role))
+                )
                 .catch(error => {
                     this.$log.error(error);
                 })
                 .finally(() => (this.loading = false));
+        },
+        addRoleOption(role) {
+            let roleOption = { value: null, text: null };
+            roleOption.value = role;
+            roleOption.text = name;
+            this.roleOptions.push(roleOption);
         },
     },
 };

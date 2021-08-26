@@ -90,6 +90,7 @@
         <b-container fluid class="mt-1 pl-4 pr-4">
             <b-row>
                 <b-table
+                    id="comic-list-table"
                     show-empty
                     small
                     striped
@@ -140,7 +141,9 @@
                         >
                             {{ seriesTitleAndSubtitle(row.item) }}
                         </b-link>
-                        <span v-if="hasComicSeries(row.item)">{{ seriesVolume(row.item) }}</span>
+                        <span v-if="hasComicSeries(row.item)">{{
+                            seriesVolume(row.item)
+                        }}</span>
 
                         <b-link :to="'/comics/' + row.item.id">{{
                             row.item.nameForWebAppList
@@ -171,10 +174,13 @@
                     </template>
 
                     <!-- publisher -->
-                    <template v-slot:cell(publisher)="row">
-                        <span v-if="row.item.publisher != null">{{
-                            row.item.publisher.name
-                        }}</span>
+                    <template v-slot:cell(publisher)="data">
+                        <div
+                            v-for="publisher in data.item.publishers"
+                            v-bind:key="publisher.id"
+                        >
+                            <span>{{ publisher.name }}</span>
+                        </div>
                     </template>
 
                     <!-- creation/change date -->
@@ -271,23 +277,46 @@ export default {
         };
     },
     mounted() {
-        httpClient
-            .get('/comics')
-            .then(
-                response => (
-                    (this.comics = response.data),
-                    (this.totalRows = this.comics.length)
-                )
-            )
-            .catch(error => {
-                console.log(error);
-                this.errored = true;
-            })
-            .finally(() => (this.loading = false));
+        this.loadComicList();
+        this.$nextTick(() => {
+            if (localStorage.currentPage) {
+                this.$log.debug(
+                    'localStorage.currentPage=' + localStorage.currentPage
+                );
+                this.currentPage = localStorage.currentPage;
+            }
+            if (localStorage.perPage) {
+                this.$log.debug('localStorage.perPage=' + localStorage.perPage);
+                this.perPage = localStorage.perPage;
+            }
+        });
+    },
+    watch: {
+        currentPage(newVal) {
+            localStorage.currentPage = newVal;
+        },
+        perPage(newVal) {
+            localStorage.perPage = newVal;
+        },
     },
     methods: {
         edit(item) {
             this.$router.push('/comics/' + item.id);
+        },
+        loadComicList() {
+            httpClient
+                .get('/comics')
+                .then(
+                    response => (
+                        (this.comics = response.data),
+                        (this.totalRows = this.comics.length)
+                    )
+                )
+                .catch(error => {
+                    console.log(error);
+                    this.errored = true;
+                })
+                .finally(() => (this.loading = false));
         },
         onFiltered(filteredItems) {
             // Trigger pagination to update the number of buttons/pages due to filtering
