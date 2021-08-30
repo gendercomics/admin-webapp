@@ -87,20 +87,6 @@
                     @filtered="onFiltered"
                 >
                     <template v-slot:cell(actions)="row">
-                        <!-- edit button -->
-                        <b-button
-                            variant="light"
-                            size="sm"
-                            @click="edit(row.item)"
-                            class="mr-1"
-                        >
-                            <font-awesome-icon
-                                icon="edit"
-                                v-b-tooltip
-                                title="edit"
-                            />
-                        </b-button>
-
                         <!-- delete button -->
                         <b-button
                             v-show="row.item.metaData.status === 'DRAFT'"
@@ -128,6 +114,13 @@
                         <span v-if="row.item.metaData.status === 'FINAL'"
                             ><b-badge variant="success">final</b-badge></span
                         >
+                    </template>
+
+                    <!-- publisher name -->
+                    <template v-slot:cell(name)="row">
+                        <b-link :to="'/publishers/' + row.item.id">{{
+                            row.item.name
+                        }}</b-link>
                     </template>
 
                     <template v-slot:cell(url)="data">
@@ -160,6 +153,23 @@
                         }}</span>
                         <span v-else>{{ data.item.metaData.changedBy }}</span>
                     </template>
+
+                    <template v-slot:cell(actions)="row">
+                        <!-- delete button -->
+                        <b-button
+                            v-show="row.item.metaData.status === 'DRAFT'"
+                            variant="light"
+                            size="sm"
+                            class="mr-1"
+                            @click="showDeleteModal(row.item)"
+                        >
+                            <font-awesome-icon
+                                icon="trash-alt"
+                                v-b-tooltip
+                                title="delete"
+                            />
+                        </b-button>
+                    </template>
                 </b-table>
             </b-row>
         </b-container>
@@ -174,13 +184,13 @@ export default {
     data() {
         return {
             fields: [
-                { key: 'actions', label: 'actions' },
                 { key: 'metaData.status', label: 'status' },
                 { key: 'name', label: 'name' },
                 { key: 'location', label: 'location' },
                 { key: 'url', label: 'url' },
                 { key: 'metaData.changedOn', label: 'created/modified' },
                 { key: 'metaData.changedBy', label: 'by' },
+                { key: 'actions', label: '' },
             ],
             publishers: null,
             loading: true,
@@ -215,7 +225,6 @@ export default {
         },
         deletePublisher(item) {
             console.log('delete publisher: ' + item.name);
-            // TODO display warning modal?
             httpClient
                 .delete('/publishers/' + item.id, item)
                 .catch(error => {
@@ -224,6 +233,14 @@ export default {
                 })
                 .finally(() => (this.loading = false));
             this.publishers.splice(this.publishers.indexOf(item), 1);
+        },
+        showDeleteModal(item) {
+            this.$bvModal.msgBoxConfirm('sure???').then(confirmed => {
+                this.$log.debug('delete id:' + item.id + ': ' + confirmed);
+                if (confirmed) {
+                    this.deletePublisher(item);
+                }
+            });
         },
     },
 };
