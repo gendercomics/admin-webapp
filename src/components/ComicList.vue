@@ -173,13 +173,13 @@
                         </div>
                     </template>
 
-                    <!-- publisher -->
-                    <template v-slot:cell(publisher)="data">
+                    <!-- publishers -->
+                    <template v-slot:cell(publishers)="data">
                         <div
                             v-for="publisher in data.item.publishers"
                             v-bind:key="publisher.id"
                         >
-                            <span>{{ publisher.name }}</span>
+                            <span>{{ publisher.nameForWebAppList }}</span>
                         </div>
                     </template>
 
@@ -251,7 +251,7 @@ export default {
                 { key: 'title', label: 'title' },
                 { key: 'creators', label: 'creator(s)' },
                 /* { key: 'partOf', label: 'in' },*/
-                { key: 'publisher', label: 'publisher' },
+                { key: 'publishers', label: 'publisher(s)' },
                 { key: 'metaData.changedOn', label: 'created/modified' },
                 { key: 'metaData.changedBy', label: 'by' },
                 { key: 'actions', label: '' },
