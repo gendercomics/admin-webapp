@@ -305,7 +305,7 @@ export default {
         },
         loadComicList() {
             httpClient
-                .get('/comics')
+                .get('/comicsList')
                 .then(
                     response => (
                         (this.comics = response.data),
