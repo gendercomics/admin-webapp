@@ -13,7 +13,7 @@
 #### Rollen-Liste 
 - Layout Update (Link von Rollenname zu Detailansicht, Edit-Button entfernt, Delete-Button an letzte Stelle in der Tabelle verschoben, Sicherheitsabfrage beim Löschen)
 #### Rollen Detailansicht
-- WYSIWIG-Beschreibungs-Editor
+- WYSIWYG-Beschreibungs-Editor
 ---
 
 ### gendercomics-admin-webapp-1.7.0
