@@ -293,24 +293,43 @@
                         </div>
 
                         <!-- publishers -->
+
                         <div
                             v-for="(publisher, idx) in comic.publishers"
                             v-bind:key="'publisher-' + idx"
                         >
-                            <b-input-group class="pt-2" prepend="publisher">
-                                <searchable-dropdown
-                                    v-model="comic.publishers[idx]"
-                                    options-path="/publishers"
-                                />
+                            <b-form-row class="pl-1">
+                                <b-input-group class="pt-2" prepend="publisher">
+                                    <searchable-dropdown
+                                        v-model="comic.publishers[idx]"
+                                        options-path="/publishers"
+                                    />
 
-                                <template v-slot:append>
-                                    <b-button @click="removePublisher(idx)">
-                                        <font-awesome-icon
-                                            icon="times-circle"
-                                        />
-                                    </b-button>
-                                </template>
-                            </b-input-group>
+                                    <!-- display and modify location for publisher
+                                    <b-form-input
+                                        v-if="
+                                            comic.publishers[idx].location !=
+                                                null
+                                        "
+                                        :value="comic.publishers[idx].location"
+                                        readonly
+                                    />
+
+
+                                    <b-button
+                                        ><font-awesome-icon icon="edit"
+                                    /></b-button>
+                                    -->
+
+                                    <template v-slot:append>
+                                        <b-button @click="removePublisher(idx)">
+                                            <font-awesome-icon
+                                                icon="times-circle"
+                                            />
+                                        </b-button>
+                                    </template>
+                                </b-input-group>
+                            </b-form-row>
                         </div>
 
                         <!-- printer -->
