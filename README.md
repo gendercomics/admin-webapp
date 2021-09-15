@@ -1,12 +1,20 @@
 # gendercomics-admin-webapp
 
 ## URLs
-### production: https://gendercomics.net/admin/ [![Build Status](https://travis-ci.com/gendercomics/admin-webapp.svg?branch=master)](https://travis-ci.com/gendercomics/admin-webapp)
-### stage: https://stage.gendercomics.net/admin/ [![Build Status](https://travis-ci.com/gendercomics/admin-webapp.svg?branch=master)](https://travis-ci.com/gendercomics/admin-webapp)
+### production: https://gendercomics.net/admin/
+![build status master branch](https://github.com/gendercomics/admin-webapp/actions/workflows/docker-image-production.yml/badge.svg?branch=master)
+### stage: https://stage.gendercomics.net/admin/
+![build status master branch](https://github.com/gendercomics/admin-webapp/actions/workflows/docker-image-stage.yml/badge.svg?branch=develop) 
 
 ## Release Notes
 
 ---
+### gendercomics-admin-webapp-1.8.0
+#### Rollen-Liste 
+- Layout Update (Link von Rollenname zu Detailansicht, Edit-Button entfernt, Delete-Button an letzte Stelle in der Tabelle verschoben, Sicherheitsabfrage beim Löschen)
+#### Rollen Detailansicht
+- WYSIWIG-Beschreibungs-Editor
+
 ### gendercomics-admin-webapp-1.7.0
 
 #### Comic Detailansicht
