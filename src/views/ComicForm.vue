@@ -23,7 +23,7 @@
             </b-alert>
         </div>
 
-        <b-form @submit="onSubmit" v-if="show">
+        <b-form @submit="onSubmit">
             <b-container class="mt-2" fluid>
                 <b-row class="ml-0">
                     <div id="button-col" class="mt-2 mb-2">
@@ -549,7 +549,6 @@ export default {
             names: [],
             roles: [],
             publishers: [],
-            show: true,
             loading: true,
             errored: false,
             saveSuccessful: false,
