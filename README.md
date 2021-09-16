@@ -7,6 +7,10 @@
 ![build status master branch](https://github.com/gendercomics/admin-webapp/actions/workflows/docker-image-stage.yml/badge.svg?branch=develop) 
 
 ## Release Notes
+---
+### gendercomics-admin-webapp-1.9.0-SNAPSHOT
+TODO
+
 
 ---
 ### gendercomics-admin-webapp-1.8.0
