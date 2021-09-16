@@ -57,7 +57,6 @@ export default {
     },
     watch: {
         '$data.content': function(newValue) {
-            this.$log.debug('newValue=' + newValue);
             this.localValue = newValue;
         },
     },
