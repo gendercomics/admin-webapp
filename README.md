@@ -8,9 +8,8 @@
 
 ## Release Notes
 ---
-### gendercomics-admin-webapp-1.9.0-SNAPSHOT
-TODO
-
+### gendercomics-admin-webapp-1.9.0
+- Einem Comic können mehrere Hyperlinks zugeordnet werden
 
 ---
 ### gendercomics-admin-webapp-1.8.0
