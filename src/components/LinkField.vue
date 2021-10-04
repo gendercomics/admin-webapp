@@ -60,8 +60,7 @@ export default {
     methods: {
         deleteValue() {
             this.$log.debug('delete ' + this.label);
-            this.localValue.url = null;
-            this.localValue.lastAccess = null;
+            this.$emit('remove', this.localValue);
         },
         openLink() {
             this.$log.debug('open link: ' + this.localValue.url);

@@ -168,7 +168,7 @@ export default {
             fields: [
                 { key: 'metaData.status', label: 'status' },
                 { key: 'name', label: 'name' },
-              //  { key: 'description', label: 'description' },
+                //  { key: 'description', label: 'description' },
                 { key: 'metaData.changedOn', label: 'created/modified' },
                 { key: 'metaData.changedBy', label: 'by' },
                 { key: 'actions', label: 'actions' },

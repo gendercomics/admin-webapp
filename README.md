@@ -7,6 +7,9 @@
 ![build status master branch](https://github.com/gendercomics/admin-webapp/actions/workflows/docker-image-stage.yml/badge.svg?branch=develop) 
 
 ## Release Notes
+---
+### gendercomics-admin-webapp-1.9.0
+- Einem Comic können mehrere Hyperlinks zugeordnet werden
 
 ---
 ### gendercomics-admin-webapp-1.8.0

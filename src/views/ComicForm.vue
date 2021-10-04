@@ -103,12 +103,16 @@
                                 >edition
                             </b-button>
                             <!-- link button -->
-                            <b-button
-                                :variant="linkBtnVariant"
-                                @click="addLink"
-                                :disabled="this.showLink"
-                                >link
-                            </b-button>
+                            <b-button-group>
+                                <b-button :variant="linkBtnVariant" disabled
+                                    >link
+                                </b-button>
+                                <b-button
+                                    variant="outline-dark"
+                                    @click="addLink"
+                                    >+
+                                </b-button>
+                            </b-button-group>
                             <!-- isbn button -->
                             <b-button
                                 :variant="isbnBtnVariant"
@@ -360,24 +364,19 @@
                             class="mt-2"
                         />
 
-                        <!-- link -->
-                        <input-field
-                            label="link"
-                            v-model="comic.link"
-                            v-if="showLink"
-                            type="url"
-                            removable
-                            class="mt-2"
-                        />
-
                         <!-- link including last access date -->
-                        <link-field
-                            label="link"
-                            v-model="comic.hyperLink"
-                            v-if="showHyperLink"
-                            removable
-                            class="mt-2"
-                        />
+                        <div
+                            v-for="(hyperlink, idx) in comic.hyperLinks"
+                            v-bind:key="'hyperlink-' + idx"
+                        >
+                            <link-field
+                                label="link"
+                                v-model="comic.hyperLinks[idx]"
+                                removable
+                                class="mt-2"
+                                @remove="removeHyperLink(idx)"
+                            />
+                        </div>
 
                         <!-- isbn -->
                         <input-field
@@ -546,11 +545,11 @@ export default {
                 printer: null,
                 year: null,
                 edition: null,
-                link: null,
                 hyperLink: {
                     url: null,
                     lastAccess: null,
                 },
+                hyperLinks: [],
                 isbn: null,
                 series: null,
                 partOf: null,
@@ -624,7 +623,7 @@ export default {
             return 'dark';
         },
         linkBtnVariant() {
-            if (!this.showLink) return 'outline-dark';
+            if (!this.hasHyperLinks) return 'outline-dark';
             return 'dark';
         },
         isbnBtnVariant() {
@@ -686,15 +685,6 @@ export default {
         showEdition() {
             return this.comic.edition != null;
         },
-        showLink() {
-            return this.comic.link != null;
-        },
-        showHyperLink() {
-            if (this.comic.hyperLink == null) {
-                return false;
-            }
-            return this.comic.hyperLink.url != null;
-        },
         showIsbn() {
             return this.comic.isbn != null;
         },
@@ -744,6 +734,12 @@ export default {
         },
         hasPrinter() {
             return this.comic.printer != null;
+        },
+        hasHyperLinks() {
+            return (
+                this.comic.hyperLinks != null &&
+                this.comic.hyperLinks.length > 0
+            );
         },
     },
     methods: {
@@ -821,7 +817,10 @@ export default {
             this.comic.edition = '';
         },
         addLink() {
-            this.comic.hyperLink = { url: '', lastAccess: new Date() };
+            if (this.comic.hyperLinks === null) {
+                this.comic.hyperLinks = [];
+            }
+            this.comic.hyperLinks.push({ url: '', lastAccess: new Date() });
         },
         addIsbn() {
             this.comic.isbn = '';
@@ -885,6 +884,10 @@ export default {
                 vm.$data.duplicateTitle = response;
             });
         }, 1000),
+        removeHyperLink(idx) {
+            this.$log.debug('removeHyperLink(idx)=' + idx);
+            this.comic.hyperLinks.splice(idx, 1);
+        },
     },
     mounted() {
         // load roles
