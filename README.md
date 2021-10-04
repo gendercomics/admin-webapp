@@ -13,6 +13,7 @@ TODO
 
 ---
 ### gendercomics-admin-webapp-1.9.0
+#### Comic Detailansicht
 - Einem Comic können mehrere Hyperlinks zugeordnet werden
 
 ---
