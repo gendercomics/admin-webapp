@@ -123,7 +123,7 @@
                             </b-button>
 
                             <!-- series (part of comic and/or publishing series) -->
-                            <b-button-group>
+                            <b-button-group v-if="this.isNotSeries">
                                 <b-button disabled :variant="seriesBtnVariant"
                                     >series
                                 </b-button>
@@ -133,15 +133,6 @@
                                     >+
                                 </b-button>
                             </b-button-group>
-
-                            <!-- series (part of publishing series) -->
-                            <b-button
-                                :variant="seriesBtnVariant"
-                                @click="addSeries"
-                                :disabled="this.hasSeries"
-                                v-if="this.isNotSeries"
-                                >series
-                            </b-button>
 
                             <!-- in (part of publication) -->
                             <b-button
@@ -415,7 +406,15 @@
                         />
 
                         <!-- series -->
-                        <series-field v-model="comic.series" />
+                        <div
+                            v-for="(series, idx) in comic.seriesList"
+                            v-bind:key="'series-' + idx"
+                        >
+                            <series-field
+                                v-model="comic.seriesList[idx]"
+                                @remove="removeSeries(idx)"
+                            />
+                        </div>
 
                         <!-- in (part of publication) -->
                         <b-form-row>
@@ -712,7 +711,8 @@ export default {
         },
         hasSeries() {
             return (
-                this.comic.series !== null && this.comic.series.comic !== null
+                this.comic.seriesList != null &&
+                this.comic.seriesList.length > 0
             );
         },
         hasSeriesVolume() {
@@ -847,21 +847,18 @@ export default {
             this.$log.debug('removePublisher(idx)=' + idx);
             this.comic.publishers.splice(idx, 1);
         },
-        removeSeries() {
-            this.comic.series = null;
+        removeSeries(idx) {
+            this.$log.debug('removeSeries(idx)=' + idx);
+            this.comic.seriesList.splice(idx, 1);
         },
         removeIn() {
             this.comic.partOf = null;
         },
         addSeries() {
-            if (this.comic.series === null) {
-                this.comic.series = { comic: null, volume: null };
+            if (this.comic.seriesList === null) {
+                this.comic.publishers = [];
             }
-            this.comic.series.comic = '';
-            this.comic.series.volume = '';
-        },
-        addSeriesVolume() {
-            this.comic.series.volume = '';
+            this.comic.seriesList.push({ comic: '', volume: null });
         },
         creatorName(name) {
             if (name.name !== null) {

@@ -62,10 +62,8 @@ export default {
     },
     methods: {
         removeSeries() {
-            this.$log.debug(
-                'remove series: ' + JSON.stringify(this.localValue)
-            );
-            this.localValue = null;
+            this.$log.debug('remove series: ' + this.localValue.comic.title);
+            this.$emit('remove');
         },
         addVolume() {
             this.$log.debug('add volume');
