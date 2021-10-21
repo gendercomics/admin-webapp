@@ -122,6 +122,18 @@
                                 >isbn
                             </b-button>
 
+                            <!-- series (part of comic and/or publishing series) -->
+                            <b-button-group>
+                                <b-button disabled :variant="seriesBtnVariant"
+                                    >series
+                                </b-button>
+                                <b-button
+                                    variant="outline-dark"
+                                    @click="addSeries"
+                                    >+
+                                </b-button>
+                            </b-button-group>
+
                             <!-- series (part of publishing series) -->
                             <b-button
                                 :variant="seriesBtnVariant"
@@ -129,15 +141,6 @@
                                 :disabled="this.hasSeries"
                                 v-if="this.isNotSeries"
                                 >series
-                            </b-button>
-
-                            <!-- series volume (part of publishing series) -->
-                            <b-button
-                                v-if="this.hasSeries"
-                                @click="addSeriesVolume"
-                                :variant="seriesVolumeBtnVariant"
-                                :disabled="this.hasSeriesVolume"
-                                >volume
                             </b-button>
 
                             <!-- in (part of publication) -->
@@ -412,40 +415,7 @@
                         />
 
                         <!-- series -->
-                        <b-form-row>
-                            <b-col>
-                                <b-input-group
-                                    id="input-group-series"
-                                    class="pt-2"
-                                    prepend="series"
-                                    v-if="hasSeries"
-                                >
-                                    <searchable-dropdown
-                                        v-model="comic.series.comic"
-                                        options-path="/comics/type/series"
-                                        class="flex-fill"
-                                    />
-
-                                    <template v-slot:append>
-                                        <b-button @click="removeSeries()">
-                                            <font-awesome-icon
-                                                icon="times-circle"
-                                            />
-                                        </b-button>
-                                    </template>
-                                </b-input-group>
-                            </b-col>
-                            <b-col>
-                                <input-field
-                                    label="volume"
-                                    v-model="comic.series.volume"
-                                    v-if="hasSeriesVolume"
-                                    type="text"
-                                    class="mt-2"
-                                    removable
-                                />
-                            </b-col>
-                        </b-form-row>
+                        <series-field v-model="comic.series" />
 
                         <!-- in (part of publication) -->
                         <b-form-row>
@@ -542,6 +512,7 @@ import CommentField from '@/components/CommentField';
 import LinkField from '@/components/LinkField';
 import _ from 'lodash';
 import PublisherField from '@/components/PublisherField';
+import SeriesField from '@/components/SeriesField';
 
 export default {
     name: 'ComicForm',
@@ -555,6 +526,7 @@ export default {
         InputField,
         Header,
         LinkField,
+        SeriesField,
     },
     data() {
         return {
@@ -578,6 +550,7 @@ export default {
                 hyperLinks: [],
                 isbn: null,
                 series: null,
+                seriesList: [],
                 partOf: null,
                 genres: null,
                 keywords: null,
