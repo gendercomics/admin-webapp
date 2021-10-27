@@ -856,7 +856,7 @@ export default {
         },
         addSeries() {
             if (this.comic.seriesList === null) {
-                this.comic.publishers = [];
+                this.comic.seriesList = [];
             }
             this.comic.seriesList.push({ comic: '', volume: null });
         },

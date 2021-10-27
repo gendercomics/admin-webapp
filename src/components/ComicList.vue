@@ -135,15 +135,10 @@
 
                     <!-- title (+ subtitle) -->
                     <template v-slot:cell(title)="row">
-                        <b-link
-                            v-if="hasComicSeries(row.item)"
-                            :to="'/comics/' + row.item.series.comic.id"
-                        >
+                        <b-link :to="'/comics/' + seriesComicId(row.item)">
                             {{ seriesTitleAndSubtitle(row.item) }}
                         </b-link>
-                        <span v-if="hasComicSeries(row.item)">{{
-                            seriesVolume(row.item)
-                        }}</span>
+                        <span>{{ seriesVolume(row.item) }}</span>
 
                         <b-link :to="'/comics/' + row.item.id">{{
                             row.item.nameForWebAppList
@@ -475,23 +470,43 @@ export default {
                 }
             });
         },
-        hasComicSeries(item) {
-            return (
-                item.series != null &&
-                item.series.comic != null &&
-                item.series.comic.type === 'comic_series'
-            );
+        seriesComicId(item) {
+            let id = '';
+            if (item.seriesList != null) {
+                item.seriesList.forEach(series => {
+                    if (series.comic.type === 'comic_series') {
+                        id = series.comic.id;
+                    }
+                });
+            }
+            return id;
         },
         seriesTitleAndSubtitle(item) {
-            let text = item.series.comic.title + '. ';
-            if (item.series.comic.subTitle != null) {
-                text += item.series.comic.subTitle + '. ';
+            if (item.seriesList != null) {
+                let text = '';
+                item.seriesList.forEach(series => {
+                    if (series.comic.type === 'comic_series') {
+                        text += series.comic.title + '.';
+                        if (series.comic.subTitle != null) {
+                            text += ' ' + series.comic.subTitle + '.';
+                        }
+                    }
+                });
+                return text;
             }
-            return text;
+            return '';
         },
         seriesVolume(item) {
-            if (item.series.volume != null) {
-                return item.series.volume + ': ';
+            if (item.seriesList != null) {
+                let text = '';
+                item.seriesList.forEach(series => {
+                    if (series.comic.type === 'comic_series') {
+                        if (series.volume != null) {
+                            text += ' ' + series.volume + ': ';
+                        } else text += ': ';
+                    }
+                });
+                return text;
             }
             return '';
         },
