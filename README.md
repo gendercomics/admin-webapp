@@ -8,7 +8,7 @@
 
 ## Release Notes
 ---
-### gendercomics-admin-webapp-1.10.0-SNAPSHOT
+### gendercomics-admin-webapp-1.10.0
 #### Comic Detailansicht
 - Einem Comic können mehrere Serien zugeordnet werden
 
