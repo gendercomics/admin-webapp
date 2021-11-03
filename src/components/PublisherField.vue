@@ -8,7 +8,14 @@
                 />
 
                 <b-form-input
-                    v-if="localValue.location"
+                    v-if="hasOverride"
+                    :value="localValue.location"
+                    readonly
+                    style="max-width: 15%; text-decoration: line-through;"
+                />
+
+                <b-form-input
+                    v-else-if="localValue.location"
                     :value="localValue.location"
                     readonly
                     style="max-width: 15%;"
@@ -38,16 +45,6 @@
                 </template>
             </b-input-group>
         </b-form-row>
-
-        <b-container fluid class="mt-4 ml-4 mr-4">
-            <b-row class="mt-4 mr-4">
-                <b-col id="json-comic">
-                    <b-card header="localValue">
-                        <pre class="mt-0">{{ this.localValue }}</pre>
-                    </b-card>
-                </b-col>
-            </b-row>
-        </b-container>
     </div>
 </template>
 
