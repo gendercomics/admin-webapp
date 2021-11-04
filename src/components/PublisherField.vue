@@ -23,7 +23,7 @@
 
                 <b-button
                     @click="overrideLocation"
-                    v-show="!hasOverride"
+                    v-show="!hasOverride && localValue.location != null"
                     :disabled="localValue.id == null"
                     ><font-awesome-icon icon="edit"
                 /></b-button>
