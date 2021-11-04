@@ -8,7 +8,7 @@
 
 ## Release Notes
 ---
-### gendercomics-admin-webapp-1.11.0-SNAPSHOT
+### gendercomics-admin-webapp-1.11.0
 #### Comic Detailansicht
 - Beim Verlagseintrag kann die Ortsangabe überschrieben werden, wenn ein Ortseintrag vorhanden ist. Das Überschreiben der Ortsangabe wird nur für diesen Comic-Eintrag zugeordnet und nicht beim Verlag gespeichert.
 
