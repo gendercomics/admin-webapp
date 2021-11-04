@@ -297,61 +297,9 @@
                         >
                             <publisher-field
                                 v-model="comic.publishers[idx]"
-                                :location-override="
-                                    getLocationOverrideForPublisher(
-                                        comic.publishers[idx].id
-                                    )
-                                "
                                 @remove="removePublisher(idx)"
                             />
                         </div>
-
-                        <!--
-                        <div
-                            v-for="(publisher, idx) in comic.publishers"
-                            v-bind:key="'publisher-' + idx"
-                        >
-                            <b-form-row class="pl-1">
-                                <b-input-group class="pt-2" prepend="publisher">
-                                    <searchable-dropdown
-                                        v-model="comic.publishers[idx]"
-                                        options-path="/publishers"
-                                    />
-
-                                    <b-form-input
-                                        style="max-width: 15%"
-                                        v-if="
-                                            comic.publishers[idx].location !=
-                                                null
-                                        "
-                                        :value="comic.publishers[idx].location"
-                                        readonly
-                                    />
-
-                                    <b-button @click="overrideLocation(idx)"
-                                        ><font-awesome-icon icon="edit"
-                                    /></b-button>
-
-                                    <b-form-input
-                                        v-if="comic.publisherLocationOverride"
-                                    />
-
-                                    <b-button
-                                        @click="removeOverrideLocation(idx)"
-                                        ><font-awesome-icon icon="backspace"
-                                    /></b-button>
-
-                                    <template v-slot:append>
-                                        <b-button @click="removePublisher(idx)">
-                                            <font-awesome-icon
-                                                icon="times-circle"
-                                            />
-                                        </b-button>
-                                    </template>
-                                </b-input-group>
-                            </b-form-row>
-                        </div>
-                        -->
 
                         <!-- printer -->
                         <input-field
@@ -536,9 +484,8 @@ export default {
                 issueTitle: null,
                 creators: [],
                 type: 'comic',
-                publisher: null,
                 publishers: [],
-                publisherLocationOverride: [],
+                publisherOverrides: [],
                 printer: null,
                 year: null,
                 edition: null,
@@ -884,12 +831,23 @@ export default {
             this.$log.debug('removeHyperLink(idx)=' + idx);
             this.comic.hyperLinks.splice(idx, 1);
         },
-        getLocationOverrideForPublisher(publisherId) {
-            this.$log.debug('getLocationOverrideForPublisher:' + publisherId);
-            return null;
+        initPublisherOverrides() {
+            if (this.comic.publisherOverrides != null) {
+                this.comic.publishers.forEach(publisher => {
+                    this.$log.debug(
+                        'publisher-override: publisherId=' +
+                            publisher.id +
+                            ', locationOverride: ' +
+                            this.comic.publisherOverrides[publisher.id]
+                    );
+                    publisher.locationOverride = this.comic.publisherOverrides[
+                        publisher.id
+                    ];
+                });
+            }
         },
     },
-    mounted() {
+    created() {
         // load roles
         this.loadRoles();
         // load creators (creators = searchable persons)
@@ -903,6 +861,9 @@ export default {
                     if (this.comic.metaData.status === null) {
                         this.comic.metaData.status = 'DRAFT';
                     }
+                    this.$nextTick(() => {
+                        this.initPublisherOverrides();
+                    });
                 })
                 .catch(error => {
                     console.log(error);
