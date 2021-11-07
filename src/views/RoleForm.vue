@@ -16,17 +16,7 @@
 
         <b-form @submit="onSubmit" v-if="show">
             <b-container class="mt-2" fluid>
-                <!-- role name as summary on top -->
-                <div class="m-2">
-                    <input-field
-                        label="role"
-                        :value="role.name"
-                        size="lg"
-                        disabled
-                    />
-                </div>
-
-                <b-row class="ml-2">
+                <b-row class="ml-0">
                     <div id="button-col" class="mt-2 mb-2">
                         <b-button-group vertical>
                             <b-button disabled>role</b-button>
@@ -36,52 +26,75 @@
                                 :disabled="this.showDescription"
                                 >description</b-button
                             >
+                            <!-- toggle JSON view -->
+                            <b-button
+                                variant="outline-dark"
+                                :pressed.sync="showJson"
+                                >JSON
+                            </b-button>
                         </b-button-group>
                     </div>
 
-                    <b-col id="form-col" class="pl-0 mr-3">
-                        <!-- name -->
-                        <input-field
-                            label="role"
-                            v-model="role.name"
-                            type="text"
-                            class="m-2"
-                        />
+                    <b-col id="form-col" class="mt-2">
+                        <b-input-group>
+                            <!-- name -->
+                            <input-field
+                                label="role"
+                                v-model="role.name"
+                                type="text"
+                                style="max-width: 70%"
+                            />
+
+                            <div class="ml-2 float-right">
+                                <!-- status -->
+                                <b-form-group class="m-0">
+                                    <!-- action buttons -->
+                                    <b-button-group>
+                                        <!-- editing status -->
+                                        <b-form-select
+                                            :options="this.$statusOptions"
+                                            v-model="role.metaData.status"
+                                        />
+
+                                        <b-button
+                                            type="submit"
+                                            variant="primary"
+                                            >save
+                                        </b-button>
+                                        <b-button
+                                            to="/roles"
+                                            type="reset"
+                                            variant="outline-danger"
+                                            >back
+                                        </b-button>
+                                    </b-button-group>
+                                </b-form-group>
+                            </div>
+                        </b-input-group>
 
                         <!-- description -->
-                        <input-field
-                            label="description"
-                            v-model="role.description"
-                            class="m-2"
-                            v-if="showDescription"
-                            type="text"
-                            removable
-                        />
-
-                        <!-- action buttons -->
-                        <b-form-group>
-                            <b-button-group class="mt-3 float-right">
-                                <!-- editing status -->
-                                <b-form-select
-                                    :options="statusOptions"
-                                    v-model="role.metaData.status"
-                                />
-
-                                <b-button type="submit" variant="primary"
-                                    >save</b-button
-                                >
-                                <b-button
-                                    to="/roles"
-                                    type="reset"
-                                    variant="outline-danger"
-                                    >back</b-button
-                                >
-                            </b-button-group>
-                        </b-form-group>
+                        <div class="mt-2">
+                            <text-editor-field
+                                v-if="showDescription"
+                                v-model="role.description"
+                                header-text="description"
+                                removable
+                            />
+                        </div>
                     </b-col>
                 </b-row>
             </b-container>
         </b-form>
+
+        <b-container fluid class="mt-4 ml-4 mr-4">
+            <b-row class="mt-4 mr-4" v-if="showJson">
+                <b-col id="json-role">
+                    <b-card header="role">
+                        <pre class="mt-0">{{ $data.role }}</pre>
+                    </b-card>
+                </b-col>
+            </b-row>
+        </b-container>
     </div>
 </template>
 
@@ -89,12 +102,14 @@
 import Header from '@/components/Header';
 import { httpClient } from '../services/httpclient';
 import InputField from '@/components/InputField';
+import TextEditorField from '@/components/TextEditorField';
 
 export default {
     name: 'RolesForm',
     components: {
         Header,
         InputField,
+        TextEditorField,
     },
     data() {
         return {
@@ -114,6 +129,7 @@ export default {
             debug: false,
             saveSuccessful: false,
             statusOptions: ['DRAFT', 'REVIEW', 'FINAL'],
+            showJson: false,
         };
     },
     mounted() {
@@ -172,6 +188,10 @@ export default {
         },
         addDescription() {
             this.role.description = '';
+        },
+        removeDescription() {
+            this.$log.debug('removeDescription');
+            this.role.description = null;
         },
     },
 };

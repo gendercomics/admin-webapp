@@ -9,11 +9,13 @@ import moment from 'moment';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import {
+    faBackspace,
     faCheckCircle,
     faEdit,
     faExclamationTriangle,
     faExternalLinkAlt,
     faFilter,
+    faPlus,
     faSave,
     faSearch,
     faTags,
@@ -27,12 +29,14 @@ import { faComment } from '@fortawesome/free-regular-svg-icons';
 import AuthService from './services/authservice';
 
 library.add(
+    faBackspace,
     faCheckCircle,
     faComment,
     faEdit,
     faExclamationTriangle,
     faExternalLinkAlt,
     faFilter,
+    faPlus,
     faSave,
     faSearch,
     faTags,
@@ -73,6 +77,14 @@ let initOptions = {
 Vue.prototype.keycloak = Keycloak(initOptions);
 Vue.prototype.moment = moment;
 Vue.prototype.$statusOptions = ['DRAFT', 'CLARIFICATION', 'REVIEW', 'FINAL'];
+Vue.prototype.$typeOptions = [
+    { text: 'A', value: 'anthology' },
+    { text: 'C', value: 'comic' },
+    { text: 'S', value: 'comic_series' },
+    { text: 'M', value: 'magazine' },
+    { text: 'R', value: 'publishing_series' },
+    { text: 'W', value: 'webcomic' },
+];
 
 Vue.use(BootstrapVue);
 
