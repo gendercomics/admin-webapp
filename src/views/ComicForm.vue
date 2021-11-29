@@ -15,11 +15,9 @@
         </div>
 
         <div class="mt-3 ml-3 mr-3">
-            <b-alert variant="warning" dismissible v-model="duplicateTitle"
-                ><font-awesome-icon icon="exclamation-triangle" /><span
-                    class="ml-2"
-                    >{{ comic.title }} already exists!</span
-                >
+            <b-alert variant="warning" dismissible v-model="duplicateTitle">
+                <font-awesome-icon icon="exclamation-triangle" />
+                <span class="ml-2">{{ comic.title }} already exists!</span>
             </b-alert>
         </div>
 
@@ -167,6 +165,29 @@
                                 :disabled="this.showKeywords"
                                 >keywords
                             </b-button>
+
+                            <!-- cover -->
+                            <b-button
+                                v-if="hasId"
+                                :variant="coverBtnVariant"
+                                @click="addCover"
+                                :disabled="this.hasCover"
+                                >cover
+                            </b-button>
+
+                            <!-- images -->
+                            <!--
+                            <b-button-group>
+                                <b-button disabled :variant="imageBtnVariant"
+                                    >images
+                                </b-button>
+                                <b-button
+                                    variant="outline-dark"
+                                    @click="addImage"
+                                    >+
+                                </b-button>
+                            </b-button-group>
+                            -->
 
                             <!-- comments -->
                             <b-button-group>
@@ -417,6 +438,15 @@
                             v-if="showKeywords"
                         />
 
+                        <!-- cover image -->
+                        <cover-image
+                            v-if="hasCover"
+                            class="mt-2"
+                            v-model="comic.cover"
+                            :comic-id="this.comic.id"
+                            @remove="removeCover"
+                        />
+
                         <!-- comments -->
                         <div
                             v-for="(comment, idx_comment) in comic.comments"
@@ -460,20 +490,22 @@ import LinkField from '@/components/LinkField';
 import _ from 'lodash';
 import PublisherField from '@/components/PublisherField';
 import SeriesField from '@/components/SeriesField';
+import CoverImage from '@/components/CoverImage';
 
 export default {
     name: 'ComicForm',
     mixins: [ComicService, PersonService, RoleService],
     components: {
-        PublisherField,
-        CommentField,
-        SearchableDropdown,
         ComicCreator,
-        TagInput,
-        InputField,
+        CommentField,
+        CoverImage,
         Header,
+        InputField,
         LinkField,
+        PublisherField,
+        SearchableDropdown,
         SeriesField,
+        TagInput,
     },
     data() {
         return {
@@ -495,6 +527,8 @@ export default {
                 partOf: null,
                 genres: null,
                 keywords: null,
+                cover: null,
+                //images: [],
                 metaData: {
                     createdOn: null,
                     createdBy: null,
@@ -603,6 +637,14 @@ export default {
             if (!this.hasPrinter) return 'outline-dark';
             return 'dark';
         },
+        coverBtnVariant() {
+            if (!this.hasCover) return 'outline-dark';
+            return 'dark';
+        },
+        imageBtnVariant() {
+            if (!this.hasImages) return 'outline-dark';
+            return 'dark';
+        },
         showSubtitle() {
             return this.comic.subTitle != null;
         },
@@ -680,6 +722,15 @@ export default {
                 this.comic.hyperLinks != null &&
                 this.comic.hyperLinks.length > 0
             );
+        },
+        hasCover() {
+            return this.comic.cover !== null;
+        },
+        hasImages() {
+            return this.comic.images != null;
+        },
+        hasId() {
+            return this.comic.id != null;
         },
     },
     methods: {
@@ -839,6 +890,18 @@ export default {
                     ];
                 });
             }
+        },
+        addCover() {
+            this.comic.cover = '';
+        },
+        removeCover() {
+            this.comic.cover = null;
+        },
+        addImage() {
+            if (this.comic.images == null) {
+                this.comic.images = [];
+            }
+            this.comic.images.push({});
         },
     },
     created() {
