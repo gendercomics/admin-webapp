@@ -67,7 +67,8 @@ export default {
         imageUrl() {
             if (this.localValue != null || !this.localValue.length > 0) {
                 return (
-                    'http://localhost:8001/images/' +
+                    process.env.VUE_APP_API_URL +
+                    'images/' +
                     this.comicId +
                     '/' +
                     this.localValue
@@ -84,34 +85,50 @@ export default {
         },
     },
     methods: {
-        uploadFile() {
+        async uploadFile() {
             this.$log.debug('upload file: ' + this.file.name);
+            this.loading = true;
 
             const formData = new FormData();
             formData.append('file', this.file);
             formData.append('comicId', this.comicId);
 
-            httpClient
+            await httpClient
                 .post('/files/upload/', formData)
                 .catch(error => {
                     console.log(error);
                     this.errored = true;
                 })
                 .finally(() => (this.loading = false));
+
+            await this.isFileAvailable();
         },
         deleteFile() {
-            this.$log.debug('delete file: ' + this.file.name);
+            this.$log.debug('delete file: ' + this.localValue);
             httpClient
-                .delete('/files/' + this.comicId + '/' + this.file.name)
+                .delete('/files/' + this.comicId + '/' + this.localValue)
                 .catch(error => {
                     console.log(error);
                     this.errored = true;
                 })
                 .finally(() => (this.loading = false));
         },
+        async isFileAvailable() {
+            let responseStatus;
+            await httpClient
+                .head(this.imageUrl)
+                .then(response => (responseStatus = response.status))
+                .catch(error => {
+                    console.log(error);
+                    this.errored = true;
+                })
+                .finally(() =>
+                    this.$log.debug('response-status=' + responseStatus)
+                );
+        },
         removeValue() {
             this.$log.debug('remove cover');
-            if (this.file != null) {
+            if (this.localValue != null) {
                 this.deleteFile();
             }
             this.$emit('remove');
