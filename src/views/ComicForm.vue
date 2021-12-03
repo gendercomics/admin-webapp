@@ -485,7 +485,7 @@ export default {
                 creators: [],
                 type: 'comic',
                 publishers: [],
-                publisherOverrides: [],
+                publisherOverrides: null,
                 printer: null,
                 year: null,
                 edition: null,
