@@ -3,10 +3,8 @@ version: '3'
 services:
 
   gendercomics-admin-webapp-stage:
-    image: gendercomics/admin-webapp:latest
+    image: gendercomics/admin-webapp-stage:latest
     container_name: gendercomics-admin-webapp-stage
-    environment:
-      - VUE_APP_API_URL=https://api-stage.gendercomics.net/
     networks:
       - proxy
     labels:
@@ -16,7 +14,7 @@ services:
       - "traefik.docker.network=proxy"
 
   gendercomics-admin-webapp:
-    image: gendercomics/admin-webapp:1.1.0
+    image: gendercomics/admin-webapp:1.11.1
     container_name: gendercomics-admin-webapp
     networks:
       - proxy

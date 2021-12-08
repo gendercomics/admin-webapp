@@ -1,74 +1,98 @@
 <template>
     <div class="text-left">
         <Header />
-        <b-container fluid class="mt-4 pl-4 pr-4">
-            <b-row>
-                <b-form
-                    id="role-form"
-                    v-if="show"
-                    v-on:submit.prevent="onSubmit"
-                >
-                    <div>
-                        <b-card
-                            bg-variant="light"
-                            header="add a new role"
-                            style="min-width: 50rem"
-                        >
-                            <b-card-body>
-                                <b-row>
-                                    <b-col>
-                                        <b-form-group
-                                            label-cols-sm="2"
-                                            label="name:"
-                                            label-align-sm="right"
-                                            label-for="name"
-                                        >
-                                            <b-form-input
-                                                id="name"
-                                                v-model="role.name"
-                                                placeholder="enter role name"
-                                                trim
-                                                style="max-width: 10rem"
-                                            ></b-form-input>
-                                        </b-form-group>
 
-                                        <b-form-group
-                                            label-cols-sm="2"
-                                            label="description:"
-                                            label-align-sm="right"
-                                            label-for="role-description"
-                                        >
-                                            <b-form-textarea
-                                                id="role-description"
-                                                placeholder="enter role description ..."
-                                                v-model="role.description"
-                                                style="min-width: 20rem"
-                                            />
-                                        </b-form-group>
-                                    </b-col>
-                                </b-row>
+        <div class="mt-3 ml-3 mr-3">
+            <b-alert variant="success" dismissible v-model="saveSuccessful"
+                >publisher saved!
+            </b-alert>
+        </div>
 
-                                <b-row class="mt-2">
-                                    <b-col>
-                                        <b-button-group class="float-right">
-                                            <b-button
-                                                type="submit"
-                                                variant="primary"
-                                                >save</b-button
-                                            >
-                                            <b-button
-                                                to="/roles"
-                                                type="reset"
-                                                variant="outline-danger"
-                                                >cancel</b-button
-                                            >
-                                        </b-button-group>
-                                    </b-col>
-                                </b-row>
-                            </b-card-body>
-                        </b-card>
+        <div class="mt-3 ml-3 mr-3">
+            <b-alert variant="danger" dismissible v-model="errored"
+                >error!
+            </b-alert>
+        </div>
+
+        <b-form @submit="onSubmit" v-if="show">
+            <b-container class="mt-2" fluid>
+                <b-row class="ml-0">
+                    <div id="button-col" class="mt-2 mb-2">
+                        <b-button-group vertical>
+                            <b-button disabled>role</b-button>
+                            <b-button
+                                :variant="descriptionBtnVariant"
+                                @click="addDescription"
+                                :disabled="this.showDescription"
+                                >description</b-button
+                            >
+                            <!-- toggle JSON view -->
+                            <b-button
+                                variant="outline-dark"
+                                :pressed.sync="showJson"
+                                >JSON
+                            </b-button>
+                        </b-button-group>
                     </div>
-                </b-form>
+
+                    <b-col id="form-col" class="mt-2">
+                        <b-input-group>
+                            <!-- name -->
+                            <input-field
+                                label="role"
+                                v-model="role.name"
+                                type="text"
+                                style="max-width: 70%"
+                            />
+
+                            <div class="ml-2 float-right">
+                                <!-- status -->
+                                <b-form-group class="m-0">
+                                    <!-- action buttons -->
+                                    <b-button-group>
+                                        <!-- editing status -->
+                                        <b-form-select
+                                            :options="this.$statusOptions"
+                                            v-model="role.metaData.status"
+                                        />
+
+                                        <b-button
+                                            type="submit"
+                                            variant="primary"
+                                            >save
+                                        </b-button>
+                                        <b-button
+                                            to="/roles"
+                                            type="reset"
+                                            variant="outline-danger"
+                                            >back
+                                        </b-button>
+                                    </b-button-group>
+                                </b-form-group>
+                            </div>
+                        </b-input-group>
+
+                        <!-- description -->
+                        <div class="mt-2">
+                            <text-editor-field
+                                v-if="showDescription"
+                                v-model="role.description"
+                                header-text="description"
+                                removable
+                            />
+                        </div>
+                    </b-col>
+                </b-row>
+            </b-container>
+        </b-form>
+
+        <b-container fluid class="mt-4 ml-4 mr-4">
+            <b-row class="mt-4 mr-4" v-if="showJson">
+                <b-col id="json-role">
+                    <b-card header="role">
+                        <pre class="mt-0">{{ $data.role }}</pre>
+                    </b-card>
+                </b-col>
             </b-row>
         </b-container>
     </div>
@@ -77,21 +101,35 @@
 <script>
 import Header from '@/components/Header';
 import { httpClient } from '../services/httpclient';
+import InputField from '@/components/InputField';
+import TextEditorField from '@/components/TextEditorField';
 
 export default {
     name: 'RolesForm',
     components: {
         Header,
+        InputField,
+        TextEditorField,
     },
     data() {
         return {
             role: {
                 name: null,
                 description: null,
+                metaData: {
+                    createdOn: null,
+                    createdBy: null,
+                    changedOn: null,
+                    changedBy: null,
+                    status: 'DRAFT',
+                },
             },
             show: true,
             errored: false,
             debug: false,
+            saveSuccessful: false,
+            statusOptions: ['DRAFT', 'REVIEW', 'FINAL'],
+            showJson: false,
         };
     },
     mounted() {
@@ -107,6 +145,15 @@ export default {
                     this.errored = true;
                 });
         }
+    },
+    computed: {
+        descriptionBtnVariant() {
+            if (!this.showDescription) return 'outline-dark';
+            return 'dark';
+        },
+        showDescription() {
+            return this.role.description != null;
+        },
     },
     methods: {
         onSubmit(evt) {
@@ -138,6 +185,13 @@ export default {
                         this.errored = true;
                     });
             }
+        },
+        addDescription() {
+            this.role.description = '';
+        },
+        removeDescription() {
+            this.$log.debug('removeDescription');
+            this.role.description = null;
         },
     },
 };

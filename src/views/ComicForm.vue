@@ -14,113 +14,231 @@
             </b-alert>
         </div>
 
-        <b-container class="mt-3" fluid>
-            <b-row>
-                <b-col id="button-col" cols="1">
-                    <b-button-group vertical>
-                        <b-button disabled>title</b-button>
-                        <b-button
-                            :variant="subtitleBtnVariant"
-                            @click="addSubtitle"
-                            :disabled="this.showSubtitle"
-                            >subtitle
-                        </b-button>
-                        <b-button
-                            :variant="issueBtnVariant"
-                            @click="addIssue"
-                            :disabled="this.showIssue"
-                            >issue
-                        </b-button>
-                        <b-button variant="outline-dark" @click="addCreator"
-                            >creator+
-                        </b-button>
-                        <b-button
-                            :variant="typeBtnVariant"
-                            @click="addType"
-                            :disabled="this.showType"
-                            >type
-                        </b-button>
-                        <b-button
-                            :variant="publisherBtnVariant"
-                            @click="addPublisher"
-                            :disabled="this.showPublisher"
-                            >publisher
-                        </b-button>
-                        <b-button
-                            :variant="yearBtnVariant"
-                            @click="addYear"
-                            :disabled="this.showYear"
-                            >year
-                        </b-button>
-                        <b-button
-                            :variant="editionBtnVariant"
-                            @click="addEdition"
-                            :disabled="this.showEdition"
-                            >edition
-                        </b-button>
-                        <b-button
-                            :variant="linkBtnVariant"
-                            @click="addLink"
-                            :disabled="this.showLink"
-                            >link
-                        </b-button>
-                        <b-button
-                            :variant="isbnBtnVariant"
-                            @click="addIsbn"
-                            :disabled="this.showIsbn"
-                            >isbn
-                        </b-button>
+        <div class="mt-3 ml-3 mr-3">
+            <b-alert variant="warning" dismissible v-model="duplicateTitle"
+                ><font-awesome-icon icon="exclamation-triangle" /><span
+                    class="ml-2"
+                    >{{ comic.title }} already exists!</span
+                >
+            </b-alert>
+        </div>
 
-                        <!-- in (part of publication) -->
-                        <b-button
-                            :variant="inBtnVariant"
-                            @click="addIn"
-                            :disabled="this.showIn"
-                            v-if="this.showInButtons"
-                            >in
-                        </b-button>
-                        <b-button
-                            :variant="pagesBtnVariant"
-                            @click="addPages"
-                            :disabled="this.showPages"
-                            v-if="this.showInButtons"
-                            >pages
-                        </b-button>
+        <b-form @submit="onSubmit">
+            <b-container class="mt-2" fluid>
+                <b-row class="ml-0">
+                    <div id="button-col" class="mt-2 mb-2">
+                        <b-button-group vertical>
+                            <!-- title -->
+                            <b-button disabled>title</b-button>
+                            <!-- subtitle -->
+                            <b-button
+                                :variant="subtitleBtnVariant"
+                                @click="addSubtitle"
+                                :disabled="this.showSubtitle"
+                                >subtitle
+                            </b-button>
+                            <!-- issue button -->
+                            <b-button
+                                :variant="issueBtnVariant"
+                                @click="addIssue"
+                                :disabled="this.showIssue"
+                                v-if="this.isNotSeries"
+                                >issue
+                            </b-button>
 
-                        <!-- genres -->
-                        <b-button
-                            :variant="genresBtnVariant"
-                            @click="addGenres"
-                            :disabled="this.showGenres"
-                            >genres
-                        </b-button>
+                            <!-- issue button -->
+                            <b-button
+                                :variant="issueTitleBtnVariant"
+                                @click="addIssueTitle"
+                                :disabled="this.showIssueTitle"
+                                v-if="this.showIssue"
+                                >issue title
+                            </b-button>
 
-                        <!-- keywords -->
-                        <b-button
-                            :variant="keywordsBtnVariant"
-                            @click="addKeywords"
-                            :disabled="this.showKeywords"
-                            >keywords
-                        </b-button>
-                    </b-button-group>
-                </b-col>
+                            <!-- creator button -->
+                            <b-button-group>
+                                <b-button disabled :variant="creatorBtnVariant"
+                                    >creator
+                                </b-button>
+                                <b-button
+                                    variant="outline-dark"
+                                    @click="addCreator"
+                                    >+
+                                </b-button>
+                            </b-button-group>
+                            <!-- publisher button -->
+                            <b-button-group>
+                                <b-button
+                                    disabled
+                                    :variant="publisherBtnVariant"
+                                    >publisher
+                                </b-button>
+                                <b-button
+                                    variant="outline-dark"
+                                    @click="addPublisher"
+                                    >+
+                                </b-button>
+                            </b-button-group>
+                            <!-- printer button -->
+                            <b-button
+                                :variant="printerBtnVariant"
+                                @click="addPrinter"
+                                :disabled="this.hasPrinter"
+                                v-if="!this.showPublisher"
+                                >printer
+                            </b-button>
+                            <!-- year button -->
+                            <b-button
+                                :variant="yearBtnVariant"
+                                @click="addYear"
+                                :disabled="this.showYear"
+                                >year
+                            </b-button>
+                            <!-- edition button -->
+                            <b-button
+                                :variant="editionBtnVariant"
+                                @click="addEdition"
+                                :disabled="this.showEdition"
+                                v-if="this.isComicType"
+                                >edition
+                            </b-button>
+                            <!-- link button -->
+                            <b-button-group>
+                                <b-button :variant="linkBtnVariant" disabled
+                                    >link
+                                </b-button>
+                                <b-button
+                                    variant="outline-dark"
+                                    @click="addLink"
+                                    >+
+                                </b-button>
+                            </b-button-group>
+                            <!-- isbn button -->
+                            <b-button
+                                :variant="isbnBtnVariant"
+                                @click="addIsbn"
+                                :disabled="this.showIsbn"
+                                v-if="this.isComicType"
+                                >isbn
+                            </b-button>
 
-                <b-col id="form-col">
-                    <b-form @submit="onSubmit" v-if="show">
+                            <!-- series (part of comic and/or publishing series) -->
+                            <b-button-group v-if="this.isNotSeries">
+                                <b-button disabled :variant="seriesBtnVariant"
+                                    >series
+                                </b-button>
+                                <b-button
+                                    variant="outline-dark"
+                                    @click="addSeries"
+                                    >+
+                                </b-button>
+                            </b-button-group>
+
+                            <!-- in (part of publication) -->
+                            <b-button
+                                :variant="inBtnVariant"
+                                @click="addIn"
+                                :disabled="this.showIn"
+                                v-if="this.isComicType"
+                                >in
+                            </b-button>
+
+                            <!-- pages -->
+                            <b-button
+                                :variant="pagesBtnVariant"
+                                @click="addPages"
+                                :disabled="this.hasPages"
+                                v-if="this.showIn"
+                                >pages
+                            </b-button>
+
+                            <!-- genres -->
+                            <b-button
+                                :variant="genresBtnVariant"
+                                @click="addGenres"
+                                :disabled="this.showGenres"
+                                >genres
+                            </b-button>
+
+                            <!-- keywords -->
+                            <b-button
+                                :variant="keywordsBtnVariant"
+                                @click="addKeywords"
+                                :disabled="this.showKeywords"
+                                >keywords
+                            </b-button>
+
+                            <!-- comments -->
+                            <b-button-group>
+                                <b-button disabled :variant="commentBtnVariant"
+                                    >comment
+                                </b-button>
+                                <b-button
+                                    variant="outline-dark"
+                                    @click="addComment"
+                                    >+
+                                </b-button>
+                            </b-button-group>
+
+                            <!-- toggle JSON view -->
+                            <b-button
+                                variant="outline-dark"
+                                :pressed.sync="showJson"
+                                >JSON
+                            </b-button>
+                        </b-button-group>
+                    </div>
+
+                    <b-col id="form-col" class="mt-2 mr-2">
                         <!-- title -->
                         <b-input-group
-                            prepend="title"
                             id="input-group-title"
                             label-for="input-title"
-                            size="lg"
+                            size="md"
                         >
+                            <!-- type -->
+                            <b-form-select
+                                :options="this.types"
+                                v-model="comic.type"
+                                style="background-color: #E4E7EB; max-width: 15%"
+                            >
+                            </b-form-select>
+
                             <b-form-input
                                 id="input-title"
                                 v-model="comic.title"
                                 required
                                 placeholder="Enter title"
                                 :state="titleState"
+                                @input="verifyTitle"
                             />
+
+                            <div class="ml-1 float-right">
+                                <!-- status -->
+                                <b-form-group class="m-0">
+                                    <!-- action buttons -->
+                                    <b-button-group>
+                                        <!-- editing status -->
+                                        <b-form-select
+                                            :options="this.$statusOptions"
+                                            v-model="comic.metaData.status"
+                                        />
+
+                                        <b-button
+                                            type="submit"
+                                            variant="primary"
+                                            >save
+                                        </b-button>
+                                        <b-button
+                                            to="/comics"
+                                            type="reset"
+                                            :variant="backBtnVariant"
+                                            >back
+                                        </b-button>
+                                    </b-button-group>
+                                </b-form-group>
+                            </div>
+
                             <b-form-invalid-feedback
                                 >Enter at least 1 character
                             </b-form-invalid-feedback>
@@ -137,100 +255,68 @@
                         />
 
                         <!-- issue -->
-                        <input-field
-                            label="issue"
-                            v-model="comic.issue"
-                            v-if="showIssue"
-                            type="text"
-                            removable
-                            class="mt-2"
-                        />
+                        <b-form-row>
+                            <b-col cols="3">
+                                <input-field
+                                    label="issue"
+                                    v-model="comic.issue"
+                                    v-if="showIssue"
+                                    type="text"
+                                    removable
+                                    class="mt-2"
+                                />
+                            </b-col>
+                            <b-col>
+                                <input-field
+                                    label="issue title"
+                                    v-model="comic.issueTitle"
+                                    v-if="showIssueTitle"
+                                    type="text"
+                                    removable
+                                    class="mt-2 float-left"
+                                />
+                            </b-col>
+                        </b-form-row>
 
                         <!-- creators -->
                         <div
                             v-for="(creator, idx) in comic.creators"
-                            v-bind:key="idx"
+                            v-bind:key="'creator-' + idx"
                         >
-                            <b-form-row class="pl-1 pr-1">
-                                <b-input-group class="pt-2" prepend="creator">
-                                    <div class="w-50">
-                                        <b-form-select
-                                            v-model="
-                                                comic.creators[idx].person.id
-                                            "
-                                            @change="personUpdated(idx)"
-                                        >
-                                            <option
-                                                v-for="person in persons"
-                                                v-bind:key="person.id"
-                                                :value="person.id"
-                                                >{{ creatorName(person) }}
-                                            </option>
-                                        </b-form-select>
-                                    </div>
-
-                                    <b-form-select
-                                        :options="roles"
-                                        value-field="id"
-                                        text-field="name"
-                                        v-model="comic.creators[idx].role.id"
-                                        @change="roleUpdated(idx)"
-                                    >
-                                        <!--<option value="" disabled>-- Please select a role --</option>-->
-                                    </b-form-select>
-
-                                    <template v-slot:append>
-                                        <b-button @click="removeCreator(idx)">
-                                            <font-awesome-icon
-                                                icon="times-circle"
-                                            />
-                                        </b-button>
-                                    </template>
-                                </b-input-group>
-                            </b-form-row>
+                            <comic-creator
+                                v-model="comic.creators[idx]"
+                                removable
+                                @remove="removeCreator(idx)"
+                            />
                         </div>
 
-                        <!-- type -->
-                        <select-field
-                            label="type"
-                            :options="this.types"
-                            v-if="showType"
-                            v-model="comic.type"
-                            :selected="comic.type"
-                            removable
-                            class="mt-2"
-                        />
-
-                        <!-- publisher -->
-                        <b-input-group
-                            id="input-group-publisher"
-                            class="pt-2"
-                            prepend="publisher"
-                            v-if="showPublisher"
+                        <!-- publishers -->
+                        <div
+                            v-for="(publisher, idx) in comic.publishers"
+                            v-bind:key="'publisher-' + idx"
                         >
-                            <b-form-select
-                                id="input-publisher"
-                                :options="publishers"
-                                value-field="id"
-                                text-field="name"
-                                v-model="selectedPublisher"
-                                @change="changePublisher()"
+                            <publisher-field
+                                v-model="comic.publishers[idx]"
+                                @remove="removePublisher(idx)"
                             />
-                            <template v-slot:append>
-                                <b-button @click="removePublisher()">
-                                    <font-awesome-icon icon="times-circle" />
-                                </b-button>
-                            </template>
-                        </b-input-group>
+                        </div>
+
+                        <!-- printer -->
+                        <input-field
+                            label="printer"
+                            v-model="comic.printer"
+                            v-if="hasPrinter"
+                            removable
+                            class="mt-2 w-50"
+                        />
 
                         <!-- year -->
                         <input-field
                             label="year"
                             v-model="comic.year"
                             v-if="showYear"
-                            type="number"
                             removable
-                            class="mt-2"
+                            class="mt-2 w-25"
                         />
 
                         <!-- edition -->
@@ -243,15 +329,19 @@
                             class="mt-2"
                         />
 
-                        <!-- link -->
-                        <input-field
-                            label="link"
-                            v-model="comic.link"
-                            v-if="showLink"
-                            type="url"
-                            removable
-                            class="mt-2"
-                        />
+                        <!-- link including last access date -->
+                        <div
+                            v-for="(hyperlink, idx) in comic.hyperLinks"
+                            v-bind:key="'hyperlink-' + idx"
+                        >
+                            <link-field
+                                label="link"
+                                v-model="comic.hyperLinks[idx]"
+                                removable
+                                class="mt-2"
+                                @remove="removeHyperLink(idx)"
+                            />
+                        </div>
 
                         <!-- isbn -->
                         <input-field
@@ -263,41 +353,53 @@
                             class="mt-2"
                         />
 
-                        <!-- in (part of publication -->
-                        <b-input-group
-                            id="input-group-in"
-                            class="pt-2"
-                            prepend="in"
-                            v-if="showIn"
+                        <!-- series -->
+                        <div
+                            v-for="(series, idx) in comic.seriesList"
+                            v-bind:key="'series-' + idx"
                         >
-                            <b-form-select
-                                id="input-publication"
-                                v-model="selectedPublication"
-                                @change="changePublication()"
-                            >
-                                <option
-                                    v-for="parent in this.parents"
-                                    v-bind:key="parent.id"
-                                    :value="parent.id"
-                                    >{{ parentOptionText(parent) }}
-                                </option>
-                            </b-form-select>
-                            <template v-slot:append>
-                                <b-button @click="removeIn()">
-                                    <font-awesome-icon icon="times-circle" />
-                                </b-button>
-                            </template>
-                        </b-input-group>
+                            <series-field
+                                v-model="comic.seriesList[idx]"
+                                @remove="removeSeries(idx)"
+                            />
+                        </div>
 
-                        <!-- pages -->
-                        <input-field
-                            label="pages"
-                            v-model="comic.partOf.pages"
-                            v-if="showPages"
-                            type="text"
-                            removable
-                            class="mt-2"
-                        />
+                        <!-- in (part of publication) -->
+                        <b-form-row>
+                            <b-col>
+                                <b-input-group
+                                    id="input-group-in"
+                                    class="pt-2"
+                                    prepend="in"
+                                    v-if="showIn"
+                                >
+                                    <searchable-dropdown
+                                        v-model="comic.partOf.comic"
+                                        options-path="/comics/parents"
+                                        class="flex-fill"
+                                    />
+
+                                    <template v-slot:append>
+                                        <b-button @click="removeIn()">
+                                            <font-awesome-icon
+                                                icon="times-circle"
+                                            />
+                                        </b-button>
+                                    </template>
+                                </b-input-group>
+                            </b-col>
+                            <!-- pages -->
+                            <b-col>
+                                <input-field
+                                    label="pages"
+                                    v-model="comic.partOf.pages"
+                                    v-if="hasPages"
+                                    type="text"
+                                    removable
+                                    class="mt-2"
+                                />
+                            </b-col>
+                        </b-form-row>
 
                         <!-- keywords (genres) -->
                         <TagInput
@@ -315,93 +417,63 @@
                             v-if="showKeywords"
                         />
 
-                        <!-- status -->
-                        <b-form-group>
-                            <!-- action buttons -->
-                            <b-button-group class="mt-3 float-right">
-                                <!-- editing status -->
-                                <b-form-select
-                                    :options="statusOptions"
-                                    v-model="comic.metaData.status"
-                                />
+                        <!-- comments -->
+                        <div
+                            v-for="(comment, idx_comment) in comic.comments"
+                            v-bind:key="'comment' + idx_comment"
+                        >
+                            <comment-field
+                                v-model="comic.comments[idx_comment]"
+                                removable
+                                @remove="removeComment(idx_comment)"
+                            />
+                        </div>
+                    </b-col>
+                </b-row>
+            </b-container>
+        </b-form>
 
-                                <b-button type="submit" variant="primary"
-                                    >save
-                                </b-button>
-                                <b-button
-                                    to="/comics"
-                                    type="reset"
-                                    :variant="backBtnVariant"
-                                    >back
-                                </b-button>
-                            </b-button-group>
-                        </b-form-group>
-                    </b-form>
-                </b-col>
-            </b-row>
-
-            <!--
-            <b-row class="mt-4">
+        <b-container fluid class="mt-4 ml-4 mr-4">
+            <b-row class="mt-4 mr-4" v-if="showJson">
                 <b-col id="json-comic">
                     <b-card header="comic">
                         <pre class="mt-0">{{ $data.comic }}</pre>
                     </b-card>
                 </b-col>
             </b-row>
-
-
-            <b-row class="mt-4">
-                <b-col id="json-some-values">
-                    <b-card header="some data">
-                        <pre class="mt-0">
-                            <div>selectedPublication: {{ $data.selectedPublication }}</div>
-
-                            <div>selectedCreatorPerson: {{ $data.selectedCreatorPerson }}</div>
-                            <div>selectedCreatorRole: {{ $data.selectedCreatorRole }}</div>
-                            <div>saveSuccessful: {{ $data.saveSuccessful }}</div>
-
-                        </pre>
-                    </b-card>
-                </b-col>
-            </b-row>
--->
-            <!--
-
-            <b-row class="mt-4">
-                <b-col id="json-persons">
-                    <b-card header="persons">
-                        <pre class="mt-0">{{ $data.persons }}</pre>
-                    </b-card>
-                </b-col>
-            </b-row>
-
-            <b-row class="mt-4">
-                <b-col id="json-publishers">
-                    <b-card header="publishers">
-                        <pre class="mt-0">{{ $data.publishers }}</pre>
-                    </b-card>
-                </b-col>
-            </b-row>
-
-            -->
         </b-container>
     </div>
 </template>
 
 <script>
 import Header from '@/components/Header';
-import InputField from '../components/InputField';
-import { httpClient } from '../services/httpclient';
-import TagInput from '../components/TagInput';
-import SelectField from '../components/SelectField';
+import InputField from '@/components/InputField';
+import { httpClient } from '@/services/httpclient';
+import TagInput from '@/components/TagInput';
+import ComicCreator from '@/components/ComicCreator';
+import ComicService from '@/mixins/comicservice';
+import RoleService from '@/mixins/roleservice';
+import PersonService from '@/mixins/personservice';
+import SearchableDropdown from '@/components/SearchableDropdown';
+import CommentField from '@/components/CommentField';
+import LinkField from '@/components/LinkField';
+import _ from 'lodash';
+import PublisherField from '@/components/PublisherField';
+import SeriesField from '@/components/SeriesField';
 
 export default {
     name: 'ComicForm',
+    mixins: [ComicService, PersonService, RoleService],
     components: {
+        PublisherField,
+        CommentField,
+        SearchableDropdown,
+        ComicCreator,
         TagInput,
         InputField,
-        SelectField,
         Header,
+        LinkField,
+        SeriesField,
     },
     data() {
         return {
@@ -409,13 +481,22 @@ export default {
                 title: '',
                 subTitle: null,
                 issue: null,
+                issueTitle: null,
                 creators: [],
-                type: null,
-                publisher: null,
+                type: 'comic',
+                publishers: [],
+                publisherOverrides: null,
+                printer: null,
                 year: null,
                 edition: null,
-                link: null,
+                hyperLink: {
+                    url: null,
+                    lastAccess: null,
+                },
+                hyperLinks: [],
                 isbn: null,
+                series: null,
+                seriesList: [],
                 partOf: null,
                 genres: null,
                 keywords: null,
@@ -426,19 +507,25 @@ export default {
                     changedBy: null,
                     status: 'DRAFT',
                 },
+                comments: [],
             },
-            persons: [],
+            names: [],
             roles: [],
             publishers: [],
-            show: true,
             loading: true,
             errored: false,
             saveSuccessful: false,
-            selectedPublisher: null,
-            selectedPublication: null,
-            types: ['anthology', 'comic', 'magazine', 'webcomic'],
-            statusOptions: ['DRAFT', 'REVIEW', 'FINAL'],
-            parents: null,
+            //selectedPublisher: null,
+            types: [
+                'anthology',
+                'comic',
+                'magazine',
+                'comic_series',
+                'publishing_series',
+                'webcomic',
+            ],
+            showJson: false,
+            duplicateTitle: false,
         };
     },
     computed: {
@@ -452,12 +539,20 @@ export default {
             if (!this.showSubtitle) return 'outline-dark';
             return 'dark';
         },
+        creatorsExist() {
+            return (
+                this.comic.creators != null && this.comic.creators.length > 0
+            );
+        },
+        creatorBtnVariant() {
+            return this.creatorsExist ? 'dark' : 'outline-dark';
+        },
         issueBtnVariant() {
             if (!this.showIssue) return 'outline-dark';
             return 'dark';
         },
-        typeBtnVariant() {
-            if (!this.showType) return 'outline-dark';
+        issueTitleBtnVariant() {
+            if (!this.showIssueTitle) return 'outline-dark';
             return 'dark';
         },
         publisherBtnVariant() {
@@ -473,7 +568,7 @@ export default {
             return 'dark';
         },
         linkBtnVariant() {
-            if (!this.showLink) return 'outline-dark';
+            if (!this.hasHyperLinks) return 'outline-dark';
             return 'dark';
         },
         isbnBtnVariant() {
@@ -485,7 +580,7 @@ export default {
             return 'dark';
         },
         pagesBtnVariant() {
-            if (!this.showPages) return 'outline-dark';
+            if (!this.hasPages) return 'outline-dark';
             return 'dark';
         },
         backBtnVariant() {
@@ -499,26 +594,41 @@ export default {
             if (!this.showGenres) return 'outline-dark';
             return 'dark';
         },
+        commentBtnVariant() {
+            return this.commentsExist ? 'dark' : 'outline-dark';
+        },
+        seriesBtnVariant() {
+            if (!this.hasSeries) return 'outline-dark';
+            return 'dark';
+        },
+        seriesVolumeBtnVariant() {
+            if (!this.hasSeriesVolume) return 'outline-dark';
+            return 'dark';
+        },
+        printerBtnVariant() {
+            if (!this.hasPrinter) return 'outline-dark';
+            return 'dark';
+        },
         showSubtitle() {
             return this.comic.subTitle != null;
         },
         showIssue() {
             return this.comic.issue != null;
         },
-        showType() {
-            return this.comic.type != null;
+        showIssueTitle() {
+            return this.comic.issueTitle != null;
         },
         showPublisher() {
-            return this.comic.publisher != null;
+            return (
+                this.comic.publishers != null &&
+                this.comic.publishers.length > 0
+            );
         },
         showYear() {
             return this.comic.year != null;
         },
         showEdition() {
             return this.comic.edition != null;
-        },
-        showLink() {
-            return this.comic.link != null;
         },
         showIsbn() {
             return this.comic.isbn != null;
@@ -528,12 +638,12 @@ export default {
                 this.comic.partOf !== null && this.comic.partOf.comic !== null
             );
         },
-        showPages() {
+        hasPages() {
             return (
                 this.comic.partOf !== null && this.comic.partOf.pages !== null
             );
         },
-        showInButtons() {
+        isComicType() {
             return (
                 this.comic.type === null ||
                 this.comic.type === '' ||
@@ -545,6 +655,37 @@ export default {
         },
         showGenres() {
             return this.comic.genres != null;
+        },
+        hasSeries() {
+            return (
+                this.comic.seriesList != null &&
+                this.comic.seriesList.length > 0
+            );
+        },
+        hasSeriesVolume() {
+            return (
+                this.comic.series !== null && this.comic.series.volume !== null
+            );
+        },
+        commentsExist() {
+            return (
+                this.comic.comments != null && this.comic.comments.length > 0
+            );
+        },
+        isNotSeries() {
+            return (
+                this.comic.type !== 'comic_series' &&
+                this.comic.type !== 'publishing_series'
+            );
+        },
+        hasPrinter() {
+            return this.comic.printer != null;
+        },
+        hasHyperLinks() {
+            return (
+                this.comic.hyperLinks != null &&
+                this.comic.hyperLinks.length > 0
+            );
         },
     },
     methods: {
@@ -586,22 +727,34 @@ export default {
         },
         addIssue() {
             this.comic.issue = '';
+            this.comic.issueTitle = '';
+        },
+        addIssueTitle() {
+            this.comic.issueTitle = '';
         },
         addCreator() {
-            console.log('add creator');
             if (this.comic.creators === null) {
                 this.comic.creators = [];
             }
-            this.comic.creators.push({ person: {}, role: {} });
+            this.comic.creators.push({ name: {}, roles: [] });
         },
         removeCreator(idx) {
+            this.$log.debug('idx=' + idx);
             this.comic.creators.splice(idx, 1);
         },
-        addType() {
-            this.comic.type = '';
+        removeComment(idx) {
+            // TODO remove only owned comment?
+            this.$log.debug('idx=' + idx);
+            this.comic.comments.splice(idx, 1);
         },
         addPublisher() {
-            this.comic.publisher = '';
+            if (this.comic.publishers === null) {
+                this.comic.publishers = [];
+            }
+            this.comic.publishers.push({ name: null });
+        },
+        addPrinter() {
+            this.comic.printer = '';
         },
         addYear() {
             this.comic.year = '';
@@ -610,7 +763,10 @@ export default {
             this.comic.edition = '';
         },
         addLink() {
-            this.comic.link = '';
+            if (this.comic.hyperLinks === null) {
+                this.comic.hyperLinks = [];
+            }
+            this.comic.hyperLinks.push({ url: '', lastAccess: new Date() });
         },
         addIsbn() {
             this.comic.isbn = '';
@@ -620,6 +776,7 @@ export default {
                 this.comic.partOf = { comic: null, pages: null };
             }
             this.comic.partOf.comic = '';
+            this.comic.partOf.pages = '';
         },
         addPages() {
             if (this.comic.partOf === null) {
@@ -633,100 +790,80 @@ export default {
         addGenres() {
             this.comic.genres = [];
         },
-        changePublisher() {
-            console.log(this.selectedPublisher);
-            this.publishers.forEach(publisher => {
-                if (this.selectedPublisher === publisher.id) {
-                    this.comic.publisher = publisher;
-                }
-            });
+        removePublisher(idx) {
+            this.$log.debug('removePublisher(idx)=' + idx);
+            this.comic.publishers.splice(idx, 1);
         },
-        removePublisher() {
-            this.comic.publisher = null;
-            this.selectedPublisher = null;
+        removeSeries(idx) {
+            this.$log.debug('removeSeries(idx)=' + idx);
+            this.comic.seriesList.splice(idx, 1);
         },
         removeIn() {
             this.comic.partOf = null;
         },
-        personUpdated(idx) {
-            console.log('personUpdated=' + idx);
-            this.persons.forEach(person => {
-                if (this.comic.creators[idx].person.id === person.id) {
-                    this.comic.creators[idx].person = person;
-                }
-            });
-        },
-        roleUpdated(idx) {
-            console.log('roleUpdated=' + idx);
-            this.roles.forEach(role => {
-                if (this.comic.creators[idx].role.id === role.id) {
-                    this.comic.creators[idx].role = role;
-                }
-            });
-        },
-        changePublication() {
-            console.log(this.selectedPublication);
-            this.parents.forEach(parent => {
-                if (this.selectedPublication === parent.id) {
-                    this.comic.partOf.comic = parent;
-                }
-            });
-        },
-        loadParents() {
-            httpClient
-                .get('/comics/parents')
-                .then(response => {
-                    this.parents = response.data;
-                })
-                .catch(error => {
-                    console.log(error);
-                    this.errored = true;
-                });
-        },
-        parentOptionText(parent) {
-            let optionText = parent.title;
-
-            /*
-  parent.subtitle !== null
-      ? (optionText += '. ' + parent.subTitle)
-      : optionText;
-  */
-            parent.publisher != null
-                ? (optionText += '. ' + parent.publisher.name)
-                : optionText;
-            parent.year != null
-                ? (optionText += '. ' + parent.year)
-                : optionText;
-            return optionText;
-        },
-        creatorName(creator) {
-            if (creator.pseudonym != null && creator.pseudonym.length > 1) {
-                return creator.pseudonym;
+        addSeries() {
+            if (this.comic.seriesList === null) {
+                this.comic.seriesList = [];
             }
-            return creator.firstName + ' ' + creator.lastName;
+            this.comic.seriesList.push({ comic: '', volume: null });
+        },
+        creatorName(name) {
+            if (name.name !== null) {
+                return name.name;
+            }
+            return name.firstName + ' ' + name.lastName;
+        },
+        addComment() {
+            if (this.comic.comments === null) {
+                this.comic.comments = [];
+            }
+            this.comic.comments.push({ value: null });
+        },
+        verifyTitle: _.debounce(function(val) {
+            this.$log.debug('verifyTitle=' + val);
+            let vm = this;
+            this.titleExists(val).then(function(response) {
+                vm.$log.debug('titleExits=' + response);
+                vm.$data.duplicateTitle = response;
+            });
+        }, 1000),
+        removeHyperLink(idx) {
+            this.$log.debug('removeHyperLink(idx)=' + idx);
+            this.comic.hyperLinks.splice(idx, 1);
+        },
+        initPublisherOverrides() {
+            if (this.comic.publisherOverrides != null) {
+                this.comic.publishers.forEach(publisher => {
+                    this.$log.debug(
+                        'publisher-override: publisherId=' +
+                            publisher.id +
+                            ', locationOverride: ' +
+                            this.comic.publisherOverrides[publisher.id]
+                    );
+                    publisher.locationOverride = this.comic.publisherOverrides[
+                        publisher.id
+                    ];
+                });
+            }
         },
     },
-    mounted() {
-        // load parents (anthologies, magazines)
-        this.loadParents();
+    created() {
+        // load roles
+        this.loadRoles();
+        // load creators (creators = searchable persons)
+        this.loadCreators();
         // get comic
         if (!this.$route.path.endsWith('new')) {
             httpClient
                 .get(this.$route.path)
                 .then(response => {
                     this.comic = response.data;
-                    if (this.comic.publisher != null) {
-                        this.selectedPublisher = this.comic.publisher.id;
-                    }
-                    if (
-                        this.comic.partOf != null &&
-                        this.comic.partOf.comic != null
-                    ) {
-                        this.selectedPublication = this.comic.partOf.comic.id;
-                    }
                     if (this.comic.metaData.status === null) {
                         this.comic.metaData.status = 'DRAFT';
                     }
+                    this.$nextTick(() => {
+                        this.initPublisherOverrides();
+                    });
                 })
                 .catch(error => {
                     console.log(error);
@@ -734,15 +871,6 @@ export default {
                 })
                 .finally(() => (this.loading = false));
         }
-        // get persons
-        httpClient
-            .get('/persons')
-            .then(response => (this.persons = response.data))
-            .catch(error => {
-                console.log(error);
-                this.errored = true;
-            })
-            .finally(() => (this.loading = false));
         // get publishers
         httpClient
             .get('/publishers')
@@ -750,13 +878,6 @@ export default {
             .catch(error => {
                 console.log(error);
                 this.errored = true;
-            })
-            .finally(() => (this.loading = false));
-        httpClient
-            .get('/roles')
-            .then(response => (this.roles = response.data))
-            .catch(error => {
-                console.log(error);
             })
             .finally(() => (this.loading = false));
     },
