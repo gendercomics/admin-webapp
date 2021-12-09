@@ -167,13 +167,38 @@
                             </b-button>
 
                             <!-- cover -->
-                            <b-button
-                                v-if="hasId"
-                                :variant="coverBtnVariant"
-                                @click="addCover"
-                                :disabled="this.hasCover"
-                                >cover
-                            </b-button>
+                            <b-button-group v-if="hasId">
+                                <b-button
+                                    :variant="coverBtnVariant"
+                                    @click="addCover"
+                                    :disabled="this.hasCover"
+                                    v-b-tooltip.hover
+                                    title="upload image"
+                                    >cover
+                                </b-button>
+                                <b-button
+                                    variant="outline-dark"
+                                    disabled
+                                    v-if="
+                                        !this.hasCover &&
+                                            !this.dnbCheckFinished &&
+                                            this.hasIsbn13
+                                    "
+                                >
+                                    <b-spinner small />
+                                </b-button>
+                                <b-button
+                                    v-if="coverDownloadBtnVisible"
+                                    variant="outline-dark"
+                                    v-b-tooltip.hover
+                                    title="import from DNB"
+                                    @click="downLoadDnbCover"
+                                >
+                                    <font-awesome-icon
+                                        icon="cloud-download-alt"
+                                    />
+                                </b-button>
+                            </b-button-group>
 
                             <!-- images -->
                             <!--
@@ -554,6 +579,8 @@ export default {
             ],
             showJson: false,
             duplicateTitle: false,
+            dnbHasCover: false,
+            dnbCheckFinished: false,
         };
     },
     computed: {
@@ -732,6 +759,12 @@ export default {
         hasId() {
             return this.comic.id != null;
         },
+        coverDownloadBtnVisible() {
+            return this.dnbHasCover && this.comic.cover == null;
+        },
+        hasIsbn13() {
+            return this.comic.isbn != null && this.comic.isbn >= 13;
+        },
     },
     methods: {
         onSubmit(evt) {
@@ -903,6 +936,38 @@ export default {
             }
             this.comic.images.push({});
         },
+        downLoadDnbCover() {
+            const formData = new FormData();
+            formData.append('comicId', this.comic.id);
+            formData.append('isbn', this.comic.isbn);
+
+            httpClient
+                .post('/files/dnb/cover/download', formData)
+                .catch(error => {
+                    console.log(error);
+                    this.errored = true;
+                })
+                .finally(() => (this.loading = false));
+            this.comic.cover = this.comic.isbn + '-dnb-cover.jpeg';
+        },
+        checkDnbCover() {
+            if (this.hasIsbn13) {
+                httpClient
+                    .get('/files/dnb/cover/available/' + this.comic.isbn)
+                    .then(
+                        response => (
+                            (this.dnbHasCover = response.data),
+                            (this.dnbCheckFinished = true)
+                        )
+                    )
+                    .catch(error => {
+                        console.log(error);
+                        this.errored = true;
+                    })
+                    .finally(() => (this.loading = false));
+            }
+            this.$log.debug('checkDnbCover=' + this.dnbHasCover);
+        },
     },
     created() {
         // load roles
@@ -920,6 +985,7 @@ export default {
                     }
                     this.$nextTick(() => {
                         this.initPublisherOverrides();
+                        this.checkDnbCover();
                     });
                 })
                 .catch(error => {

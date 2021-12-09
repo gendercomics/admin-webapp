@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import {
     faBackspace,
     faCheckCircle,
+    faCloudDownloadAlt,
     faEdit,
     faExclamationTriangle,
     faExternalLinkAlt,
@@ -31,6 +32,7 @@ import AuthService from './services/authservice';
 library.add(
     faBackspace,
     faCheckCircle,
+    faCloudDownloadAlt,
     faComment,
     faEdit,
     faExclamationTriangle,

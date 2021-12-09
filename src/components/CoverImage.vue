@@ -27,12 +27,15 @@
                     </template>
                 </b-input-group>
             </template>
-            <b-img
-                style="width: 100%;"
-                :src="imageUrl"
-                v-if="localValue.length > 0"
-                v-bind="mainProps"
-            />
+            <div>
+                <b-spinner v-if="imageLoading" />
+                <b-img
+                    v-else
+                    :src="imageUrl"
+                    v-bind="mainProps"
+                    style="width: 100%"
+                />
+            </div>
         </b-card>
     </div>
 </template>
@@ -50,8 +53,9 @@ export default {
         return {
             file: null,
             mainProps: {
-                class: 'm-0',
+                class: 'p-1',
             },
+            imageLoading: false,
         };
     },
     computed: {
@@ -65,7 +69,8 @@ export default {
             },
         },
         imageUrl() {
-            if (this.localValue != null || !this.localValue.length > 0) {
+            if (this.localValue != null && this.localValue.length > 0) {
+                this.$log.debug('imageUrl localValue: ' + this.localValue);
                 return (
                     process.env.VUE_APP_API_URL +
                     'images/' +
@@ -86,6 +91,7 @@ export default {
     },
     methods: {
         async uploadFile() {
+            this.imageLoading = true;
             this.$log.debug('upload file: ' + this.file.name);
             this.loading = true;
 
@@ -122,8 +128,9 @@ export default {
                     console.log(error);
                     this.errored = true;
                 })
-                .finally(() =>
-                    this.$log.debug('response-status=' + responseStatus)
+                .finally(
+                    () => this.$log.debug('response-status=' + responseStatus),
+                    (this.imageLoading = false)
                 );
         },
         removeValue() {
