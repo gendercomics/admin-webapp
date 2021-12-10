@@ -464,13 +464,16 @@
                         />
 
                         <!-- cover image -->
-                        <cover-image
-                            v-if="hasCover"
-                            class="mt-2"
-                            v-model="comic.cover"
-                            :comic-id="this.comic.id"
-                            @remove="removeCover"
-                        />
+                        <div>
+                            <b-spinner v-if="coverLoading" class="mt-2"/>
+                            <cover-image
+                                v-if="hasCover"
+                                class="mt-2"
+                                v-model="comic.cover"
+                                :comic-id="this.comic.id"
+                                @remove="removeCover"
+                            />
+                        </div>
 
                         <!-- comments -->
                         <div
@@ -581,6 +584,7 @@ export default {
             duplicateTitle: false,
             dnbHasCover: false,
             dnbCheckFinished: false,
+            coverLoading: false,
         };
     },
     computed: {
@@ -936,18 +940,19 @@ export default {
             }
             this.comic.images.push({});
         },
-        downLoadDnbCover() {
+        async downLoadDnbCover() {
+            this.coverLoading = true;
             const formData = new FormData();
             formData.append('comicId', this.comic.id);
             formData.append('isbn', this.comic.isbn);
 
-            httpClient
+            await httpClient
                 .post('/files/dnb/cover/download', formData)
                 .catch(error => {
                     console.log(error);
                     this.errored = true;
                 })
-                .finally(() => (this.loading = false));
+                .finally(() => (this.coverLoading = false));
             this.comic.cover = this.comic.isbn + '-dnb-cover.jpeg';
         },
         checkDnbCover() {
