@@ -519,10 +519,11 @@ import _ from 'lodash';
 import PublisherField from '@/components/PublisherField';
 import SeriesField from '@/components/SeriesField';
 import CoverImage from '@/components/CoverImage';
+import ImageService from '@/mixins/imageservice';
 
 export default {
     name: 'ComicForm',
-    mixins: [ComicService, PersonService, RoleService],
+    mixins: [ComicService, ImageService, PersonService, RoleService],
     components: {
         ComicCreator,
         CommentField,
@@ -939,39 +940,6 @@ export default {
                 this.comic.images = [];
             }
             this.comic.images.push({});
-        },
-        async downLoadDnbCover() {
-            this.coverLoading = true;
-            const formData = new FormData();
-            formData.append('comicId', this.comic.id);
-            formData.append('isbn', this.comic.isbn);
-
-            await httpClient
-                .post('/files/dnb/cover/download', formData)
-                .catch(error => {
-                    console.log(error);
-                    this.errored = true;
-                })
-                .finally(() => (this.coverLoading = false));
-            this.comic.cover = this.comic.isbn + '-dnb-cover.jpeg';
-        },
-        checkDnbCover() {
-            if (this.hasIsbn13) {
-                httpClient
-                    .get('/files/dnb/cover/available/' + this.comic.isbn)
-                    .then(
-                        response => (
-                            (this.dnbHasCover = response.data),
-                            (this.dnbCheckFinished = true)
-                        )
-                    )
-                    .catch(error => {
-                        console.log(error);
-                        this.errored = true;
-                    })
-                    .finally(() => (this.loading = false));
-            }
-            this.$log.debug('checkDnbCover=' + this.dnbHasCover);
         },
     },
     created() {
