@@ -23,6 +23,7 @@ import {
     faTimesCircle,
     faTrashAlt,
     faUser,
+    faUserCircle,
     faUserSecret,
 } from '@fortawesome/free-solid-svg-icons';
 import { faComment } from '@fortawesome/free-regular-svg-icons';
@@ -45,6 +46,7 @@ library.add(
     faTimesCircle,
     faTrashAlt,
     faUser,
+    faUserCircle,
     faUserSecret
 );
 
