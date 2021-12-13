@@ -465,7 +465,7 @@
 
                         <!-- cover image -->
                         <div>
-                            <b-spinner v-if="coverLoading" class="mt-2"/>
+                            <b-spinner v-if="coverLoading" class="mt-2" />
                             <cover-image
                                 v-if="hasCover"
                                 class="mt-2"
