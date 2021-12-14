@@ -4,4 +4,7 @@ module.exports = {
     },
     publicPath: process.env.NODE_ENV === 'production' ? '/admin/' : '/',
     runtimeCompiler: true,
+    css: {
+        sourceMap: true,
+    },
 };
