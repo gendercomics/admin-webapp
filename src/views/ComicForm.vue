@@ -949,6 +949,7 @@ export default {
         this.loadCreators();
         // get comic
         if (!this.$route.path.endsWith('new')) {
+            this.$log.debug('loading comic ...');
             httpClient
                 .get(this.$route.path)
                 .then(response => {
@@ -965,7 +966,12 @@ export default {
                     console.log(error);
                     this.errored = true;
                 })
-                .finally(() => (this.loading = false));
+                .finally(
+                    () => (
+                        (this.loading = false),
+                        this.$log.debug('loading comic DONE')
+                    )
+                );
         }
         // get publishers
         httpClient

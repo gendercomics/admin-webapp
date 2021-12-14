@@ -64,13 +64,11 @@ export default {
                 return this.value;
             },
             set(val) {
-                this.$log.debug('image changed: ' + val);
                 this.$emit('input', val);
             },
         },
         imageUrl() {
             if (this.localValue != null && this.localValue.length > 0) {
-                this.$log.debug('imageUrl localValue: ' + this.localValue);
                 return (
                     process.env.VUE_APP_API_URL +
                     'images/' +
