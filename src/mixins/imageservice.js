@@ -34,12 +34,14 @@ export default {
 
             await httpClient
                 .post('/files/dnb/cover/download', formData)
+                .then(response => {
+                    this.comic.cover = response.data;
+                })
                 .catch(error => {
                     console.log(error);
                     this.errored = true;
                 })
                 .finally(() => (this.coverLoading = false));
-            this.comic.cover = this.comic.isbn + '-dnb-cover.jpeg';
         },
     },
 };
