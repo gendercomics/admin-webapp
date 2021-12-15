@@ -15,11 +15,9 @@
         </div>
 
         <div class="mt-3 ml-3 mr-3">
-            <b-alert variant="warning" dismissible v-model="duplicateTitle"
-                ><font-awesome-icon icon="exclamation-triangle" /><span
-                    class="ml-2"
-                    >{{ comic.title }} already exists!</span
-                >
+            <b-alert variant="warning" dismissible v-model="duplicateTitle">
+                <font-awesome-icon icon="exclamation-triangle" />
+                <span class="ml-2">{{ comic.title }} already exists!</span>
             </b-alert>
         </div>
 
@@ -167,6 +165,54 @@
                                 :disabled="this.showKeywords"
                                 >keywords
                             </b-button>
+
+                            <!-- cover -->
+                            <b-button-group v-if="hasId">
+                                <b-button
+                                    :variant="coverBtnVariant"
+                                    @click="addCover"
+                                    :disabled="this.hasCover"
+                                    v-b-tooltip.hover
+                                    title="upload image"
+                                    >cover
+                                </b-button>
+                                <b-button
+                                    variant="outline-dark"
+                                    disabled
+                                    v-if="
+                                        !this.hasCover &&
+                                            !this.dnbCheckFinished &&
+                                            this.hasIsbn13
+                                    "
+                                >
+                                    <b-spinner small />
+                                </b-button>
+                                <b-button
+                                    v-if="coverDownloadBtnVisible"
+                                    variant="outline-dark"
+                                    v-b-tooltip.hover
+                                    title="import from DNB"
+                                    @click="downLoadDnbCover"
+                                >
+                                    <font-awesome-icon
+                                        icon="cloud-download-alt"
+                                    />
+                                </b-button>
+                            </b-button-group>
+
+                            <!-- images -->
+                            <!--
+                            <b-button-group>
+                                <b-button disabled :variant="imageBtnVariant"
+                                    >images
+                                </b-button>
+                                <b-button
+                                    variant="outline-dark"
+                                    @click="addImage"
+                                    >+
+                                </b-button>
+                            </b-button-group>
+                            -->
 
                             <!-- comments -->
                             <b-button-group>
@@ -417,6 +463,18 @@
                             v-if="showKeywords"
                         />
 
+                        <!-- cover image -->
+                        <div>
+                            <b-spinner v-if="coverLoading" class="mt-2" />
+                            <cover-image
+                                v-if="hasCover"
+                                class="mt-2"
+                                v-model="comic.cover"
+                                :comic-id="this.comic.id"
+                                @remove="removeCover"
+                            />
+                        </div>
+
                         <!-- comments -->
                         <div
                             v-for="(comment, idx_comment) in comic.comments"
@@ -460,20 +518,23 @@ import LinkField from '@/components/LinkField';
 import _ from 'lodash';
 import PublisherField from '@/components/PublisherField';
 import SeriesField from '@/components/SeriesField';
+import CoverImage from '@/components/CoverImage';
+import ImageService from '@/mixins/imageservice';
 
 export default {
     name: 'ComicForm',
-    mixins: [ComicService, PersonService, RoleService],
+    mixins: [ComicService, ImageService, PersonService, RoleService],
     components: {
-        PublisherField,
-        CommentField,
-        SearchableDropdown,
         ComicCreator,
-        TagInput,
-        InputField,
+        CommentField,
+        CoverImage,
         Header,
+        InputField,
         LinkField,
+        PublisherField,
+        SearchableDropdown,
         SeriesField,
+        TagInput,
     },
     data() {
         return {
@@ -489,17 +550,14 @@ export default {
                 printer: null,
                 year: null,
                 edition: null,
-                hyperLink: {
-                    url: null,
-                    lastAccess: null,
-                },
                 hyperLinks: [],
                 isbn: null,
-                series: null,
                 seriesList: [],
                 partOf: null,
                 genres: null,
                 keywords: null,
+                cover: null,
+                //images: [],
                 metaData: {
                     createdOn: null,
                     createdBy: null,
@@ -515,7 +573,6 @@ export default {
             loading: true,
             errored: false,
             saveSuccessful: false,
-            //selectedPublisher: null,
             types: [
                 'anthology',
                 'comic',
@@ -526,6 +583,9 @@ export default {
             ],
             showJson: false,
             duplicateTitle: false,
+            dnbHasCover: false,
+            dnbCheckFinished: false,
+            coverLoading: false,
         };
     },
     computed: {
@@ -609,6 +669,14 @@ export default {
             if (!this.hasPrinter) return 'outline-dark';
             return 'dark';
         },
+        coverBtnVariant() {
+            if (!this.hasCover) return 'outline-dark';
+            return 'dark';
+        },
+        imageBtnVariant() {
+            if (!this.hasImages) return 'outline-dark';
+            return 'dark';
+        },
         showSubtitle() {
             return this.comic.subTitle != null;
         },
@@ -686,6 +754,21 @@ export default {
                 this.comic.hyperLinks != null &&
                 this.comic.hyperLinks.length > 0
             );
+        },
+        hasCover() {
+            return this.comic.cover !== null;
+        },
+        hasImages() {
+            return this.comic.images != null;
+        },
+        hasId() {
+            return this.comic.id != null;
+        },
+        coverDownloadBtnVisible() {
+            return this.dnbHasCover && this.comic.cover == null;
+        },
+        hasIsbn13() {
+            return this.comic.isbn != null && this.comic.isbn >= 13;
         },
     },
     methods: {
@@ -846,15 +929,21 @@ export default {
                 });
             }
         },
-    },
-    created() {
-        // load roles
-        this.loadRoles();
-        // load creators (creators = searchable persons)
-        this.loadCreators();
-        // get comic
-        if (!this.$route.path.endsWith('new')) {
-            httpClient
+        addCover() {
+            this.comic.cover = '';
+        },
+        removeCover() {
+            this.comic.cover = null;
+        },
+        addImage() {
+            if (this.comic.images == null) {
+                this.comic.images = [];
+            }
+            this.comic.images.push({});
+        },
+        async loadComic() {
+            this.$log.debug('loading comic ...');
+            await httpClient
                 .get(this.$route.path)
                 .then(response => {
                     this.comic = response.data;
@@ -869,7 +958,23 @@ export default {
                     console.log(error);
                     this.errored = true;
                 })
-                .finally(() => (this.loading = false));
+                .finally(
+                    () => (
+                        (this.loading = false),
+                        this.$log.debug('loading comic DONE'),
+                        this.checkDnbCover(this.comic.isbn)
+                    )
+                );
+        },
+    },
+    created() {
+        // load roles
+        this.loadRoles();
+        // load creators (creators = searchable persons)
+        this.loadCreators();
+        // get comic
+        if (!this.$route.path.endsWith('new')) {
+            this.loadComic();
         }
         // get publishers
         httpClient

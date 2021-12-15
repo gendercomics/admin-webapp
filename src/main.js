@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import {
     faBackspace,
     faCheckCircle,
+    faCloudDownloadAlt,
     faEdit,
     faExclamationTriangle,
     faExternalLinkAlt,
@@ -22,6 +23,7 @@ import {
     faTimesCircle,
     faTrashAlt,
     faUser,
+    faUserCircle,
     faUserSecret,
 } from '@fortawesome/free-solid-svg-icons';
 import { faComment } from '@fortawesome/free-regular-svg-icons';
@@ -31,6 +33,7 @@ import AuthService from './services/authservice';
 library.add(
     faBackspace,
     faCheckCircle,
+    faCloudDownloadAlt,
     faComment,
     faEdit,
     faExclamationTriangle,
@@ -43,6 +46,7 @@ library.add(
     faTimesCircle,
     faTrashAlt,
     faUser,
+    faUserCircle,
     faUserSecret
 );
 

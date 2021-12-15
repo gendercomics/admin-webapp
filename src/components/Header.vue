@@ -30,7 +30,7 @@
                 <b-nav-item-dropdown right>
                     <!-- Using 'button-content' slot -->
                     <template v-slot:button-content>
-                        <em>User</em>
+                        <font-awesome-icon icon="user-circle" size="lg" />
                     </template>
                     <b-dropdown-item href="#" disabled>profile</b-dropdown-item>
                     <b-dropdown-item to="logout">logout</b-dropdown-item>
