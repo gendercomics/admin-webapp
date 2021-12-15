@@ -24,6 +24,8 @@ export default {
                         this.errored = true;
                     })
                     .finally(() => (this.loading = false));
+            } else {
+                this.$log.debug('no isbn13');
             }
             this.$log.debug('checkDnbCover=' + this.dnbHasCover);
         },
