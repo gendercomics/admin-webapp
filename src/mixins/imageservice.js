@@ -8,10 +8,10 @@ export default {
     },
     created: function() {},
     methods: {
-        async checkDnbCover() {
+        checkDnbCover() {
             this.$log.debug('checking DNB cover ...');
             if (this.hasIsbn13) {
-                await httpClient
+                httpClient
                     .get('/files/dnb/cover/available/' + this.comic.isbn)
                     .then(
                         response => (
@@ -27,7 +27,6 @@ export default {
             } else {
                 this.$log.debug('no isbn13');
             }
-            this.$log.debug('checkDnbCover=' + this.dnbHasCover);
         },
         async downLoadDnbCover() {
             this.coverLoading = true;

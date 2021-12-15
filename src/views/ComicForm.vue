@@ -941,16 +941,9 @@ export default {
             }
             this.comic.images.push({});
         },
-    },
-    created() {
-        // load roles
-        this.loadRoles();
-        // load creators (creators = searchable persons)
-        this.loadCreators();
-        // get comic
-        if (!this.$route.path.endsWith('new')) {
+        async loadComic() {
             this.$log.debug('loading comic ...');
-            httpClient
+            await httpClient
                 .get(this.$route.path)
                 .then(response => {
                     this.comic = response.data;
@@ -959,7 +952,6 @@ export default {
                     }
                     this.$nextTick(() => {
                         this.initPublisherOverrides();
-                        this.checkDnbCover();
                     });
                 })
                 .catch(error => {
@@ -969,9 +961,20 @@ export default {
                 .finally(
                     () => (
                         (this.loading = false),
-                        this.$log.debug('loading comic DONE')
+                        this.$log.debug('loading comic DONE'),
+                        this.checkDnbCover()
                     )
                 );
+        },
+    },
+    created() {
+        // load roles
+        this.loadRoles();
+        // load creators (creators = searchable persons)
+        this.loadCreators();
+        // get comic
+        if (!this.$route.path.endsWith('new')) {
+            this.loadComic();
         }
         // get publishers
         httpClient
