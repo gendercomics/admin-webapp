@@ -8,6 +8,10 @@
 
 ## Release Notes
 ---
+### gendercomics-admin-webapp-1.13.0
+- TODO
+
+---
 ### gendercomics-admin-webapp-1.12.0
 #### Comic Detailansicht
 - Cover Upload & Cover Download von DNB (falls bei DNB ein Cover-Bild existiert)
