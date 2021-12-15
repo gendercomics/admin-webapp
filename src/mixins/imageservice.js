@@ -8,11 +8,11 @@ export default {
     },
     created: function() {},
     methods: {
-        checkDnbCover() {
-            this.$log.debug('checking DNB cover ...');
-            if (this.hasIsbn13) {
+        checkDnbCover(isbn) {
+            this.$log.debug('checking DNB cover for isbn: ' + isbn);
+            if (isbn != null && isbn.length >= 13) {
                 httpClient
-                    .get('/files/dnb/cover/available/' + this.comic.isbn)
+                    .get('/files/dnb/cover/available/' + isbn)
                     .then(
                         response => (
                             (this.dnbHasCover = response.data),

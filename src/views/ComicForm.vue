@@ -962,7 +962,7 @@ export default {
                     () => (
                         (this.loading = false),
                         this.$log.debug('loading comic DONE'),
-                        this.checkDnbCover()
+                        this.checkDnbCover(this.comic.isbn)
                     )
                 );
         },
