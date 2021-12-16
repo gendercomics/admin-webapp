@@ -85,6 +85,7 @@
                     :filter="filter"
                     :filterIncludedFields="filterOn"
                     @filtered="onFiltered"
+                    :busy="loading"
                 >
                     <template v-slot:cell(actions)="row">
                         <b-button
@@ -151,6 +152,14 @@
                             data.item.metaData.createdBy
                         }}</span>
                         <span v-else>{{ data.item.metaData.changedBy }}</span>
+                    </template>
+
+                    <!-- busy spinner -->
+                    <template #table-busy>
+                        <div class="text-center text-black-50 my-2">
+                            <b-spinner class="align-middle" />
+                            <strong>loading...</strong>
+                        </div>
                     </template>
                 </b-table>
             </b-row>

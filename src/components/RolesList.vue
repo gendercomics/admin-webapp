@@ -85,6 +85,7 @@
                     :filter="filter"
                     :filterIncludedFields="filterOn"
                     @filtered="onFiltered"
+                    :busy="loading"
                 >
                     <!-- state -->
                     <template v-slot:cell(metaData.status)="row">
@@ -151,6 +152,14 @@
                                 title="delete"
                             />
                         </b-button>
+                    </template>
+
+                    <!-- busy spinner -->
+                    <template #table-busy>
+                        <div class="text-center text-black-50 my-2">
+                            <b-spinner class="align-middle" />
+                            <strong>loading...</strong>
+                        </div>
                     </template>
                 </b-table>
             </b-row>
