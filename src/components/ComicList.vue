@@ -234,10 +234,6 @@
                 </b-table>
             </b-row>
         </b-container>
-
-        <b-modal id="confirm-delete" title="delete comic?">
-            <span>oida?</span>
-        </b-modal>
     </div>
 </template>
 
