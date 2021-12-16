@@ -9,7 +9,10 @@
 ## Release Notes
 ---
 ### gendercomics-admin-webapp-1.13.0
-- TODO
+#### Alle Listen
+- Lade-Spinner für alle Listen (comics, persons, publishers, roles, keywords)
+#### Comic Liste
+- Filterbegriff wird gespeichert (im Browser), bei Rückkehr zur Liste wird der gespeicherte Suchbegriff verwendet
 
 ---
 ### gendercomics-admin-webapp-1.12.0
