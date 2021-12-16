@@ -87,36 +87,6 @@
                     @filtered="onFiltered"
                     :busy="loading"
                 >
-                    <template v-slot:cell(actions)="row">
-                        <b-button
-                            variant="light"
-                            size="sm"
-                            @click="edit(row.item)"
-                            class="mr-1"
-                        >
-                            <font-awesome-icon
-                                icon="edit"
-                                v-b-tooltip
-                                title="edit"
-                            />
-                        </b-button>
-
-                        <!-- delete button -->
-                        <b-button
-                            v-show="row.item.metaData.status === 'DRAFT'"
-                            variant="light"
-                            size="sm"
-                            class="mr-1"
-                            @click="deleteKeyword(row.item)"
-                        >
-                            <font-awesome-icon
-                                icon="trash-alt"
-                                v-b-tooltip
-                                title="delete"
-                            />
-                        </b-button>
-                    </template>
-
                     <template v-slot:cell(metaData.status)="row">
                         <span v-if="row.item.metaData.status === 'DRAFT'"
                             ><b-badge variant="secondary">draft</b-badge></span
@@ -154,6 +124,24 @@
                         <span v-else>{{ data.item.metaData.changedBy }}</span>
                     </template>
 
+                    <!-- action buttons -->
+                    <template v-slot:cell(actions)="row">
+                        <!-- delete button -->
+                        <b-button
+                            v-show="row.item.metaData.status === 'DRAFT'"
+                            variant="light"
+                            size="sm"
+                            class="mr-1"
+                            @click="showDeleteModal(row.item)"
+                        >
+                            <font-awesome-icon
+                                icon="trash-alt"
+                                v-b-tooltip
+                                title="delete"
+                            />
+                        </b-button>
+                    </template>
+
                     <!-- busy spinner -->
                     <template #table-busy>
                         <div class="text-center text-black-50 my-2">
@@ -176,13 +164,13 @@ export default {
     data() {
         return {
             fields: [
-                { key: 'actions', label: 'actions' },
                 { key: 'metaData.status', label: 'status' },
                 { key: 'values.de.name', label: 'keyword [de]' },
                 { key: 'values.en.name', label: 'keyword [en]' },
                 { key: 'type', label: 'type' },
                 { key: 'metaData.changedOn', label: 'created/modified' },
                 { key: 'metaData.changedBy', label: 'by' },
+                { key: 'actions', label: 'actions' },
             ],
             keywords: null,
             loading: true,
@@ -230,6 +218,14 @@ export default {
                 })
                 .finally(() => (this.loading = false));
             this.keywords.splice(this.keywords.indexOf(item), 1);
+        },
+        showDeleteModal(item) {
+            this.$bvModal.msgBoxConfirm('sure???').then(confirmed => {
+                this.$log.debug('delete id:' + item.id + ': ' + confirmed);
+                if (confirmed) {
+                    this.deleteKeyword(item);
+                }
+            });
         },
     },
 };
