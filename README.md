@@ -10,6 +10,11 @@
 
 ---
 
+### gendercomics-admin-webapp-1.14.0
+- TODO
+
+---
+
 ### gendercomics-admin-webapp-1.13.0
 #### Alle Listen
 -   Lade-Spinner für alle Listen (comics, persons, publishers, roles, keywords)
