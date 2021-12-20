@@ -85,38 +85,8 @@
                     :filter="filter"
                     :filterIncludedFields="filterOn"
                     @filtered="onFiltered"
+                    :busy="this.loading"
                 >
-                    <template v-slot:cell(actions)="row">
-                        <!-- edit button -->
-                        <b-button
-                            variant="light"
-                            size="sm"
-                            @click="edit(row.item)"
-                            class="mr-1"
-                        >
-                            <font-awesome-icon
-                                icon="edit"
-                                v-b-tooltip
-                                title="edit"
-                            />
-                        </b-button>
-
-                        <!-- delete button -->
-                        <b-button
-                            v-show="row.item.metaData.status === 'DRAFT'"
-                            variant="light"
-                            size="sm"
-                            class="mr-1"
-                            @click="deletePerson(row.item)"
-                        >
-                            <font-awesome-icon
-                                icon="trash-alt"
-                                v-b-tooltip
-                                title="delete"
-                            />
-                        </b-button>
-                    </template>
-
                     <template v-slot:cell(metaData.status)="row">
                         <span v-if="row.item.metaData.status === 'DRAFT'"
                             ><b-badge variant="secondary">draft</b-badge></span
@@ -134,7 +104,9 @@
                             v-for="nameObj in data.item.names"
                             v-bind:key="nameObj.id"
                         >
-                            <span>{{ fullName(nameObj) }}</span>
+                            <b-link :to="'/persons/' + data.item.id">{{
+                                fullName(nameObj)
+                            }}</b-link>
                         </div>
                     </template>
 
@@ -171,6 +143,32 @@
                         }}</span>
                         <span v-else>{{ data.item.metaData.changedBy }}</span>
                     </template>
+
+                    <!-- action buttons -->
+                    <template v-slot:cell(actions)="row">
+                        <!-- delete button -->
+                        <b-button
+                            v-show="row.item.metaData.status === 'DRAFT'"
+                            variant="light"
+                            size="sm"
+                            class="mr-1"
+                            @click="showDeleteModal(row.item)"
+                        >
+                            <font-awesome-icon
+                                icon="trash-alt"
+                                v-b-tooltip
+                                title="delete"
+                            />
+                        </b-button>
+                    </template>
+
+                    <!-- busy spinner -->
+                    <template #table-busy>
+                        <div class="text-center text-black-50 my-2">
+                            <b-spinner class="align-middle" />
+                            <strong>loading...</strong>
+                        </div>
+                    </template>
                 </b-table>
             </b-row>
         </b-container>
@@ -186,12 +184,12 @@ export default {
     data() {
         return {
             fields: [
-                { key: 'actions', label: 'actions' },
                 { key: 'metaData.status', label: 'status' },
                 { key: 'name', label: 'name/pseudonym' },
                 { key: 'wikiData', label: 'wikidata' },
                 { key: 'metaData.changedOn', label: 'created/modified' },
                 { key: 'metaData.changedBy', label: 'by' },
+                { key: 'actions', label: 'actions' },
             ],
             persons: null,
             loading: true,
@@ -201,7 +199,7 @@ export default {
             totalRows: 1,
             currentPage: 1,
             perPage: 10,
-            pageOptions: [10, 20, 50],
+            pageOptions: [10, 20, 50, 100],
         };
     },
     mounted() {
@@ -226,7 +224,6 @@ export default {
         },
         deletePerson(item) {
             console.log('delete item: ' + item.id);
-            // TODO display warning modal?
             httpClient
                 .delete('/persons/' + item.id, item)
                 .catch(error => {
@@ -247,6 +244,14 @@ export default {
         fullName(nameObj) {
             if (nameObj.name !== null) return nameObj.name;
             return nameObj.firstName + ' ' + nameObj.lastName;
+        },
+        showDeleteModal(item) {
+            this.$bvModal.msgBoxConfirm('sure???').then(confirmed => {
+                this.$log.debug('delete id:' + item.id + ': ' + confirmed);
+                if (confirmed) {
+                    this.deletePerson(item);
+                }
+            });
         },
     },
 };

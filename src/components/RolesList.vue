@@ -85,6 +85,7 @@
                     :filter="filter"
                     :filterIncludedFields="filterOn"
                     @filtered="onFiltered"
+                    :busy="loading"
                 >
                     <!-- state -->
                     <template v-slot:cell(metaData.status)="row">
@@ -143,7 +144,7 @@
                             variant="light"
                             size="sm"
                             class="mr-1"
-                            @click="deleteRole(row.item)"
+                            @click="showDeleteModal(row.item)"
                         >
                             <font-awesome-icon
                                 icon="trash-alt"
@@ -151,6 +152,14 @@
                                 title="delete"
                             />
                         </b-button>
+                    </template>
+
+                    <!-- busy spinner -->
+                    <template #table-busy>
+                        <div class="text-center text-black-50 my-2">
+                            <b-spinner class="align-middle" />
+                            <strong>loading...</strong>
+                        </div>
                     </template>
                 </b-table>
             </b-row>
@@ -201,7 +210,6 @@ export default {
         },
         deleteRole(item) {
             console.log('delete role: ' + item.name);
-            // TODO display warning modal?
             httpClient
                 .delete('/roles/' + item.id, item)
                 .catch(error => {
@@ -215,6 +223,14 @@ export default {
             // Trigger pagination to update the number of buttons/pages due to filtering
             this.totalRows = filteredItems.length;
             this.currentPage = 1;
+        },
+        showDeleteModal(item) {
+            this.$bvModal.msgBoxConfirm('sure???').then(confirmed => {
+                this.$log.debug('delete id:' + item.id + ': ' + confirmed);
+                if (confirmed) {
+                    this.deleteRole(item);
+                }
+            });
         },
     },
 };

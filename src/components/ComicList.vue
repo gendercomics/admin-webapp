@@ -104,6 +104,7 @@
                     :filter="filter"
                     :filter-function="customFilter"
                     @filtered="onFiltered"
+                    :busy="this.loading"
                 >
                     <!-- status -->
                     <template v-slot:cell(metaData.status)="row">
@@ -222,13 +223,17 @@
                             />
                         </b-button>
                     </template>
+
+                    <!-- busy spinner -->
+                    <template #table-busy>
+                        <div class="text-center text-black-50 my-2">
+                            <b-spinner class="align-middle" />
+                            <strong>loading...</strong>
+                        </div>
+                    </template>
                 </b-table>
             </b-row>
         </b-container>
-
-        <b-modal id="confirm-delete" title="delete comic?">
-            <span>oida?</span>
-        </b-modal>
     </div>
 </template>
 
@@ -284,6 +289,12 @@ export default {
                 this.$log.debug('localStorage.perPage=' + localStorage.perPage);
                 this.perPage = localStorage.perPage;
             }
+            if (localStorage.textFilter) {
+                this.$log.debug(
+                    'localStorage.textFilter=' + localStorage.textFilter
+                );
+                this.textFilter = localStorage.textFilter;
+            }
         });
     },
     watch: {
@@ -292,6 +303,9 @@ export default {
         },
         perPage(newVal) {
             localStorage.perPage = newVal;
+        },
+        textFilter(newVal) {
+            localStorage.textFilter = newVal;
         },
     },
     methods: {
@@ -316,6 +330,7 @@ export default {
         onFiltered(filteredItems) {
             // Trigger pagination to update the number of buttons/pages due to filtering
             this.totalRows = filteredItems.length;
+            // TODO set currentPage from localStorage or set to 1 if filter has changed
             this.currentPage = 1;
         },
         customFilter(row, filter) {
@@ -434,7 +449,6 @@ export default {
         },
         deleteComic(item) {
             console.log('delete comic: ' + item.title);
-            // TODO display warning modal?
             httpClient
                 .delete('/comics/' + item.id, item)
                 .catch(error => {
