@@ -5,16 +5,38 @@
                 <b-col lg="5" class="my-1">
                     <b-form-group label-for="filterInput">
                         <b-input-group size="sm">
+                            <b-button
+                                size="sm"
+                                @click="browseMode = !browseMode"
+                                ><font-awesome-icon
+                                    v-show="browseMode"
+                                    icon="database"
+                                /><font-awesome-icon
+                                    v-show="!browseMode"
+                                    icon="search"
+                                />
+                            </b-button>
+
                             <b-form-input
+                                v-show="browseMode"
                                 v-model="textFilter"
                                 type="search"
                                 id="filterInput"
-                                placeholder="Type to Search"
+                                placeholder="type to filter"
                             />
+                            <b-form-input
+                                v-show="!browseMode"
+                                v-model="searchTerm"
+                                type="search"
+                                id="searchInput"
+                                placeholder="type to search"
+                                @input="searchComics"
+                            />
+
                             <b-input-group-append>
                                 <b-button
-                                    :disabled="!textFilter"
-                                    @click="textFilter = ''"
+                                    :disabled="!textFilter && !searchTerm"
+                                    @click="clearSearchTermAndFilter"
                                     >Clear
                                 </b-button>
                             </b-input-group-append>
@@ -28,8 +50,9 @@
                         size="sm"
                         v-b-toggle.filter-collapse
                         class="m-1"
-                        >filter ...</b-button
-                    >
+                        :variant="filterBtnVariant"
+                        ><font-awesome-icon icon="filter" />
+                    </b-button>
                 </b-col>
 
                 <b-col sm="1" md="1" class="my-1">
@@ -239,9 +262,12 @@
 
 <script>
 import { httpClient } from '../services/httpclient';
+import _ from 'lodash';
+import Comicservice from '@/mixins/comicservice';
 //import { getters, mutations } from '@/services/store';
 export default {
     name: 'ComicList',
+    mixins: [Comicservice],
 
     data() {
         return {
@@ -274,10 +300,12 @@ export default {
             currentPage: 1,
             perPage: 20,
             pageOptions: [10, 20, 50, 100],
+            browseMode: false,
+            searchTerm: '',
         };
     },
     mounted() {
-        this.loadComicList();
+        //this.loadComicList();
         this.$nextTick(() => {
             if (localStorage.currentPage) {
                 this.$log.debug(
@@ -295,7 +323,14 @@ export default {
                 );
                 this.textFilter = localStorage.textFilter;
             }
+            if (localStorage.browseMode) {
+                this.$log.debug(
+                    'localStorage.browseMode=' + localStorage.browseMode
+                );
+                this.browseMode = localStorage.browseMode;
+            }
         });
+        this.loading = false;
     },
     watch: {
         currentPage(newVal) {
@@ -307,12 +342,19 @@ export default {
         textFilter(newVal) {
             localStorage.textFilter = newVal;
         },
+        browseMode(newVal) {
+            localStorage.browseMode = newVal;
+            if (newVal) {
+                this.loadComicList();
+            }
+        },
     },
     methods: {
         edit(item) {
             this.$router.push('/comics/' + item.id);
         },
         loadComicList() {
+            this.loading = true;
             httpClient
                 .get('/comicsList')
                 .then(
@@ -524,6 +566,17 @@ export default {
             }
             return '';
         },
+        searchComics: _.debounce(function(val) {
+            this.$log.debug('search=' + val);
+            let vm = this;
+            this.search(val).then(function(response) {
+                vm.$data.comics = response;
+            });
+        }, 500),
+        clearSearchTermAndFilter() {
+            this.textFilter = '';
+            this.searchTerm = '';
+        },
     },
     computed: {
         filter: function() {
@@ -531,6 +584,13 @@ export default {
                 return null;
             }
             return [this.textFilter, this.statusFilter];
+        },
+        isFilter() {
+            return this.statusFilter.length < 4 || this.typeFilter.length < 6;
+        },
+        filterBtnVariant() {
+            if (this.isFilter) return 'warning';
+            return 'secondary';
         },
         //statusFilter: ['DRAFT', 'CLARIFICATION', 'REVIEW', 'FINAL'],
         //statusFilter: {
