@@ -9,23 +9,23 @@
                                 size="sm"
                                 @click="browseMode = !browseMode"
                                 ><font-awesome-icon
-                                    v-show="browseMode"
+                                    v-if="browseMode"
                                     icon="database"
                                 /><font-awesome-icon
-                                    v-show="!browseMode"
+                                    v-if="!browseMode"
                                     icon="search"
                                 />
                             </b-button>
 
                             <b-form-input
-                                v-show="browseMode"
+                                v-if="browseMode"
                                 v-model="textFilter"
                                 type="search"
                                 id="filterInput"
                                 placeholder="type to filter"
                             />
                             <b-form-input
-                                v-show="!browseMode"
+                                v-if="!browseMode"
                                 v-model="searchTerm"
                                 type="search"
                                 id="searchInput"
@@ -34,9 +34,7 @@
                             />
 
                             <b-input-group-append>
-                                <b-button
-                                    :disabled="!textFilter && !searchTerm"
-                                    @click="clearSearchTermAndFilter"
+                                <b-button @click="clearSearchTermAndFilter"
                                     >Clear
                                 </b-button>
                             </b-input-group-append>
@@ -261,13 +259,13 @@
 </template>
 
 <script>
-import { httpClient } from '../services/httpclient';
+import { httpClient } from '@/services/httpclient';
 import _ from 'lodash';
-import Comicservice from '@/mixins/comicservice';
-//import { getters, mutations } from '@/services/store';
+import ComicService from '@/mixins/comicservice';
+import { getters, mutations } from '@/services/store';
 export default {
     name: 'ComicList',
-    mixins: [Comicservice],
+    mixins: [ComicService],
 
     data() {
         return {
@@ -285,7 +283,6 @@ export default {
             comics: null,
             loading: true,
             errored: false,
-            textFilter: '',
             statusFilter: ['DRAFT', 'CLARIFICATION', 'REVIEW', 'FINAL'],
             typeFilter: [
                 'anthology',
@@ -297,22 +294,17 @@ export default {
             ],
             filterOn: [],
             totalRows: 1,
-            currentPage: 1,
             perPage: 20,
             pageOptions: [10, 20, 50, 100],
-            browseMode: false,
-            searchTerm: '',
         };
     },
     mounted() {
-        //this.loadComicList();
+        if (this.browseMode) {
+            this.loading = true;
+            this.loadComicList();
+        }
+
         this.$nextTick(() => {
-            if (localStorage.currentPage) {
-                this.$log.debug(
-                    'localStorage.currentPage=' + localStorage.currentPage
-                );
-                this.currentPage = localStorage.currentPage;
-            }
             if (localStorage.perPage) {
                 this.$log.debug('localStorage.perPage=' + localStorage.perPage);
                 this.perPage = localStorage.perPage;
@@ -323,12 +315,9 @@ export default {
                 );
                 this.textFilter = localStorage.textFilter;
             }
-            if (localStorage.browseMode) {
-                this.$log.debug(
-                    'localStorage.browseMode=' + localStorage.browseMode
-                );
-                this.browseMode = localStorage.browseMode;
-            }
+            this.$log.debug('store.browseMode=' + this.browseMode);
+            this.$log.debug('store.page=' + this.currentPage);
+            this.$log.debug('store.searchTerm=' + this.searchTerm);
         });
         this.loading = false;
     },
@@ -341,9 +330,10 @@ export default {
         },
         textFilter(newVal) {
             localStorage.textFilter = newVal;
+            this.searchTerm = '';
         },
         browseMode(newVal) {
-            localStorage.browseMode = newVal;
+            this.$log.debug('browseMode(' + newVal + ')');
             if (newVal) {
                 this.loadComicList();
             }
@@ -567,6 +557,7 @@ export default {
             return '';
         },
         searchComics: _.debounce(function(val) {
+            this.loading = true;
             this.$log.debug('search=' + val);
             let vm = this;
             this.search(val).then(function(response) {
@@ -592,6 +583,39 @@ export default {
             if (this.isFilter) return 'warning';
             return 'secondary';
         },
+        searchTerm: {
+            get() {
+                return getters.searchTerm();
+            },
+            set(val) {
+                mutations.setSearchTerm(val);
+            },
+        },
+        textFilter: {
+            get() {
+                return getters.textFilter();
+            },
+            set(val) {
+                mutations.setTextFilter(val);
+            },
+        },
+        browseMode: {
+            get() {
+                return getters.browseMode();
+            },
+            set(val) {
+                mutations.setBrowseMode(val);
+            },
+        },
+        currentPage: {
+            get() {
+                return getters.page();
+            },
+            set(val) {
+                mutations.setPage(val);
+            },
+        },
+
         //statusFilter: ['DRAFT', 'CLARIFICATION', 'REVIEW', 'FINAL'],
         //statusFilter: {
         //    get() {
