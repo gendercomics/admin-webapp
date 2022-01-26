@@ -99,6 +99,18 @@
                         >
                     </template>
 
+                    <template v-slot:cell(values.de.name)="row">
+                        <b-link :to="'/keywords/' + row.item.id">{{
+                            row.item.values.de.name
+                        }}</b-link>
+                    </template>
+
+                    <template v-slot:cell(values.en.name)="row">
+                        <b-link :to="'/keywords/' + row.item.id">{{
+                            row.item.values.en.name
+                        }}</b-link>
+                    </template>
+
                     <template v-slot:cell(metaData.changedOn)="data">
                         <span
                             v-if="
