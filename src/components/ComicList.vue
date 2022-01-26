@@ -299,12 +299,13 @@ export default {
         };
     },
     mounted() {
-        if (this.browseMode) {
-            this.loading = true;
-            this.loadComicList();
-        }
+        this.$log.debug('..mounted..loading=' + this.loading);
 
         this.$nextTick(() => {
+            if (this.browseMode) {
+                this.loadComicList();
+            }
+
             if (localStorage.perPage) {
                 this.$log.debug('localStorage.perPage=' + localStorage.perPage);
                 this.perPage = localStorage.perPage;
@@ -319,6 +320,7 @@ export default {
             this.$log.debug('store.page=' + this.currentPage);
             this.$log.debug('store.searchTerm=' + this.searchTerm);
         });
+
         this.loading = false;
     },
     watch: {
@@ -532,9 +534,9 @@ export default {
                 let text = '';
                 item.seriesList.forEach(series => {
                     if (series.comic.type === 'comic_series') {
-                        text += series.comic.title + '.';
+                        text += series.comic.title;
                         if (series.comic.subTitle != null) {
-                            text += ' ' + series.comic.subTitle + '.';
+                            text += '. ' + series.comic.subTitle;
                         }
                     }
                 });
@@ -585,10 +587,12 @@ export default {
         },
         searchTerm: {
             get() {
+                //return this.$store.state.comicList.searchTerm;
                 return getters.searchTerm();
             },
             set(val) {
                 mutations.setSearchTerm(val);
+                //this.$store.commit("comicList/searchTerm", val)
             },
         },
         textFilter: {
