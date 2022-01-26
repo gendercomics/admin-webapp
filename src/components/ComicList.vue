@@ -302,10 +302,6 @@ export default {
         this.$log.debug('..mounted..loading=' + this.loading);
 
         this.$nextTick(() => {
-            if (this.browseMode) {
-                this.loadComicList();
-            }
-
             if (localStorage.perPage) {
                 this.$log.debug('localStorage.perPage=' + localStorage.perPage);
                 this.perPage = localStorage.perPage;
@@ -319,6 +315,14 @@ export default {
             this.$log.debug('store.browseMode=' + this.browseMode);
             this.$log.debug('store.page=' + this.currentPage);
             this.$log.debug('store.searchTerm=' + this.searchTerm);
+
+            if (this.browseMode) {
+                this.loadComicList();
+            } else {
+                if (this.searchTerm != null && this.searchTerm.length > 0) {
+                    this.searchComics(this.searchTerm);
+                }
+            }
         });
 
         this.loading = false;
