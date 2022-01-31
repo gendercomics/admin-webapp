@@ -30,6 +30,9 @@ export default {
                     '/search/',
                     formData
                 );
+                if (this.isComicListEmpty(response)) {
+                    return [];
+                }
                 return response;
             } catch (error) {
                 this.$log.error(error);
@@ -37,6 +40,9 @@ export default {
             } finally {
                 this.loading = false;
             }
+        },
+        isComicListEmpty(comicList) {
+            return comicList === '';
         },
     },
 };
