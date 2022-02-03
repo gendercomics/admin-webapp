@@ -157,10 +157,30 @@
 
                     <!-- title (+ subtitle) -->
                     <template v-slot:cell(title)="row">
-                        <b-link :to="'/comics/' + seriesComicId(row.item)">
-                            {{ seriesTitleAndSubtitle(row.item) }}
-                        </b-link>
-                        <span>{{ seriesVolume(row.item) }}</span>
+                        <span
+                            v-if="
+                                seriesTitleAndSubtitle(row.item, 'comic_series')
+                            "
+                        >
+                            <b-link
+                                :to="
+                                    '/comics/' +
+                                        seriesComicId(row.item, 'comic_series')
+                                "
+                            >
+                                {{
+                                    seriesTitleAndSubtitle(
+                                        row.item,
+                                        'comic_series'
+                                    )
+                                }}
+                            </b-link>
+
+                            <span>
+                                {{ seriesVolume(row.item, 'comic_series') }}
+                            </span>
+                            <span>: </span>
+                        </span>
 
                         <b-link :to="'/comics/' + row.item.id">{{
                             row.item.nameForWebAppList
@@ -176,6 +196,45 @@
                                 >
                                     {{ parentDisplayText(row.item) }}
                                 </b-link>
+                            </span>
+                        </div>
+
+                        <div
+                            v-if="
+                                seriesComicId(row.item, 'publishing_series')
+                                    .length > 0
+                            "
+                        >
+                            <span class="small"
+                                >series:
+                                <b-link
+                                    :to="
+                                        '/comics/' +
+                                            seriesComicId(
+                                                row.item,
+                                                'publishing_series'
+                                            )
+                                    "
+                                >
+                                    {{
+                                        seriesTitleAndSubtitle(
+                                            row.item,
+                                            'publishing_series'
+                                        )
+                                    }}
+                                </b-link>
+                                <span
+                                    v-if="
+                                        seriesVolume(
+                                            row.item,
+                                            'publishing_series'
+                                        ).length > 0
+                                    "
+                                    >:</span
+                                >
+                                <span>{{
+                                    seriesVolume(row.item, 'publishing_series')
+                                }}</span>
                             </span>
                         </div>
                     </template>
@@ -522,22 +581,22 @@ export default {
                 }
             });
         },
-        seriesComicId(item) {
+        seriesComicId(item, seriesType) {
             let id = '';
             if (item.seriesList != null) {
                 item.seriesList.forEach(series => {
-                    if (series.comic.type === 'comic_series') {
+                    if (series.comic.type === seriesType) {
                         id = series.comic.id;
                     }
                 });
             }
             return id;
         },
-        seriesTitleAndSubtitle(item) {
+        seriesTitleAndSubtitle(item, seriesType) {
             if (item.seriesList != null) {
                 let text = '';
                 item.seriesList.forEach(series => {
-                    if (series.comic.type === 'comic_series') {
+                    if (series.comic.type === seriesType) {
                         text += series.comic.title;
                         if (series.comic.subTitle != null) {
                             text += '. ' + series.comic.subTitle;
@@ -548,14 +607,14 @@ export default {
             }
             return '';
         },
-        seriesVolume(item) {
+        seriesVolume(item, seriesType) {
             if (item.seriesList != null) {
                 let text = '';
                 item.seriesList.forEach(series => {
-                    if (series.comic.type === 'comic_series') {
+                    if (series.comic.type === seriesType) {
                         if (series.volume != null) {
-                            text += ' ' + series.volume + ': ';
-                        } else text += ': ';
+                            text += ' ' + series.volume;
+                        }
                     }
                 });
                 return text;
@@ -563,12 +622,14 @@ export default {
             return '';
         },
         searchComics: _.debounce(function(val) {
-            this.loading = true;
-            this.$log.debug('search=' + val);
-            let vm = this;
-            this.search(val).then(function(response) {
-                vm.$data.comics = response;
-            });
+            if (val.length > 0) {
+                this.loading = true;
+                this.$log.debug('search=' + val);
+                let vm = this;
+                this.search(val).then(function(response) {
+                    vm.$data.comics = response;
+                });
+            }
         }, 500),
         clearSearchTermAndFilter() {
             this.textFilter = '';
