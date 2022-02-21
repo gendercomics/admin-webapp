@@ -376,16 +376,6 @@ export default {
         this.loading = false;
     },
     watch: {
-        currentPage(newVal) {
-            localStorage.currentPage = newVal;
-        },
-        perPage(newVal) {
-            localStorage.perPage = newVal;
-        },
-        textFilter(newVal) {
-            localStorage.textFilter = newVal;
-            this.searchTerm = '';
-        },
         browseMode(newVal) {
             this.$log.debug('browseMode(' + newVal + ')');
             if (newVal) {
