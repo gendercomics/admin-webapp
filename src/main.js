@@ -6,7 +6,6 @@ import VueLogger from 'vuejs-logger';
 import BootstrapVue from 'bootstrap-vue';
 import './styles/styles.scss';
 import moment from 'moment';
-import store from '@/store';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import {
@@ -117,5 +116,3 @@ Vue.prototype.keycloak
     .error(() => {
         Vue.$log.error('Authentication failed!');
     });
-
-Vue.use(store);
