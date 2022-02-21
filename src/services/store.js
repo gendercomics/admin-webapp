@@ -9,6 +9,7 @@ const state = Vue.observable({
     searchTerm: '',
     textFilter: '',
     page: 1,
+    perPage: 20,
     browseMode: false,
 });
 
@@ -18,6 +19,7 @@ export const getters = {
     textFilter: () => state.textFilter,
     filter: () => state.filter,
     page: () => state.page,
+    perPage: () => state.perPage,
     browseMode: () => state.browseMode,
 };
 
@@ -29,5 +31,6 @@ export const mutations = {
     setLanguage: val => (state.language = val),
     setSearchTerm: val => (state.searchTerm = val),
     setPage: val => (state.page = val),
+    setPerPage: val => (state.perPage = val),
     setBrowseMode: val => (state.browseMode = val),
 };

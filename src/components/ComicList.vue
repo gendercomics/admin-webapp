@@ -353,27 +353,16 @@ export default {
             ],
             filterOn: [],
             totalRows: 1,
-            perPage: 20,
             pageOptions: [10, 20, 50, 100],
         };
     },
     mounted() {
-        this.$log.debug('..mounted..loading=' + this.loading);
-
         this.$nextTick(() => {
-            if (localStorage.perPage) {
-                this.$log.debug('localStorage.perPage=' + localStorage.perPage);
-                this.perPage = localStorage.perPage;
-            }
-            if (localStorage.textFilter) {
-                this.$log.debug(
-                    'localStorage.textFilter=' + localStorage.textFilter
-                );
-                this.textFilter = localStorage.textFilter;
-            }
             this.$log.debug('store.browseMode=' + this.browseMode);
             this.$log.debug('store.page=' + this.currentPage);
+            this.$log.debug('store.perPage=' + this.perPage);
             this.$log.debug('store.searchTerm=' + this.searchTerm);
+            this.$log.debug('store.textFilter=' + this.textFilter);
 
             if (this.browseMode) {
                 this.loadComicList();
@@ -652,12 +641,10 @@ export default {
         },
         searchTerm: {
             get() {
-                //return this.$store.state.comicList.searchTerm;
                 return getters.searchTerm();
             },
             set(val) {
                 mutations.setSearchTerm(val);
-                //this.$store.commit("comicList/searchTerm", val)
             },
         },
         textFilter: {
@@ -682,6 +669,14 @@ export default {
             },
             set(val) {
                 mutations.setPage(val);
+            },
+        },
+        perPage: {
+            get() {
+                return getters.perPage();
+            },
+            set(val) {
+                mutations.setPerPage(val);
             },
         },
 
