@@ -2,11 +2,19 @@ const state = () => ({
     searchTerm: '',
 });
 
-const getters = {};
+const getters = {
+    searchTerm: () => {
+        return state.searchTerm;
+    },
+};
 
 const actions = {};
 
-const mutations = {};
+const mutations = {
+    searchTerm: val => {
+        state.searchTerm = val;
+    },
+};
 
 export default {
     namespaced: true,
