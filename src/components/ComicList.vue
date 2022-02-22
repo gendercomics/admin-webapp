@@ -377,7 +377,7 @@ export default {
         },
         currentPage(newVal) {
             this.$log.debug('watch: currentPage(' + newVal + ')');
-        }
+        },
     },
     methods: {
         edit(item) {
