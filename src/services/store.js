@@ -2,8 +2,15 @@ import Vue from 'vue';
 
 const state = Vue.observable({
     filter: {
-        statusFilter: null,
-        typeFilter: null,
+        statusFilter: ['DRAFT', 'CLARIFICATION', 'REVIEW', 'FINAL'],
+        typeFilter: [
+            'anthology',
+            'comic',
+            'comic_series',
+            'magazine',
+            'publishing_series',
+            'webcomic',
+        ],
     },
     language: 'de',
     searchTerm: '',

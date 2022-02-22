@@ -342,15 +342,6 @@ export default {
             comics: null,
             loading: true,
             errored: false,
-            statusFilter: ['DRAFT', 'CLARIFICATION', 'REVIEW', 'FINAL'],
-            typeFilter: [
-                'anthology',
-                'comic',
-                'comic_series',
-                'magazine',
-                'publishing_series',
-                'webcomic',
-            ],
             filterOn: [],
             totalRows: 1,
             pageOptions: [10, 20, 50, 100],
@@ -359,6 +350,7 @@ export default {
     mounted() {
         this.$nextTick(() => {
             this.$log.debug('store.browseMode=' + this.browseMode);
+            this.$log.debug('store.filter.typeFilter=' + this.typeFilter);
             this.$log.debug('store.page=' + this.currentPage);
             this.$log.debug('store.perPage=' + this.perPage);
             this.$log.debug('store.searchTerm=' + this.searchTerm);
@@ -669,16 +661,22 @@ export default {
                 mutations.setPerPage(val);
             },
         },
-
-        //statusFilter: ['DRAFT', 'CLARIFICATION', 'REVIEW', 'FINAL'],
-        //statusFilter: {
-        //    get() {
-        //        return getters.filter.statusFilter;
-        //    },
-        //    set(val) {
-        //        mutations.setStatusFilter(val);
-        //    },
-        //},
+        typeFilter: {
+            get() {
+                return getters.filter().typeFilter;
+            },
+            set(val) {
+                mutations.setTypeFilter(val);
+            },
+        },
+        statusFilter: {
+            get() {
+                return getters.filter().statusFilter;
+            },
+            set(val) {
+                mutations.setStatusFilter(val);
+            },
+        },
     },
 };
 </script>
