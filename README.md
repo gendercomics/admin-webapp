@@ -10,6 +10,11 @@
 
 ---
 
+### gendercomics-admin-webapp-1.15.0
+- TODO
+
+---
+
 ### gendercomics-admin-webapp-1.14.0
 #### Comic Liste
 - Zwei Such-Modi: Browse & Search
