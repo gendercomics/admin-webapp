@@ -350,6 +350,7 @@ export default {
     mounted() {
         this.$nextTick(() => {
             this.$log.debug('store.browseMode=' + this.browseMode);
+            this.$log.debug('store.filter.statusFilter=' + this.statusFilter);
             this.$log.debug('store.filter.typeFilter=' + this.typeFilter);
             this.$log.debug('store.page=' + this.currentPage);
             this.$log.debug('store.perPage=' + this.perPage);
@@ -374,6 +375,9 @@ export default {
                 this.loadComicList();
             }
         },
+        currentPage(newVal) {
+            this.$log.debug('watch: currentPage(' + newVal + ')');
+        }
     },
     methods: {
         edit(item) {
