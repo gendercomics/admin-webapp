@@ -10,6 +10,20 @@
 
 ---
 
+### gendercomics-admin-webapp-1.14.0
+#### Comic Liste
+- Zwei Such-Modi: Browse & Search
+  - Browse = Datenbanksymbol, Funktion wie bisher
+  - Search = Lupensymbol, Suche wird bei Eingabe eines Suchbegriffs aktiviert
+  - Suchmodus ist Standardverhalten, die Suche wird nicht mehr automatisch bei Aufruf der Seite durchgeführt
+  - Der Modus wird mit Klick auf den Button vor dem Suchschlitz umgeschaltet
+- Suchbegriff wird gespeichert (pro Session bis zum Schließen der Anwendung)
+- Filtereinstellungen werden gespeichert (pro Session bis zum Schließen der Anwendung)
+- Bei Rückkehr aus der Comic-Detailansicht wird die gespeicherte Suche wieder ausgeführt (mit allen Filtereinstellungen)
+  - _Known Issue_: Man landet derzeit immer auf Seite 1 des Suchergebnisses 
+
+---
+
 ### gendercomics-admin-webapp-1.13.0
 #### Alle Listen
 -   Lade-Spinner für alle Listen (comics, persons, publishers, roles, keywords)

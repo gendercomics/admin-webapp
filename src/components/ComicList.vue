@@ -5,16 +5,36 @@
                 <b-col lg="5" class="my-1">
                     <b-form-group label-for="filterInput">
                         <b-input-group size="sm">
+                            <b-button
+                                size="sm"
+                                @click="browseMode = !browseMode"
+                                ><font-awesome-icon
+                                    v-if="browseMode"
+                                    icon="database"
+                                /><font-awesome-icon
+                                    v-if="!browseMode"
+                                    icon="search"
+                                />
+                            </b-button>
+
                             <b-form-input
+                                v-if="browseMode"
                                 v-model="textFilter"
                                 type="search"
                                 id="filterInput"
-                                placeholder="Type to Search"
+                                placeholder="type to filter"
                             />
+                            <b-form-input
+                                v-if="!browseMode"
+                                v-model="searchTerm"
+                                type="search"
+                                id="searchInput"
+                                placeholder="type to search"
+                                @input="searchComics"
+                            />
+
                             <b-input-group-append>
-                                <b-button
-                                    :disabled="!textFilter"
-                                    @click="textFilter = ''"
+                                <b-button @click="clearSearchTermAndFilter"
                                     >Clear
                                 </b-button>
                             </b-input-group-append>
@@ -28,8 +48,9 @@
                         size="sm"
                         v-b-toggle.filter-collapse
                         class="m-1"
-                        >filter ...</b-button
-                    >
+                        :variant="filterBtnVariant"
+                        ><font-awesome-icon icon="filter" />
+                    </b-button>
                 </b-col>
 
                 <b-col sm="1" md="1" class="my-1">
@@ -136,10 +157,30 @@
 
                     <!-- title (+ subtitle) -->
                     <template v-slot:cell(title)="row">
-                        <b-link :to="'/comics/' + seriesComicId(row.item)">
-                            {{ seriesTitleAndSubtitle(row.item) }}
-                        </b-link>
-                        <span>{{ seriesVolume(row.item) }}</span>
+                        <span
+                            v-if="
+                                seriesTitleAndSubtitle(row.item, 'comic_series')
+                            "
+                        >
+                            <b-link
+                                :to="
+                                    '/comics/' +
+                                        seriesComicId(row.item, 'comic_series')
+                                "
+                            >
+                                {{
+                                    seriesTitleAndSubtitle(
+                                        row.item,
+                                        'comic_series'
+                                    )
+                                }}
+                            </b-link>
+
+                            <span>
+                                {{ seriesVolume(row.item, 'comic_series') }}
+                            </span>
+                            <span>: </span>
+                        </span>
 
                         <b-link :to="'/comics/' + row.item.id">{{
                             row.item.nameForWebAppList
@@ -155,6 +196,45 @@
                                 >
                                     {{ parentDisplayText(row.item) }}
                                 </b-link>
+                            </span>
+                        </div>
+
+                        <div
+                            v-if="
+                                seriesComicId(row.item, 'publishing_series')
+                                    .length > 0
+                            "
+                        >
+                            <span class="small"
+                                >series:
+                                <b-link
+                                    :to="
+                                        '/comics/' +
+                                            seriesComicId(
+                                                row.item,
+                                                'publishing_series'
+                                            )
+                                    "
+                                >
+                                    {{
+                                        seriesTitleAndSubtitle(
+                                            row.item,
+                                            'publishing_series'
+                                        )
+                                    }}
+                                </b-link>
+                                <span
+                                    v-if="
+                                        seriesVolume(
+                                            row.item,
+                                            'publishing_series'
+                                        ).length > 0
+                                    "
+                                    >:</span
+                                >
+                                <span>{{
+                                    seriesVolume(row.item, 'publishing_series')
+                                }}</span>
                             </span>
                         </div>
                     </template>
@@ -238,10 +318,13 @@
 </template>
 
 <script>
-import { httpClient } from '../services/httpclient';
-//import { getters, mutations } from '@/services/store';
+import { httpClient } from '@/services/httpclient';
+import _ from 'lodash';
+import ComicService from '@/mixins/comicservice';
+import { getters, mutations } from '@/services/store';
 export default {
     name: 'ComicList',
+    mixins: [ComicService],
 
     data() {
         return {
@@ -259,53 +342,41 @@ export default {
             comics: null,
             loading: true,
             errored: false,
-            textFilter: '',
-            statusFilter: ['DRAFT', 'CLARIFICATION', 'REVIEW', 'FINAL'],
-            typeFilter: [
-                'anthology',
-                'comic',
-                'comic_series',
-                'magazine',
-                'publishing_series',
-                'webcomic',
-            ],
             filterOn: [],
             totalRows: 1,
-            currentPage: 1,
-            perPage: 20,
             pageOptions: [10, 20, 50, 100],
         };
     },
     mounted() {
-        this.loadComicList();
         this.$nextTick(() => {
-            if (localStorage.currentPage) {
-                this.$log.debug(
-                    'localStorage.currentPage=' + localStorage.currentPage
-                );
-                this.currentPage = localStorage.currentPage;
-            }
-            if (localStorage.perPage) {
-                this.$log.debug('localStorage.perPage=' + localStorage.perPage);
-                this.perPage = localStorage.perPage;
-            }
-            if (localStorage.textFilter) {
-                this.$log.debug(
-                    'localStorage.textFilter=' + localStorage.textFilter
-                );
-                this.textFilter = localStorage.textFilter;
+            this.$log.debug('store.browseMode=' + this.browseMode);
+            this.$log.debug('store.filter.statusFilter=' + this.statusFilter);
+            this.$log.debug('store.filter.typeFilter=' + this.typeFilter);
+            this.$log.debug('store.page=' + this.currentPage);
+            this.$log.debug('store.perPage=' + this.perPage);
+            this.$log.debug('store.searchTerm=' + this.searchTerm);
+            this.$log.debug('store.textFilter=' + this.textFilter);
+
+            if (this.browseMode) {
+                this.loadComicList();
+            } else {
+                if (this.searchTerm != null && this.searchTerm.length > 0) {
+                    this.searchComics(this.searchTerm);
+                }
             }
         });
+
+        this.loading = false;
     },
     watch: {
+        browseMode(newVal) {
+            this.$log.debug('browseMode(' + newVal + ')');
+            if (newVal) {
+                this.loadComicList();
+            }
+        },
         currentPage(newVal) {
-            localStorage.currentPage = newVal;
-        },
-        perPage(newVal) {
-            localStorage.perPage = newVal;
-        },
-        textFilter(newVal) {
-            localStorage.textFilter = newVal;
+            this.$log.debug('watch: currentPage(' + newVal + ')');
         },
     },
     methods: {
@@ -313,6 +384,7 @@ export default {
             this.$router.push('/comics/' + item.id);
         },
         loadComicList() {
+            this.loading = true;
             httpClient
                 .get('/comicsList')
                 .then(
@@ -484,25 +556,25 @@ export default {
                 }
             });
         },
-        seriesComicId(item) {
+        seriesComicId(item, seriesType) {
             let id = '';
             if (item.seriesList != null) {
                 item.seriesList.forEach(series => {
-                    if (series.comic.type === 'comic_series') {
+                    if (series.comic.type === seriesType) {
                         id = series.comic.id;
                     }
                 });
             }
             return id;
         },
-        seriesTitleAndSubtitle(item) {
+        seriesTitleAndSubtitle(item, seriesType) {
             if (item.seriesList != null) {
                 let text = '';
                 item.seriesList.forEach(series => {
-                    if (series.comic.type === 'comic_series') {
-                        text += series.comic.title + '.';
+                    if (series.comic.type === seriesType) {
+                        text += series.comic.title;
                         if (series.comic.subTitle != null) {
-                            text += ' ' + series.comic.subTitle + '.';
+                            text += '. ' + series.comic.subTitle;
                         }
                     }
                 });
@@ -510,19 +582,33 @@ export default {
             }
             return '';
         },
-        seriesVolume(item) {
+        seriesVolume(item, seriesType) {
             if (item.seriesList != null) {
                 let text = '';
                 item.seriesList.forEach(series => {
-                    if (series.comic.type === 'comic_series') {
+                    if (series.comic.type === seriesType) {
                         if (series.volume != null) {
-                            text += ' ' + series.volume + ': ';
-                        } else text += ': ';
+                            text += ' ' + series.volume;
+                        }
                     }
                 });
                 return text;
             }
             return '';
+        },
+        searchComics: _.debounce(function(val) {
+            if (val.length > 0) {
+                this.loading = true;
+                this.$log.debug('search=' + val);
+                let vm = this;
+                this.search(val).then(function(response) {
+                    vm.$data.comics = response;
+                });
+            }
+        }, 500),
+        clearSearchTermAndFilter() {
+            this.textFilter = '';
+            this.searchTerm = '';
         },
     },
     computed: {
@@ -532,15 +618,69 @@ export default {
             }
             return [this.textFilter, this.statusFilter];
         },
-        //statusFilter: ['DRAFT', 'CLARIFICATION', 'REVIEW', 'FINAL'],
-        //statusFilter: {
-        //    get() {
-        //        return getters.filter.statusFilter;
-        //    },
-        //    set(val) {
-        //        mutations.setStatusFilter(val);
-        //    },
-        //},
+        isFilter() {
+            return this.statusFilter.length < 4 || this.typeFilter.length < 6;
+        },
+        filterBtnVariant() {
+            if (this.isFilter) return 'warning';
+            return 'secondary';
+        },
+        searchTerm: {
+            get() {
+                return getters.searchTerm();
+            },
+            set(val) {
+                mutations.setSearchTerm(val);
+            },
+        },
+        textFilter: {
+            get() {
+                return getters.textFilter();
+            },
+            set(val) {
+                mutations.setTextFilter(val);
+            },
+        },
+        browseMode: {
+            get() {
+                return getters.browseMode();
+            },
+            set(val) {
+                mutations.setBrowseMode(val);
+            },
+        },
+        currentPage: {
+            get() {
+                return getters.page();
+            },
+            set(val) {
+                mutations.setPage(val);
+            },
+        },
+        perPage: {
+            get() {
+                return getters.perPage();
+            },
+            set(val) {
+                mutations.setPerPage(val);
+            },
+        },
+        typeFilter: {
+            get() {
+                return getters.filter().typeFilter;
+            },
+            set(val) {
+                mutations.setTypeFilter(val);
+            },
+        },
+        statusFilter: {
+            get() {
+                return getters.filter().statusFilter;
+            },
+            set(val) {
+                mutations.setStatusFilter(val);
+            },
+        },
     },
 };
 </script>

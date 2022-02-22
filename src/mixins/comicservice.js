@@ -20,17 +20,29 @@ export default {
             } finally {
                 this.loading = false;
             }
+        },
+        async search(searchTerm) {
+            try {
+                const formData = new FormData();
+                formData.append('searchTerm', searchTerm);
 
-            /*
-            return httpClient
-                .get('/comics/title/exists/' + title)
-                .then(response => response.data)
-                .catch(error => {
-                    this.$log.error(error);
-                    this.errored = true;
-                })
-                .finally(() => (this.loading = false));
-            */
+                const { data: response } = await httpClient.post(
+                    '/search/',
+                    formData
+                );
+                if (this.isComicListEmpty(response)) {
+                    return [];
+                }
+                return response;
+            } catch (error) {
+                this.$log.error(error);
+                this.errored = true;
+            } finally {
+                this.loading = false;
+            }
+        },
+        isComicListEmpty(comicList) {
+            return comicList === '';
         },
     },
 };
