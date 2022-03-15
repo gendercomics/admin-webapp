@@ -30,6 +30,23 @@
                                 :disabled="this.showDescription"
                                 >description</b-button
                             >
+                            <b-button-group>
+                                <b-button disabled :variant="relationBtnVariant"
+                                    >relations
+                                </b-button>
+                                <b-button
+                                    variant="outline-dark"
+                                    @click="addRelation"
+                                    >+
+                                </b-button>
+                            </b-button-group>
+
+                            <!-- toggle JSON view -->
+                            <b-button
+                                variant="outline-dark"
+                                :pressed.sync="showJson"
+                                >JSON
+                            </b-button>
                         </b-button-group>
                     </div>
                     <b-col id="form-col" class="mt-2 mr-2">
@@ -203,6 +220,7 @@ export default {
                         language: 'en',
                     },
                 },
+                relations: [],
             },
             show: true,
             loading: true,
@@ -240,6 +258,15 @@ export default {
             }
             return names;
         },
+        relationBtnVariant() {
+            return this.realtionssExist ? 'dark' : 'outline-dark';
+        },
+        realtionsExist() {
+            return (
+                this.keyword.relations != null &&
+                this.keyword.relations.length > 0
+            );
+        },
     },
     methods: {
         onSubmit(evt) {
@@ -276,6 +303,9 @@ export default {
         addDescription() {
             this.keyword.values.de.description = '';
             this.keyword.values.en.description = '';
+        },
+        addRelation() {
+            this.$log.debug('add relation');
         },
     },
     mounted() {
