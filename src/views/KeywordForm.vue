@@ -14,18 +14,9 @@
             >
         </div>
 
-        <b-container class="mt-2" fluid>
-            <div class="m-2">
-                <input-field
-                    label="keyword"
-                    :value="displayNames"
-                    size="lg"
-                    disabled
-                />
-            </div>
-
-            <b-form @submit="onSubmit" v-if="show">
-                <b-row class="ml-2">
+        <b-form @submit="onSubmit">
+            <b-container class="mt-2" fluid>
+                <b-row class="ml-0">
                     <div id="button-col" class="mt-2 mb-2">
                         <b-button-group vertical>
                             <!-- keyword -->
@@ -41,8 +32,46 @@
                             >
                         </b-button-group>
                     </div>
+                    <b-col id="form-col" class="mt-2 mr-2">
+                        <div>
+                            <b-input-group>
+                                <input-field
+                                    label="keyword"
+                                    :value="displayNames"
+                                    size="md"
+                                    style="max-width: 71%"
+                                    disabled
+                                />
+                                <!-- action buttons -->
+                                <div class="ml-1 float-right">
+                                    <!-- status -->
+                                    <b-form-group class="m-0">
+                                        <!-- action buttons -->
+                                        <b-button-group>
+                                            <!-- editing status -->
+                                            <b-form-select
+                                                :options="this.$statusOptions"
+                                                v-model="
+                                                    keyword.metaData.status
+                                                "
+                                            />
+                                            <b-button
+                                                type="submit"
+                                                variant="primary"
+                                                >save
+                                            </b-button>
+                                            <b-button
+                                                to="/comics"
+                                                type="reset"
+                                                variant="outline-danger"
+                                                >back
+                                            </b-button>
+                                        </b-button-group>
+                                    </b-form-group>
+                                </div>
+                            </b-input-group>
+                        </div>
 
-                    <b-col id="form-col" class="mr-2">
                         <!-- keyword name -->
                         <b-row class="mt-2">
                             <b-col>
@@ -117,31 +146,10 @@
                                 </b-tabs>
                             </b-card>
                         </div>
-
-                        <!-- action buttons -->
-                        <b-form-group>
-                            <b-button-group class="mt-3 float-right">
-                                <!-- editing status -->
-                                <b-form-select
-                                    :options="statusOptions"
-                                    v-model="keyword.metaData.status"
-                                />
-
-                                <b-button type="submit" variant="primary"
-                                    >save</b-button
-                                >
-                                <b-button
-                                    to="/keywords"
-                                    type="reset"
-                                    :variant="backBtnVariant"
-                                    >back</b-button
-                                >
-                            </b-button-group>
-                        </b-form-group>
                     </b-col>
                 </b-row>
-            </b-form>
-        </b-container>
+            </b-container>
+        </b-form>
 
         <b-container fluid class="mt-4 ml-4 mr-4">
             <div v-if="showJson">
