@@ -163,6 +163,17 @@
                                 </b-tabs>
                             </b-card>
                         </div>
+
+                        <div
+                            v-for="(relation, idx) in keyword.relations"
+                            v-bind:key="'relation-' + idx"
+                        >
+                            <relation
+                                v-model="keyword.relations[idx]"
+                                removable
+                                @remove="removeRelation(idx)"
+                            />
+                        </div>
                     </b-col>
                 </b-row>
             </b-container>
@@ -188,10 +199,12 @@ import InputField from '../components/InputField';
 import SelectField from '../components/SelectField';
 import { httpClient } from '../services/httpclient';
 import Editor from '@/components/Editor';
+import Relation from '@/components/Relation';
 
 export default {
     name: 'KeywordForm',
     components: {
+        Relation,
         Editor,
         InputField,
         SelectField,
@@ -306,6 +319,14 @@ export default {
         },
         addRelation() {
             this.$log.debug('add relation');
+            if (this.keyword.relations === null) {
+                this.keyword.relations = [];
+            }
+            this.keyword.relations.push({ predicate: null, keyword: null });
+        },
+        removeRelation() {
+            this.$log.debug('remove relation');
+            // TODO coding
         },
     },
     mounted() {
