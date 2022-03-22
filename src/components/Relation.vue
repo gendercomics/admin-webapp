@@ -1,15 +1,17 @@
 <template>
-    <div>
-        <b-input-group>
+    <div class="mt-2">
+        <b-input-group prepend="relation">
             <!-- predicate -->
-            <b-input></b-input>
+            <b-input disabled v-model="this.label" />
 
             <!-- related keyword -->
+            <!--
             <searchable-dropdown
                 v-model="localValue.keyword"
                 options-path="/keywords"
                 class="flex-fill"
             />
+            -->
 
             <template v-slot:append v-if="removable">
                 <b-button @click="deleteValue"
@@ -21,12 +23,16 @@
 </template>
 
 <script>
-import SearchableDropdown from '@/components/SearchableDropdown';
+// import SearchableDropdown from '@/components/SearchableDropdown';
+import { getters, mutations } from '@/services/store';
+
 export default {
     name: 'Relation',
+    /**
     components: {
         SearchableDropdown,
     },
+     */
     props: {
         label: null,
         value: {},
@@ -52,11 +58,19 @@ export default {
                 this.$emit('input', val);
             },
         },
+        language: {
+            get() {
+                return getters.language();
+            },
+            set(val) {
+                mutations.setLanguage(val);
+            },
+        },
     },
     methods: {
         deleteValue() {
             this.$log.debug('delete relation');
-            this.localValue = null;
+            this.$emit('remove', this.localValue);
         },
     },
 };

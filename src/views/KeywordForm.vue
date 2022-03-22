@@ -169,6 +169,7 @@
                             v-bind:key="'relation-' + idx"
                         >
                             <relation
+                                :label="labelForRelation"
                                 v-model="keyword.relations[idx]"
                                 removable
                                 @remove="removeRelation(idx)"
@@ -200,6 +201,7 @@ import SelectField from '../components/SelectField';
 import { httpClient } from '../services/httpclient';
 import Editor from '@/components/Editor';
 import Relation from '@/components/Relation';
+import { getters, mutations } from '@/services/store';
 
 export default {
     name: 'KeywordForm',
@@ -272,13 +274,24 @@ export default {
             return names;
         },
         relationBtnVariant() {
-            return this.realtionssExist ? 'dark' : 'outline-dark';
+            return this.relationsExist ? 'dark' : 'outline-dark';
         },
-        realtionsExist() {
+        relationsExist() {
             return (
                 this.keyword.relations != null &&
                 this.keyword.relations.length > 0
             );
+        },
+        language: {
+            get() {
+                return getters.language();
+            },
+            set(val) {
+                mutations.setLanguage(val);
+            },
+        },
+        labelForRelation() {
+            return this.keyword.values[this.language].name;
         },
     },
     methods: {
@@ -324,9 +337,9 @@ export default {
             }
             this.keyword.relations.push({ predicate: null, keyword: null });
         },
-        removeRelation() {
-            this.$log.debug('remove relation');
-            // TODO coding
+        removeRelation(idx) {
+            this.$log.debug('removeRelation(idx)=' + idx);
+            this.keyword.relations.splice(idx, 1);
         },
     },
     mounted() {
