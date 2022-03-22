@@ -78,7 +78,7 @@
                                                 >save
                                             </b-button>
                                             <b-button
-                                                to="/comics"
+                                                to="/keywords"
                                                 type="reset"
                                                 variant="outline-danger"
                                                 >back
