@@ -12,6 +12,7 @@ import PersonForm from './views/PersonForm';
 import AuthService from './services/authservice';
 import Keywords from './views/Keywords';
 import KeywordForm from './views/KeywordForm';
+import Predicates from './views/Predicates';
 
 Vue.use(Router);
 
@@ -119,6 +120,15 @@ export default new Router({
                 title: 'gendercomics.net:keywords',
             },
         },
+        {
+            path: '/predicates',
+            name: 'predicates',
+            component: Predicates,
+            meta: {
+                title: 'gendercomics.net:predicates',
+            },
+        },
+
         {
             path: '/logout',
             beforeEnter() {

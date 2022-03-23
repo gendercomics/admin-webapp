@@ -5,34 +5,30 @@
             <b-input disabled v-model="this.label" />
 
             <!-- related keyword -->
-            <!--
             <searchable-dropdown
-                v-model="localValue.keyword"
-                options-path="/keywords"
+                v-model="localValue.predicate"
+                options-path="/predicates"
                 class="flex-fill"
             />
-            -->
 
             <template v-slot:append v-if="removable">
-                <b-button @click="deleteValue"
-                    ><font-awesome-icon icon="times-circle"
-                /></b-button>
+                <b-button @click="deleteValue">
+                    <font-awesome-icon icon="times-circle" />
+                </b-button>
             </template>
         </b-input-group>
     </div>
 </template>
 
 <script>
-// import SearchableDropdown from '@/components/SearchableDropdown';
+import SearchableDropdown from '@/components/SearchableDropdown';
 import { getters, mutations } from '@/services/store';
 
 export default {
     name: 'Relation',
-    /**
     components: {
         SearchableDropdown,
     },
-     */
     props: {
         label: null,
         value: {},

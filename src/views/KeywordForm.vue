@@ -50,6 +50,7 @@
                         </b-button-group>
                     </div>
                     <b-col id="form-col" class="mt-2 mr-2">
+                        <!-- form "header" and action buttons -->
                         <div>
                             <b-input-group>
                                 <input-field
@@ -164,6 +165,7 @@
                             </b-card>
                         </div>
 
+                        <!-- relations -->
                         <div
                             v-for="(relation, idx) in keyword.relations"
                             v-bind:key="'relation-' + idx"
