@@ -91,25 +91,41 @@
                     hover
                     head-variant="dark"
                     bordered
-                    :fields="fields"
                     :items="predicates"
+                    :fields="fields"
                     :current-page="currentPage"
                     :per-page="perPage"
                     :filter="filter"
                     :filterIncludedFields="filterOn"
                     @filtered="onFiltered"
                     :busy="loading"
+                    ref="table"
                 >
-                    <template v-slot:cell(metaData.status)="row">
-                        <span v-if="row.item.metaData.status === 'DRAFT'"
-                            ><b-badge variant="secondary">draft</b-badge></span
-                        >
-                        <span v-if="row.item.metaData.status === 'REVIEW'"
-                            ><b-badge variant="warning">review</b-badge></span
-                        >
-                        <span v-if="row.item.metaData.status === 'FINAL'"
-                            ><b-badge variant="success">final</b-badge></span
-                        >
+                    <template v-slot:cell(metaData.status)="data">
+                        <b-form-select
+                            v-model="data.item.metaData.status"
+                            :options="$statusOptions"
+                            size="sm"
+                            @input="inputHandler(data.index, data.item.id)"
+                        />
+                    </template>
+
+                    <template v-slot:cell(values.de)="data">
+                        <b-form-input
+                            v-model="data.item.values.de"
+                            :disabled="data.item.metaData.status === 'FINAL'"
+                            size="sm"
+                            @input="inputHandler(data.index, data.item.id)"
+                        />
+                    </template>
+
+                    <template v-slot:cell(values.en)="data">
+                        <b-form-input
+                            v-model="data.item.values.en"
+                            :disabled="data.item.metaData.status === 'FINAL'"
+                            size="sm"
+                            @input="inputHandler(data.index, data.item.id)"
+                        />
                     </template>
 
                     <template v-slot:cell(metaData.changedOn)="data">
@@ -165,20 +181,31 @@
                 </b-table>
             </b-row>
         </b-container>
+
+        <b-container fluid class="mt-4 ml-4 mr-4">
+            <b-row class="mt-4 mr-4" v-if="true">
+                <b-col id="json-predicates">
+                    <b-card header="predicates">
+                        <pre class="mt-0">{{ $data.predicates }}</pre>
+                    </b-card>
+                </b-col>
+            </b-row>
+        </b-container>
     </div>
 </template>
 
 <script>
-import { httpClient } from '../services/httpclient';
+import PredicateService from '@/mixins/predicateservice';
 
 export default {
     name: 'PredicateList',
+    mixins: [PredicateService],
     data() {
         return {
             fields: [
                 { key: 'metaData.status', label: 'status' },
-                { key: 'values.de.name', label: 'predicate [de]' },
-                { key: 'values.en.name', label: 'predicate [en]' },
+                { key: 'values.de', label: 'predicate [de]' },
+                { key: 'values.en', label: 'predicate [en]' },
                 { key: 'metaData.changedOn', label: 'created/modified' },
                 { key: 'metaData.changedBy', label: 'by' },
                 { key: 'actions', label: 'actions' },
@@ -199,19 +226,7 @@ export default {
         };
     },
     mounted() {
-        httpClient
-            .get('/predicates')
-            .then(
-                response => (
-                    (this.keywords = response.data),
-                    (this.totalRows = this.keywords.length)
-                )
-            )
-            .catch(error => {
-                console.log(error);
-                this.errored = true;
-            })
-            .finally(() => (this.loading = false));
+        this.loadPredicates();
     },
     computed: {
         addBtnDisabled: function() {
@@ -221,6 +236,12 @@ export default {
                 this.newPredicate.de === '' ||
                 this.newPredicate.en === ''
             );
+        },
+    },
+    watch: {
+        predicates: function() {
+            this.$log.debug('predicates changed');
+            this.$refs.table.refresh();
         },
     },
     methods: {
@@ -236,19 +257,18 @@ export default {
                     ' [en]=' +
                     this.newPredicate.en
             );
-            // TODO coding
+            this.insertPredicate(this.newPredicate.de, this.newPredicate.en);
+            this.resetNewPredicate();
+            this.loadPredicates();
+        },
+        resetNewPredicate() {
+            this.newPredicate.de = null;
+            this.newPredicate.en = null;
         },
         deletePredicate(item) {
-            console.log('delete item: ' + item.id);
-            // TODO display warning modal?
-            httpClient
-                .delete('/predicates/' + item.id, item)
-                .catch(error => {
-                    console.log(error);
-                    this.errored = true;
-                })
-                .finally(() => (this.loading = false));
-            this.keywords.splice(this.keywords.indexOf(item), 1);
+            this.$log.debug('delete item: ' + item.id);
+            this.deletePredicate(item.id);
+            this.predicates.splice(this.predicates.indexOf(item), 1);
         },
         showDeleteModal(item) {
             this.$bvModal.msgBoxConfirm('sure???').then(confirmed => {
@@ -257,6 +277,17 @@ export default {
                     this.deletePredicate(item);
                 }
             });
+        },
+        inputHandler(index, id) {
+            this.$log.debug('inputHandler(' + index + ', ' + id + ')');
+            let changed = this.predicates.filter(predicate => {
+                return predicate.id === id;
+            });
+            this.savePredicate(changed[0]);
+            this.$log.debug(
+                'updatedPredicate: ' + JSON.stringify(this.updatedPredicate)
+            );
+            //this.$set(this.predicates, index, this.updatedPredicate);
         },
     },
 };
