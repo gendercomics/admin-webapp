@@ -2,7 +2,7 @@
     <b-dropdown
         variant="outline-secondary"
         no-flip
-        :text="displayName(localValue.nameForWebAppList)"
+        :text="displayName(this.localValue)"
     >
         <b-dropdown-form @submit.stop.prevent="() => {}">
             <b-form-group
@@ -31,7 +31,7 @@
                 :key="option.id"
                 @click="onOptionClick(option)"
             >
-                {{ option.nameForWebAppList }}
+                {{ displayName(option) }}
             </b-dropdown-item-button>
             <b-dropdown-text v-if="availableOptions.length === 0">
                 no value available to select
@@ -42,6 +42,7 @@
 
 <script>
 import { httpClient } from '@/services/httpclient';
+import { getters, mutations } from '@/services/store';
 
 export default {
     name: 'SearchableDropdown',
@@ -66,6 +67,14 @@ export default {
                 this.$emit('input', val);
             },
         },
+        language: {
+            get() {
+                return getters.language();
+            },
+            set(val) {
+                mutations.setLanguage(val);
+            },
+        },
         criteria() {
             // Compute the search criteria
             return this.search.trim().toLowerCase();
@@ -73,11 +82,12 @@ export default {
         availableOptions() {
             const criteria = this.criteria;
             if (criteria) {
-                this.$log.debug('criteria=' + criteria);
+                //this.$log.debug('criteria=' + criteria);
                 return this.options.filter(
                     opt =>
-                        opt.nameForWebAppList.toLowerCase().indexOf(criteria) >
-                        -1
+                        this.displayName(opt)
+                            .toLowerCase()
+                            .indexOf(criteria) > -1
                 );
             }
             // Show all options available
@@ -85,7 +95,7 @@ export default {
         },
         searchDesc() {
             if (this.criteria && this.availableOptions.length === 0) {
-                return 'no keywords matching your search criteria';
+                return 'no match for your search criteria';
             }
             return '';
         },
@@ -96,7 +106,7 @@ export default {
     methods: {
         onOptionClick(option) {
             this.$log.debug(
-                'id=' + option.id + ', name=' + option.nameForWebAppList
+                'id=' + option.id + ', name=' + this.displayName(option)
             );
             this.localValue = option;
             this.search = '';
@@ -112,9 +122,9 @@ export default {
                 })
                 .finally(() => (this.loading = false));
         },
-        displayName(name) {
-            if (name != null && name.length > 0) {
-                return name;
+        displayName(item) {
+            if (item != null) {
+                return item.displayNames[this.language];
             }
             return '-- please select --';
         },

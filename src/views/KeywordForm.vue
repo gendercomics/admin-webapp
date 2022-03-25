@@ -173,6 +173,7 @@
                             <relation
                                 :label="labelForRelation"
                                 v-model="keyword.relations[idx]"
+                                target-route='/keywords'
                                 removable
                                 @remove="removeRelation(idx)"
                             />
@@ -337,7 +338,7 @@ export default {
             if (this.keyword.relations === null) {
                 this.keyword.relations = [];
             }
-            this.keyword.relations.push({ predicate: null, keyword: null });
+            this.keyword.relations.push({ predicate: null, target: null });
         },
         removeRelation(idx) {
             this.$log.debug('removeRelation(idx)=' + idx);

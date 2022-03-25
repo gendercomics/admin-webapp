@@ -1,13 +1,20 @@
 <template>
     <div class="mt-2">
         <b-input-group prepend="relation">
-            <!-- predicate -->
+            <!-- source (self) -->
             <b-input disabled v-model="this.label" />
 
-            <!-- related keyword -->
+            <!-- predicate -->
             <searchable-dropdown
                 v-model="localValue.predicate"
                 options-path="/predicates"
+                class="flex-fill"
+            />
+
+            <!-- target -->
+            <searchable-dropdown
+                v-model="localValue.target"
+                :options-path="targetRoute"
                 class="flex-fill"
             />
 
@@ -31,7 +38,11 @@ export default {
     },
     props: {
         label: null,
-        value: {},
+        value: {
+            predicate: null,
+            target: null,
+        },
+        targetRoute: null,
         removable: {
             type: Boolean,
             default: false,
