@@ -173,7 +173,7 @@
                             <relation
                                 :label="labelForRelation"
                                 v-model="keyword.relations[idx]"
-                                target-route='/keywords'
+                                target-route="/keywords"
                                 removable
                                 @remove="removeRelation(idx)"
                             />
@@ -239,6 +239,7 @@ export default {
                     },
                 },
                 relations: [],
+                relationIds: [],
             },
             show: true,
             loading: true,
