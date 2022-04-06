@@ -115,7 +115,9 @@
                             v-model="data.item.values.de"
                             :disabled="data.item.metaData.status === 'FINAL'"
                             size="sm"
-                            @input="inputHandler(data.index, data.item.id)"
+                            @input="
+                                inputHandlerDebounce(data.index, data.item.id)
+                            "
                         />
                     </template>
 
@@ -124,7 +126,9 @@
                             v-model="data.item.values.en"
                             :disabled="data.item.metaData.status === 'FINAL'"
                             size="sm"
-                            @input="inputHandler(data.index, data.item.id)"
+                            @input="
+                                inputHandlerDebounce(data.index, data.item.id)
+                            "
                         />
                     </template>
 
@@ -198,6 +202,7 @@
 
 <script>
 import PredicateService from '@/mixins/predicateservice';
+import _ from 'lodash';
 
 export default {
     name: 'PredicateList',
@@ -291,6 +296,9 @@ export default {
             );
             //this.$set(this.predicates, index, this.updatedPredicate);
         },
+        inputHandlerDebounce: _.debounce(function(index, id) {
+            this.inputHandler(index, id);
+        }, 500),
     },
 };
 </script>
