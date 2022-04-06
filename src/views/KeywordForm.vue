@@ -4,14 +4,14 @@
 
         <div class="mt-3 ml-3 mr-3">
             <b-alert variant="success" dismissible v-model="saveSuccessful"
-                >keyword saved!</b-alert
-            >
+                >keyword saved!
+            </b-alert>
         </div>
 
         <div class="mt-3 ml-3 mr-3">
             <b-alert variant="danger" dismissible v-model="errored"
-                >error!</b-alert
-            >
+                >error!
+            </b-alert>
         </div>
 
         <b-form @submit="onSubmit">
@@ -28,8 +28,8 @@
                                 :variant="descriptionBtnVariant"
                                 @click="addDescription"
                                 :disabled="this.showDescription"
-                                >description</b-button
-                            >
+                                >description
+                            </b-button>
                             <!-- relation outbound -->
                             <b-button-group>
                                 <b-button
@@ -265,6 +265,7 @@ export default {
                 },
                 relations: [],
                 relationIds: [],
+                removeRelationIds: [],
             },
             show: true,
             loading: true,
