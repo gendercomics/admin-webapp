@@ -1,8 +1,29 @@
 <template>
     <div class="mt-2">
         <b-input-group prepend="relation">
-            <!-- source (self) -->
-            <b-input disabled v-model="this.label" />
+            <template #prepend>
+                <b-input-group-text v-if="direction === 'out'"
+                    ><font-awesome-icon icon="arrow-right-from-bracket"
+                /></b-input-group-text>
+                <b-input-group-text v-if="direction === 'in'"
+                    ><font-awesome-icon icon="arrow-right-to-bracket"
+                /></b-input-group-text>
+            </template>
+
+            <!-- source (out) -->
+            <b-input
+                disabled
+                v-model="this.label"
+                v-if="this.direction === 'out'"
+            />
+
+            <!-- source (in) -->
+            <searchable-dropdown
+                v-model="localValue.source"
+                v-if="this.direction === 'in'"
+                :options-path="targetRoute"
+                class="flex-fill"
+            />
 
             <!-- predicate -->
             <searchable-dropdown
@@ -11,11 +32,19 @@
                 class="flex-fill"
             />
 
-            <!-- target -->
+            <!-- target (out) -->
             <searchable-dropdown
                 v-model="localValue.target"
+                v-if="this.direction === 'out'"
                 :options-path="targetRoute"
                 class="flex-fill"
+            />
+
+            <!-- target (in) -->
+            <b-input
+                disabled
+                v-model="this.label"
+                v-if="this.direction === 'in'"
             />
 
             <template v-slot:append v-if="removable">
@@ -39,6 +68,7 @@ export default {
     props: {
         label: null,
         value: {
+            source: null,
             predicate: null,
             target: null,
         },
@@ -54,6 +84,10 @@ export default {
         size: {
             type: String,
             default: 'md',
+        },
+        direction: {
+            type: String,
+            default: 'out',
         },
     },
     computed: {

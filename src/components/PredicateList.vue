@@ -182,6 +182,7 @@
             </b-row>
         </b-container>
 
+        <!--
         <b-container fluid class="mt-4 ml-4 mr-4">
             <b-row class="mt-4 mr-4" v-if="true">
                 <b-col id="json-predicates">
@@ -191,6 +192,7 @@
                 </b-col>
             </b-row>
         </b-container>
+        -->
     </div>
 </template>
 

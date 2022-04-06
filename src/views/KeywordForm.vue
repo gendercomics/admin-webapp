@@ -30,13 +30,37 @@
                                 :disabled="this.showDescription"
                                 >description</b-button
                             >
+                            <!-- relation outbound -->
                             <b-button-group>
-                                <b-button disabled :variant="relationBtnVariant"
-                                    >relations
+                                <b-button
+                                    disabled
+                                    :variant="relationBtnVariant"
+                                >
+                                    <font-awesome-icon
+                                        icon="arrow-right-from-bracket"
+                                    />
+                                    relations
                                 </b-button>
                                 <b-button
                                     variant="outline-dark"
-                                    @click="addRelation"
+                                    @click="addRelation('out')"
+                                    >+
+                                </b-button>
+                            </b-button-group>
+                            <!-- relation inbound -->
+                            <b-button-group>
+                                <b-button
+                                    disabled
+                                    :variant="relationBtnVariant"
+                                >
+                                    <font-awesome-icon
+                                        icon="arrow-right-to-bracket"
+                                    />
+                                    relations
+                                </b-button>
+                                <b-button
+                                    variant="outline-dark"
+                                    @click="addRelation('in')"
                                     >+
                                 </b-button>
                             </b-button-group>
@@ -175,6 +199,7 @@
                                 v-model="keyword.relations[idx]"
                                 target-route="/keywords"
                                 removable
+                                :direction="relationDirection(relation)"
                                 @remove="removeRelation(idx)"
                             />
                         </div>
@@ -334,16 +359,53 @@ export default {
             this.keyword.values.de.description = '';
             this.keyword.values.en.description = '';
         },
-        addRelation() {
+        addRelation(direction) {
             this.$log.debug('add relation');
             if (this.keyword.relations === null) {
                 this.keyword.relations = [];
             }
-            this.keyword.relations.push({ predicate: null, target: null });
+            let sourceId = null;
+            let targetId = null;
+            if ('out' === direction) {
+                sourceId = this.keyword.id;
+            } else if ('in' === direction) {
+                targetId = this.keyword.id;
+            }
+            this.keyword.relations.push({
+                source: {
+                    id: sourceId,
+                    displayNames: {
+                        de: '-- please select --',
+                        en: '-- please select --',
+                    },
+                },
+                predicate: null,
+                target: {
+                    id: targetId,
+                    displayNames: {
+                        de: '-- please select --',
+                        en: '-- please select --',
+                    },
+                },
+            });
         },
         removeRelation(idx) {
             this.$log.debug('removeRelation(idx)=' + idx);
             this.keyword.relations.splice(idx, 1);
+        },
+        relationDirection(relation) {
+            if (
+                relation.source != null &&
+                relation.source.id === this.keyword.id
+            ) {
+                return 'out';
+            }
+            if (
+                relation.target != null &&
+                relation.target.id === this.keyword.id
+            ) {
+                return 'in';
+            }
         },
     },
     mounted() {
