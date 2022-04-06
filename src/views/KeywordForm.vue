@@ -36,15 +36,14 @@
                                     disabled
                                     :variant="relationBtnVariant"
                                 >
-                                    <font-awesome-icon
-                                        icon="arrow-right-from-bracket"
-                                    />
                                     relations
                                 </b-button>
                                 <b-button
                                     variant="outline-dark"
                                     @click="addRelation('out')"
-                                    >+
+                                    ><font-awesome-icon
+                                        icon="arrow-right-from-bracket"
+                                    />
                                 </b-button>
                             </b-button-group>
                             <!-- relation inbound -->
@@ -53,15 +52,14 @@
                                     disabled
                                     :variant="relationBtnVariant"
                                 >
-                                    <font-awesome-icon
-                                        icon="arrow-right-to-bracket"
-                                    />
                                     relations
                                 </b-button>
                                 <b-button
                                     variant="outline-dark"
                                     @click="addRelation('in')"
-                                    >+
+                                    ><font-awesome-icon
+                                        icon="arrow-right-to-bracket"
+                                    />
                                 </b-button>
                             </b-button-group>
 
