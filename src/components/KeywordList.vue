@@ -180,6 +180,8 @@ export default {
                 { key: 'values.de.name', label: 'keyword [de]' },
                 { key: 'values.en.name', label: 'keyword [en]' },
                 { key: 'type', label: 'type' },
+                { key: 'relationsOut', label: 'relations.out' },
+                { key: 'relationsIn', label: 'relations.in' },
                 { key: 'metaData.changedOn', label: 'created/modified' },
                 { key: 'metaData.changedBy', label: 'by' },
                 { key: 'actions', label: 'actions' },
