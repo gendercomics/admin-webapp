@@ -272,8 +272,8 @@ export default {
             this.newPredicate.de = null;
             this.newPredicate.en = null;
         },
-        deletePredicate(item) {
-            this.$log.debug('delete item: ' + item.id);
+        removePredicate(item) {
+            this.$log.debug('remove item: ' + item.id);
             this.deletePredicate(item.id);
             this.predicates.splice(this.predicates.indexOf(item), 1);
         },
@@ -281,19 +281,32 @@ export default {
             this.$bvModal.msgBoxConfirm('sure???').then(confirmed => {
                 this.$log.debug('delete id:' + item.id + ': ' + confirmed);
                 if (confirmed) {
-                    this.deletePredicate(item);
+                    this.removePredicate(item);
                 }
             });
         },
         inputHandler(index, id) {
-            this.$log.debug('inputHandler(' + index + ', ' + id + ')');
             let changed = this.predicates.filter(predicate => {
                 return predicate.id === id;
             });
-            this.savePredicate(changed[0]);
+            this.updatedPredicate = changed[0];
             this.$log.debug(
-                'updatedPredicate: ' + JSON.stringify(this.updatedPredicate)
+                'inputHandler(' + JSON.stringify(this.updatedPredicate) + ')'
             );
+
+            //this.$set(this.predicates, index, this.predicates[index]);
+            this.$set(this.predicates, index, this.updatedPredicate);
+
+            this.savePredicate(this.updatedPredicate);
+            //this.savePredicate(this.predicates[index]);
+
+            this.$emit('input', this.predicates);
+
+            /*
+        this.$log.debug(
+            'updatedPredicate: ' + JSON.stringify(this.updatedPredicate)
+        );
+         */
             //this.$set(this.predicates, index, this.updatedPredicate);
         },
         inputHandlerDebounce: _.debounce(function(index, id) {
