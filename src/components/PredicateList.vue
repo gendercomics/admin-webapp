@@ -294,20 +294,9 @@ export default {
                 'inputHandler(' + JSON.stringify(this.updatedPredicate) + ')'
             );
 
-            //this.$set(this.predicates, index, this.predicates[index]);
             this.$set(this.predicates, index, this.updatedPredicate);
-
             this.savePredicate(this.updatedPredicate);
-            //this.savePredicate(this.predicates[index]);
-
             this.$emit('input', this.predicates);
-
-            /*
-        this.$log.debug(
-            'updatedPredicate: ' + JSON.stringify(this.updatedPredicate)
-        );
-         */
-            //this.$set(this.predicates, index, this.updatedPredicate);
         },
         inputHandlerDebounce: _.debounce(function(index, id) {
             this.inputHandler(index, id);
