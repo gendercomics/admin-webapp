@@ -294,8 +294,12 @@ export default {
                 'inputHandler(' + JSON.stringify(this.updatedPredicate) + ')'
             );
 
+            this.savePredicate(
+                this.updatedPredicate.id,
+                this.updatedPredicate.values.de,
+                this.updatedPredicate.values.en
+            );
             this.$set(this.predicates, index, this.updatedPredicate);
-            this.savePredicate(this.updatedPredicate);
             this.$emit('input', this.predicates);
         },
         inputHandlerDebounce: _.debounce(function(index, id) {

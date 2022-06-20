@@ -48,11 +48,18 @@ export default {
                 })
                 .finally(() => (this.loading = false));
         },
-        async savePredicate(predicate) {
+        async savePredicate(id, de, en) {
             this.loading = true;
-            this.$log.debug('savePredicate: ' + JSON.stringify(predicate));
+            this.$log.debug(
+                'savePredicate: id= ' + id + ', de=' + de + ', en=' + en
+            );
+
+            const formData = new FormData();
+            formData.append('de', de);
+            formData.append('en', en);
+
             await httpClient
-                .put('/predicates/' + predicate.id, predicate)
+                .put('/predicates/' + id, formData)
                 .then(response => (this.updatedPredicate = response.data))
                 .catch(error => {
                     console.log(error);
