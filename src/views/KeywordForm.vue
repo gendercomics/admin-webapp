@@ -4,28 +4,19 @@
 
         <div class="mt-3 ml-3 mr-3">
             <b-alert variant="success" dismissible v-model="saveSuccessful"
-                >keyword saved!</b-alert
-            >
+                >keyword saved!
+            </b-alert>
         </div>
 
         <div class="mt-3 ml-3 mr-3">
             <b-alert variant="danger" dismissible v-model="errored"
-                >error!</b-alert
-            >
+                >error!
+            </b-alert>
         </div>
 
-        <b-container class="mt-2" fluid>
-            <div class="m-2">
-                <input-field
-                    label="keyword"
-                    :value="displayNames"
-                    size="lg"
-                    disabled
-                />
-            </div>
-
-            <b-form @submit="onSubmit" v-if="show">
-                <b-row class="ml-2">
+        <b-form @submit="onSubmit">
+            <b-container class="mt-2" fluid>
+                <b-row class="ml-0">
                     <div id="button-col" class="mt-2 mb-2">
                         <b-button-group vertical>
                             <!-- keyword -->
@@ -37,12 +28,90 @@
                                 :variant="descriptionBtnVariant"
                                 @click="addDescription"
                                 :disabled="this.showDescription"
-                                >description</b-button
-                            >
+                                >description
+                            </b-button>
+                            <!-- relation outbound -->
+                            <b-button-group>
+                                <b-button
+                                    disabled
+                                    :variant="relationBtnVariant"
+                                >
+                                    relations
+                                </b-button>
+                                <b-button
+                                    variant="outline-dark"
+                                    @click="addRelation('out')"
+                                    ><font-awesome-icon
+                                        icon="arrow-right-from-bracket"
+                                    />
+                                </b-button>
+                            </b-button-group>
+                            <!-- relation inbound -->
+                            <b-button-group>
+                                <b-button
+                                    disabled
+                                    :variant="relationBtnVariant"
+                                >
+                                    relations
+                                </b-button>
+                                <b-button
+                                    variant="outline-dark"
+                                    @click="addRelation('in')"
+                                    ><font-awesome-icon
+                                        icon="arrow-right-to-bracket"
+                                    />
+                                </b-button>
+                            </b-button-group>
+
+                            <!-- toggle JSON view -->
+                            <b-button
+                                variant="outline-dark"
+                                :pressed.sync="showJson"
+                                >JSON
+                            </b-button>
                         </b-button-group>
                     </div>
+                    <b-col id="form-col" class="mt-2 mr-2">
+                        <!-- form "header" and action buttons -->
+                        <div>
+                            <b-input-group>
+                                <input-field
+                                    label="keyword"
+                                    :value="displayNames"
+                                    size="md"
+                                    style="max-width: 71%"
+                                    disabled
+                                />
+                                <!-- action buttons -->
+                                <div class="ml-1 float-right">
+                                    <!-- status -->
+                                    <b-form-group class="m-0">
+                                        <!-- action buttons -->
+                                        <b-button-group>
+                                            <!-- editing status -->
+                                            <b-form-select
+                                                :options="this.$statusOptions"
+                                                v-model="
+                                                    keyword.metaData.status
+                                                "
+                                            />
+                                            <b-button
+                                                type="submit"
+                                                variant="primary"
+                                                >save
+                                            </b-button>
+                                            <b-button
+                                                to="/keywords"
+                                                type="reset"
+                                                variant="outline-danger"
+                                                >back
+                                            </b-button>
+                                        </b-button-group>
+                                    </b-form-group>
+                                </div>
+                            </b-input-group>
+                        </div>
 
-                    <b-col id="form-col" class="mr-2">
                         <!-- keyword name -->
                         <b-row class="mt-2">
                             <b-col>
@@ -118,30 +187,24 @@
                             </b-card>
                         </div>
 
-                        <!-- action buttons -->
-                        <b-form-group>
-                            <b-button-group class="mt-3 float-right">
-                                <!-- editing status -->
-                                <b-form-select
-                                    :options="statusOptions"
-                                    v-model="keyword.metaData.status"
-                                />
-
-                                <b-button type="submit" variant="primary"
-                                    >save</b-button
-                                >
-                                <b-button
-                                    to="/keywords"
-                                    type="reset"
-                                    :variant="backBtnVariant"
-                                    >back</b-button
-                                >
-                            </b-button-group>
-                        </b-form-group>
+                        <!-- relations -->
+                        <div
+                            v-for="(relation, idx) in keyword.relations"
+                            v-bind:key="'relation-' + idx"
+                        >
+                            <relation
+                                :label="labelForRelation"
+                                v-model="keyword.relations[idx]"
+                                target-route="/keywords"
+                                removable
+                                :direction="relationDirection(relation)"
+                                @remove="removeRelation(idx)"
+                            />
+                        </div>
                     </b-col>
                 </b-row>
-            </b-form>
-        </b-container>
+            </b-container>
+        </b-form>
 
         <b-container fluid class="mt-4 ml-4 mr-4">
             <div v-if="showJson">
@@ -163,10 +226,13 @@ import InputField from '../components/InputField';
 import SelectField from '../components/SelectField';
 import { httpClient } from '../services/httpclient';
 import Editor from '@/components/Editor';
+import Relation from '@/components/Relation';
+import { getters, mutations } from '@/services/store';
 
 export default {
     name: 'KeywordForm',
     components: {
+        Relation,
         Editor,
         InputField,
         SelectField,
@@ -195,6 +261,9 @@ export default {
                         language: 'en',
                     },
                 },
+                relations: [],
+                relationIds: [],
+                removeRelationIds: [],
             },
             show: true,
             loading: true,
@@ -232,6 +301,26 @@ export default {
             }
             return names;
         },
+        relationBtnVariant() {
+            return this.relationsExist ? 'dark' : 'outline-dark';
+        },
+        relationsExist() {
+            return (
+                this.keyword.relations != null &&
+                this.keyword.relations.length > 0
+            );
+        },
+        language: {
+            get() {
+                return getters.language();
+            },
+            set(val) {
+                mutations.setLanguage(val);
+            },
+        },
+        labelForRelation() {
+            return this.keyword.values[this.language].name;
+        },
     },
     methods: {
         onSubmit(evt) {
@@ -268,6 +357,54 @@ export default {
         addDescription() {
             this.keyword.values.de.description = '';
             this.keyword.values.en.description = '';
+        },
+        addRelation(direction) {
+            this.$log.debug('add relation');
+            if (this.keyword.relations === null) {
+                this.keyword.relations = [];
+            }
+            let sourceId = null;
+            let targetId = null;
+            if ('out' === direction) {
+                sourceId = this.keyword.id;
+            } else if ('in' === direction) {
+                targetId = this.keyword.id;
+            }
+            this.keyword.relations.push({
+                source: {
+                    id: sourceId,
+                    displayNames: {
+                        de: '-- please select --',
+                        en: '-- please select --',
+                    },
+                },
+                predicate: null,
+                target: {
+                    id: targetId,
+                    displayNames: {
+                        de: '-- please select --',
+                        en: '-- please select --',
+                    },
+                },
+            });
+        },
+        removeRelation(idx) {
+            this.$log.debug('removeRelation(idx)=' + idx);
+            this.keyword.relations.splice(idx, 1);
+        },
+        relationDirection(relation) {
+            if (
+                relation.source != null &&
+                relation.source.id === this.keyword.id
+            ) {
+                return 'out';
+            }
+            if (
+                relation.target != null &&
+                relation.target.id === this.keyword.id
+            ) {
+                return 'in';
+            }
         },
     },
     mounted() {

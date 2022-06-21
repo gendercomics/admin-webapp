@@ -9,6 +9,8 @@ import moment from 'moment';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import {
+    faArrowRightFromBracket,
+    faArrowRightToBracket,
     faBackspace,
     faCheckCircle,
     faCloudDownloadAlt,
@@ -32,6 +34,8 @@ import { faComment } from '@fortawesome/free-regular-svg-icons';
 import AuthService from './services/authservice';
 
 library.add(
+    faArrowRightFromBracket,
+    faArrowRightToBracket,
     faBackspace,
     faCheckCircle,
     faCloudDownloadAlt,

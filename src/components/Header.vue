@@ -9,8 +9,13 @@
                 <b-nav-item to="/comics">Comics</b-nav-item>
                 <b-nav-item to="/persons">Persons</b-nav-item>
                 <b-nav-item to="/publishers">Publishers</b-nav-item>
-                <b-nav-item to="/roles">Roles</b-nav-item>
                 <b-nav-item to="/keywords">Keywords</b-nav-item>
+                <b-nav-item-dropdown text="more">
+                    <b-dropdown-item to="/roles">Roles</b-dropdown-item>
+                    <b-dropdown-item to="/predicates"
+                        >Predicates</b-dropdown-item
+                    >
+                </b-nav-item-dropdown>
                 <b-nav-item-dropdown text="NEW">
                     <b-dropdown-item to="/comics/new">comic</b-dropdown-item>
                     <b-dropdown-item to="/persons/new">person</b-dropdown-item>

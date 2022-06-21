@@ -10,6 +10,16 @@
 
 ---
 
+### gendercomics-admin-webapp-1.15.0
+- NEU: Predicates zur Definition des Attributs der Relationen
+- Relationen können mittels Predicates in Beziehung gesetzt werden
+- Roles und Predicates in die Menügruppe "more" verschoben
+- Bekannte Einschränkungen:
+  - Aktualisierungsdatum bei Predicates wird erst nach erneutem Laden angezeigt
+  - Neu angelegte Predicates werden erst nach erneutem Laden der Seite angezeigt
+
+---
+
 ### gendercomics-admin-webapp-1.14.0
 #### Comic Liste
 - Zwei Such-Modi: Browse & Search

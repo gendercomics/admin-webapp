@@ -16,7 +16,7 @@
                                 v-model="filter"
                                 type="search"
                                 id="filterInput"
-                                placeholder="Type to Search"
+                                placeholder="Type to Filter"
                             ></b-form-input>
                             <b-input-group-append>
                                 <b-button
@@ -28,10 +28,24 @@
                         </b-input-group>
                     </b-form-group>
                 </b-col>
-                <b-col lg="6" class="my-1">
-                    <b-button to="keywords/new" variant="outline-primary"
-                        >new keyword</b-button
-                    >
+                <b-col>
+                    <b-input-group size="sm" prepend="new:" class="my-1">
+                        <b-input
+                            placeholder="de"
+                            v-model="newPredicate.de"
+                        ></b-input>
+                        <b-input
+                            placeholder="en"
+                            v-model="newPredicate.en"
+                        ></b-input>
+                        <b-button
+                            variant="primary"
+                            size="sm"
+                            :disabled="addBtnDisabled"
+                            @click="addPredicate"
+                            >add</b-button
+                        >
+                    </b-input-group>
                 </b-col>
             </b-row>
             <b-row>
@@ -54,7 +68,6 @@
                         ></b-form-select>
                     </b-form-group>
                 </b-col>
-
                 <b-col sm="7" md="6" class="my-1">
                     <b-pagination
                         v-model="currentPage"
@@ -78,37 +91,45 @@
                     hover
                     head-variant="dark"
                     bordered
+                    :items="predicates"
                     :fields="fields"
-                    :items="keywords"
                     :current-page="currentPage"
                     :per-page="perPage"
                     :filter="filter"
                     :filterIncludedFields="filterOn"
                     @filtered="onFiltered"
                     :busy="loading"
+                    ref="table"
                 >
-                    <template v-slot:cell(metaData.status)="row">
-                        <span v-if="row.item.metaData.status === 'DRAFT'"
-                            ><b-badge variant="secondary">draft</b-badge></span
-                        >
-                        <span v-if="row.item.metaData.status === 'REVIEW'"
-                            ><b-badge variant="warning">review</b-badge></span
-                        >
-                        <span v-if="row.item.metaData.status === 'FINAL'"
-                            ><b-badge variant="success">final</b-badge></span
-                        >
+                    <template v-slot:cell(metaData.status)="data">
+                        <b-form-select
+                            v-model="data.item.metaData.status"
+                            :options="$statusOptions"
+                            size="sm"
+                            @input="inputHandler(data.index, data.item.id)"
+                        />
                     </template>
 
-                    <template v-slot:cell(values.de.name)="row">
-                        <b-link :to="'/keywords/' + row.item.id">{{
-                            row.item.values.de.name
-                        }}</b-link>
+                    <template v-slot:cell(values.de)="data">
+                        <b-form-input
+                            v-model="data.item.values.de"
+                            :disabled="data.item.metaData.status === 'FINAL'"
+                            size="sm"
+                            @input="
+                                inputHandlerDebounce(data.index, data.item.id)
+                            "
+                        />
                     </template>
 
-                    <template v-slot:cell(values.en.name)="row">
-                        <b-link :to="'/keywords/' + row.item.id">{{
-                            row.item.values.en.name
-                        }}</b-link>
+                    <template v-slot:cell(values.en)="data">
+                        <b-form-input
+                            v-model="data.item.values.en"
+                            :disabled="data.item.metaData.status === 'FINAL'"
+                            size="sm"
+                            @input="
+                                inputHandlerDebounce(data.index, data.item.id)
+                            "
+                        />
                     </template>
 
                     <template v-slot:cell(metaData.changedOn)="data">
@@ -164,29 +185,39 @@
                 </b-table>
             </b-row>
         </b-container>
+
+        <!--
+        <b-container fluid class="mt-4 ml-4 mr-4">
+            <b-row class="mt-4 mr-4" v-if="true">
+                <b-col id="json-predicates">
+                    <b-card header="predicates">
+                        <pre class="mt-0">{{ $data.predicates }}</pre>
+                    </b-card>
+                </b-col>
+            </b-row>
+        </b-container>
+        -->
     </div>
 </template>
 
 <script>
-import { httpClient } from '../services/httpclient';
+import PredicateService from '@/mixins/predicateservice';
+import _ from 'lodash';
 
 export default {
-    name: 'KeywordList',
-
+    name: 'PredicateList',
+    mixins: [PredicateService],
     data() {
         return {
             fields: [
                 { key: 'metaData.status', label: 'status' },
-                { key: 'values.de.name', label: 'keyword [de]' },
-                { key: 'values.en.name', label: 'keyword [en]' },
-                { key: 'type', label: 'type' },
-                { key: 'relationsOut', label: 'relations.out' },
-                { key: 'relationsIn', label: 'relations.in' },
+                { key: 'values.de', label: 'predicate [de]' },
+                { key: 'values.en', label: 'predicate [en]' },
                 { key: 'metaData.changedOn', label: 'created/modified' },
                 { key: 'metaData.changedBy', label: 'by' },
                 { key: 'actions', label: 'actions' },
             ],
-            keywords: null,
+            predicates: null,
             loading: true,
             errored: false,
             filter: null,
@@ -195,52 +226,87 @@ export default {
             currentPage: 1,
             perPage: 10,
             pageOptions: [10, 20, 50],
+            newPredicate: {
+                de: null,
+                en: null,
+            },
         };
     },
     mounted() {
-        httpClient
-            .get('/keywords')
-            .then(
-                response => (
-                    (this.keywords = response.data),
-                    (this.totalRows = this.keywords.length)
-                )
-            )
-            .catch(error => {
-                console.log(error);
-                this.errored = true;
-            })
-            .finally(() => (this.loading = false));
+        this.loadPredicates();
+    },
+    computed: {
+        addBtnDisabled: function() {
+            return (
+                this.newPredicate.de === null ||
+                this.newPredicate.en === null ||
+                this.newPredicate.de === '' ||
+                this.newPredicate.en === ''
+            );
+        },
+    },
+    watch: {
+        predicates: function() {
+            this.$log.debug('predicates changed');
+            this.$refs.table.refresh();
+        },
     },
     methods: {
-        edit(item) {
-            this.$router.push('/keywords/' + item.id);
-        },
         onFiltered(filteredItems) {
             // Trigger pagination to update the number of buttons/pages due to filtering
             this.totalRows = filteredItems.length;
             this.currentPage = 1;
         },
-        deleteKeyword(item) {
-            console.log('delete item: ' + item.id);
-            // TODO display warning modal?
-            httpClient
-                .delete('/keywords/' + item.id, item)
-                .catch(error => {
-                    console.log(error);
-                    this.errored = true;
-                })
-                .finally(() => (this.loading = false));
-            this.keywords.splice(this.keywords.indexOf(item), 1);
+        addPredicate() {
+            this.$log.debug(
+                'add predicate: [de]=' +
+                    this.newPredicate.de +
+                    ' [en]=' +
+                    this.newPredicate.en
+            );
+            this.insertPredicate(this.newPredicate.de, this.newPredicate.en);
+            this.resetNewPredicate();
+            this.$nextTick(() => {
+                this.loadPredicates();
+            });
+        },
+        resetNewPredicate() {
+            this.newPredicate.de = null;
+            this.newPredicate.en = null;
+        },
+        removePredicate(item) {
+            this.$log.debug('remove item: ' + item.id);
+            this.deletePredicate(item.id);
+            this.predicates.splice(this.predicates.indexOf(item), 1);
         },
         showDeleteModal(item) {
             this.$bvModal.msgBoxConfirm('sure???').then(confirmed => {
                 this.$log.debug('delete id:' + item.id + ': ' + confirmed);
                 if (confirmed) {
-                    this.deleteKeyword(item);
+                    this.removePredicate(item);
                 }
             });
         },
+        inputHandler(index, id) {
+            let changed = this.predicates.filter(predicate => {
+                return predicate.id === id;
+            });
+            this.updatedPredicate = changed[0];
+            this.$log.debug(
+                'inputHandler(' + JSON.stringify(this.updatedPredicate) + ')'
+            );
+
+            this.savePredicate(
+                this.updatedPredicate.id,
+                this.updatedPredicate.values.de,
+                this.updatedPredicate.values.en
+            );
+            this.$set(this.predicates, index, this.updatedPredicate);
+            this.$emit('input', this.predicates);
+        },
+        inputHandlerDebounce: _.debounce(function(index, id) {
+            this.inputHandler(index, id);
+        }, 500),
     },
 };
 </script>
