@@ -266,7 +266,9 @@ export default {
             );
             this.insertPredicate(this.newPredicate.de, this.newPredicate.en);
             this.resetNewPredicate();
-            this.loadPredicates();
+            this.$nextTick(() => {
+                this.loadPredicates();
+            });
         },
         resetNewPredicate() {
             this.newPredicate.de = null;

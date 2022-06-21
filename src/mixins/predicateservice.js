@@ -33,6 +33,7 @@ export default {
 
             await httpClient
                 .post('/predicates', formData)
+                .then(response => (this.newPredicate = response.data))
                 .catch(error => {
                     console.log(error);
                     this.errored = true;
