@@ -8,6 +8,9 @@
 
 <script>
 export default {
+    title() {
+        return 'gendercomics.net';
+    },
     watch: {
         $route(to) {
             document.title = to.meta.title || 'gendercomics.net';
