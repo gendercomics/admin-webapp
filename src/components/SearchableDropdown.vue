@@ -123,7 +123,7 @@ export default {
                 .finally(() => (this.loading = false));
         },
         displayName(item) {
-            if (item != null) {
+            if (item.name != null) {
                 return item.displayNames[this.language];
             }
             return '-- please select --';

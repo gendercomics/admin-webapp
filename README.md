@@ -10,6 +10,11 @@
 
 ---
 
+### gendercomics-admin-webapp-1.15.1
+- FIX: Fehler (kein Auswahlfeld) beim Hinzufügen eines Publishers behoben
+
+---
+
 ### gendercomics-admin-webapp-1.15.0
 - NEU: Predicates zur Definition des Attributs der Relationen
 - Relationen können mittels Predicates in Beziehung gesetzt werden
