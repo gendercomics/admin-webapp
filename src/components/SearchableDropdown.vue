@@ -117,12 +117,13 @@ export default {
                 .get(this.optionsPath)
                 .then(response => (this.options = response.data))
                 .catch(error => {
-                    console.log(error);
+                    this.$log.error(error);
                     this.errored = true;
                 })
                 .finally(() => (this.loading = false));
         },
         displayName(item) {
+            this.$log.debug(JSON.stringify(item));
             if (item.name != null) {
                 return item.displayNames[this.language];
             }
