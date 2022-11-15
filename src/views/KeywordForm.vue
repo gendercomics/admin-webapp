@@ -336,7 +336,7 @@ export default {
                         )
                     )
                     .catch(error => {
-                        console.log(error);
+                        this.$log.error(error);
                         this.errored = true;
                     })
                     .finally(() => (this.loading = false));
@@ -348,7 +348,7 @@ export default {
                         (this.saveSuccessful = true)
                     )
                     .catch(error => {
-                        console.log(error);
+                        this.$log.error(error);
                         this.errored = true;
                     })
                     .finally(() => (this.loading = false));
@@ -419,7 +419,7 @@ export default {
                     }
                 })
                 .catch(error => {
-                    console.log(error);
+                    this.$log.error(error);
                     this.errored = true;
                 })
                 .finally(() => (this.loading = false));
