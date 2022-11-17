@@ -124,7 +124,7 @@ export default {
         },
         displayName(item) {
             this.$log.debug(JSON.stringify(item));
-            if (item.name != null) {
+            if (item != null && item.displayNames[this.language] != null) {
                 return item.displayNames[this.language];
             }
             return '-- please select --';

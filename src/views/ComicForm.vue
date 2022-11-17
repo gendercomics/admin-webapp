@@ -834,7 +834,10 @@ export default {
             if (this.comic.publishers === null) {
                 this.comic.publishers = [];
             }
-            this.comic.publishers.push({ name: null });
+            this.comic.publishers.push({
+                name: null,
+                displayNames: { en: null, de: null },
+            });
         },
         addPrinter() {
             this.comic.printer = '';
@@ -888,7 +891,10 @@ export default {
             if (this.comic.seriesList === null) {
                 this.comic.seriesList = [];
             }
-            this.comic.seriesList.push({ comic: '', volume: null });
+            this.comic.seriesList.push({
+                comic: { displayNames: { en: null, de: null } },
+                volume: null,
+            });
         },
         creatorName(name) {
             if (name.name !== null) {
