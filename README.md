@@ -9,8 +9,8 @@
 ## Release Notes
 ---
 
-### gendercomics-admin-webapp-1.16.0
-- TODO
+### gendercomics-admin-webapp-1.15.2
+- FIX: Fehler (leere Auswahlfelder) beim Relationen
 
 ---
 
