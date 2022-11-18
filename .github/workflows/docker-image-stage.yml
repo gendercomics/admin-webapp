@@ -20,7 +20,7 @@ jobs:
 
             - name: extract metadata (tags, labels) for docker
               id: meta
-              uses: docker/metadata-action@v3.3.0
+              uses: docker/metadata-action@v4
               with:
                   images: gendercomics/admin-webapp-stage
                   tags: |
