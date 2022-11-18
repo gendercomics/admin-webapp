@@ -110,5 +110,8 @@
             "jest-watch-typeahead/filename",
             "jest-watch-typeahead/testname"
         ]
+    },
+    "engines": {
+        "node": "^16"
     }
 }
