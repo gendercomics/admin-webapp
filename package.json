@@ -3,7 +3,7 @@
     "version": "1.16.0-SNAPSHOT",
     "private": true,
     "scripts": {
-        "serve dev": "vue-cli-service serve --mode development",
+        "serve dev admin-webapp": "vue-cli-service serve --mode development",
         "serve": "vue-cli-service serve",
         "build dev": "vue-cli-service build --mode development",
         "build": "vue-cli-service build",
