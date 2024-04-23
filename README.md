@@ -8,6 +8,10 @@
 
 ## Release Notes
 ---
+### gendercomics-admin-webapp-1.16.0
+- NEU: Keywords im "NEW" Dropdown im Header
+
+---
 
 ### gendercomics-admin-webapp-1.15.2
 - FIX: Fehler (leere Auswahlfelder) beim Relationen

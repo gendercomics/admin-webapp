@@ -1,6 +1,6 @@
 {
     "name": "admin-webapp",
-    "version": "1.16.0-SNAPSHOT",
+    "version": "1.16.0",
     "private": true,
     "scripts": {
         "serve dev admin-webapp": "vue-cli-service serve --mode development",
