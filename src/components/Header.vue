@@ -22,6 +22,9 @@
                     <b-dropdown-item to="/publishers/new"
                         >publisher</b-dropdown-item
                     >
+                    <b-dropdown-item to="/keywords/new"
+                        >keyword</b-dropdown-item
+                    >
                 </b-nav-item-dropdown>
             </b-navbar-nav>
 
