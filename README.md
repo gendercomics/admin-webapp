@@ -8,9 +8,12 @@
 
 ## Release Notes
 ---
+### gendercomics-admin-webapp-1.16.1
+- FIX: "IN" im Comic-Form prüft leere Einträge und funktioniert dadurch wieder
+---
+
 ### gendercomics-admin-webapp-1.16.0
 - NEU: Keywords im "NEW" Dropdown im Header
-
 ---
 
 ### gendercomics-admin-webapp-1.15.2

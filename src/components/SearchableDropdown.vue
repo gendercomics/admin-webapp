@@ -51,7 +51,7 @@ export default {
         optionsPath: null,
         displayProperty: null,
     },
-    data: function() {
+    data: function () {
         return {
             options: [],
             search: '',
@@ -84,10 +84,9 @@ export default {
             if (criteria) {
                 //this.$log.debug('criteria=' + criteria);
                 return this.options.filter(
-                    opt =>
-                        this.displayName(opt)
-                            .toLowerCase()
-                            .indexOf(criteria) > -1
+                    (opt) =>
+                        this.displayName(opt).toLowerCase().indexOf(criteria) >
+                        -1
                 );
             }
             // Show all options available
@@ -115,8 +114,8 @@ export default {
             // get publishers
             httpClient
                 .get(this.optionsPath)
-                .then(response => (this.options = response.data))
-                .catch(error => {
+                .then((response) => (this.options = response.data))
+                .catch((error) => {
                     this.$log.error(error);
                     this.errored = true;
                 })
@@ -124,7 +123,11 @@ export default {
         },
         displayName(item) {
             this.$log.debug(JSON.stringify(item));
-            if (item != null && item.displayNames[this.language] != null) {
+            if (
+                item !== null &&
+                item !== '' &&
+                item.displayNames[this.language] != null
+            ) {
                 return item.displayNames[this.language];
             }
             return '-- please select --';
