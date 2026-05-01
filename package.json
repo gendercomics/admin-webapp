@@ -81,6 +81,20 @@
         "> 1%",
         "last 2 versions"
     ],
+    "pnpm": {
+        "onlyBuiltDependencies": [
+            "@fortawesome/fontawesome-common-types",
+            "@fortawesome/fontawesome-svg-core",
+            "@fortawesome/free-regular-svg-icons",
+            "@fortawesome/free-solid-svg-icons",
+            "bootstrap-vue",
+            "core-js",
+            "deasync",
+            "ejs",
+            "node-sass",
+            "yorkie"
+        ]
+    },
     "jest": {
         "moduleFileExtensions": [
             "js",

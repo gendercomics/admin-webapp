@@ -1,10 +1,11 @@
 # build stage
-FROM node:lts-alpine3.14 as build-stage
+FROM node:lts-alpine as build-stage
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
+RUN corepack enable && corepack prepare pnpm@latest --activate
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 COPY . .
-RUN npm run build
+RUN pnpm run build
 
 # production stage
 FROM nginx:stable-alpine as production-stage
