@@ -21,3 +21,4 @@ yarn-error.log*
 *.sw?
 /admin-webapp.iml
 /.env
+/.claude/settings.local.json
