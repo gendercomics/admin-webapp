@@ -1,10 +1,13 @@
 # build stage
-FROM node:lts-alpine3.14 as build-stage
+FROM node:lts-alpine as build-stage
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
+RUN apk add --no-cache python3 make g++
+RUN npm install -g pnpm@9
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 COPY . .
-RUN npm run build
+ENV NODE_OPTIONS=--openssl-legacy-provider
+RUN pnpm run build
 
 # production stage
 FROM nginx:stable-alpine as production-stage
