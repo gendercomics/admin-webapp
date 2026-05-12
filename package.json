@@ -27,7 +27,9 @@
         "tiptap-extensions": "^1.35.2",
         "vue": "^2.7.16",
         "vue-router": "^3.6.5",
-        "vuejs-logger": "^1.10.2"
+        "vuejs-logger": "^1.10.2",
+        "lodash": "^4.17.21",
+        "regenerator-runtime": "^0.13.11"
     },
     "devDependencies": {
         "@vue/cli-plugin-babel": "^4.5.19",
