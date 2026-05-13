@@ -9,17 +9,17 @@ importers:
   .:
     dependencies:
       '@fortawesome/fontawesome-svg-core':
-        specifier: ^6.1.1
-        version: 6.1.1
+        specifier: ^6.7.2
+        version: 6.7.2
       '@fortawesome/free-regular-svg-icons':
-        specifier: ^6.1.1
-        version: 6.1.1
+        specifier: ^6.7.2
+        version: 6.7.2
       '@fortawesome/free-solid-svg-icons':
-        specifier: ^6.1.1
-        version: 6.1.1
+        specifier: ^6.7.2
+        version: 6.7.2
       '@fortawesome/vue-fontawesome':
-        specifier: ^2.0.8
-        version: 2.0.8(@fortawesome/fontawesome-svg-core@6.1.1)(vue@2.7.16)
+        specifier: ^2.0.10
+        version: 2.0.10(@fortawesome/fontawesome-svg-core@6.7.2)(vue@2.7.16)
       axios:
         specifier: 1.6.7
         version: 1.6.7
@@ -109,7 +109,7 @@ importers:
         specifier: ^1.19.1
         version: 1.19.1
       sass:
-        specifier: ^1.77.0
+        specifier: ^1.99.0
         version: 1.99.0
       sass-loader:
         specifier: ^10.5.2
@@ -718,24 +718,24 @@ packages:
   '@epic-web/invariant@1.0.0':
     resolution: {integrity: sha512-lrTPqgvfFQtR/eY/qkIzp98OGdNJu0m5ji3q/nJI8v3SXkRKEnWiOxMmbvcSoAIzv/cGiuvRy57k4suKQSAdwA==}
 
-  '@fortawesome/fontawesome-common-types@6.1.1':
-    resolution: {integrity: sha512-wVn5WJPirFTnzN6tR95abCx+ocH+3IFLXAgyavnf9hUmN0CfWoDjPT/BAWsUVwSlYYVBeCLJxaqi7ZGe4uSjBA==}
+  '@fortawesome/fontawesome-common-types@6.7.2':
+    resolution: {integrity: sha512-Zs+YeHUC5fkt7Mg1l6XTniei3k4bwG/yo3iFUtZWd/pMx9g3fdvkSK9E0FOC+++phXOka78uJcYb8JaFkW52Xg==}
     engines: {node: '>=6'}
 
-  '@fortawesome/fontawesome-svg-core@6.1.1':
-    resolution: {integrity: sha512-NCg0w2YIp81f4V6cMGD9iomfsIj7GWrqmsa0ZsPh59G7PKiGN1KymZNxmF00ssuAlo/VZmpK6xazsGOwzKYUMg==}
+  '@fortawesome/fontawesome-svg-core@6.7.2':
+    resolution: {integrity: sha512-yxtOBWDrdi5DD5o1pmVdq3WMCvnobT0LU6R8RyyVXPvFRd2o79/0NCuQoCjNTeZz9EzA9xS3JxNWfv54RIHFEA==}
     engines: {node: '>=6'}
 
-  '@fortawesome/free-regular-svg-icons@6.1.1':
-    resolution: {integrity: sha512-xXiW7hcpgwmWtndKPOzG+43fPH7ZjxOaoeyooptSztGmJxCAflHZxXNK0GcT0uEsR4jTGQAfGklDZE5NHoBhKg==}
+  '@fortawesome/free-regular-svg-icons@6.7.2':
+    resolution: {integrity: sha512-7Z/ur0gvCMW8G93dXIQOkQqHo2M5HLhYrRVC0//fakJXxcF1VmMPsxnG6Ee8qEylA8b8Q3peQXWMNZ62lYF28g==}
     engines: {node: '>=6'}
 
-  '@fortawesome/free-solid-svg-icons@6.1.1':
-    resolution: {integrity: sha512-0/5exxavOhI/D4Ovm2r3vxNojGZioPwmFrKg0ZUH69Q68uFhFPs6+dhAToh6VEQBntxPRYPuT5Cg1tpNa9JUPg==}
+  '@fortawesome/free-solid-svg-icons@6.7.2':
+    resolution: {integrity: sha512-GsBrnOzU8uj0LECDfD5zomZJIjrPhIlWU82AHwa2s40FKH+kcxQaBvBo3Z4TxyZHIyX8XTDxsyA33/Vx9eFuQA==}
     engines: {node: '>=6'}
 
-  '@fortawesome/vue-fontawesome@2.0.8':
-    resolution: {integrity: sha512-SRmP0q9Ox4zq8ydDR/hrH+23TVU1bdwYVnugLVaAIwklOHbf56gx6JUGlwES7zjuNYqzKgl8e39iYf6ph8qSQw==}
+  '@fortawesome/vue-fontawesome@2.0.10':
+    resolution: {integrity: sha512-OTETSXz+3ygD2OK2/vy82cmUBpuJqeOAg4gfnnv+f2Rir1tDIhQg026Q3NQxznq83ZLz8iNqGG9XJm26inpDeg==}
     peerDependencies:
       '@fortawesome/fontawesome-svg-core': ~1 || ~6
       vue: ~2
@@ -6937,23 +6937,23 @@ snapshots:
 
   '@epic-web/invariant@1.0.0': {}
 
-  '@fortawesome/fontawesome-common-types@6.1.1': {}
+  '@fortawesome/fontawesome-common-types@6.7.2': {}
 
-  '@fortawesome/fontawesome-svg-core@6.1.1':
+  '@fortawesome/fontawesome-svg-core@6.7.2':
     dependencies:
-      '@fortawesome/fontawesome-common-types': 6.1.1
+      '@fortawesome/fontawesome-common-types': 6.7.2
 
-  '@fortawesome/free-regular-svg-icons@6.1.1':
+  '@fortawesome/free-regular-svg-icons@6.7.2':
     dependencies:
-      '@fortawesome/fontawesome-common-types': 6.1.1
+      '@fortawesome/fontawesome-common-types': 6.7.2
 
-  '@fortawesome/free-solid-svg-icons@6.1.1':
+  '@fortawesome/free-solid-svg-icons@6.7.2':
     dependencies:
-      '@fortawesome/fontawesome-common-types': 6.1.1
+      '@fortawesome/fontawesome-common-types': 6.7.2
 
-  '@fortawesome/vue-fontawesome@2.0.8(@fortawesome/fontawesome-svg-core@6.1.1)(vue@2.7.16)':
+  '@fortawesome/vue-fontawesome@2.0.10(@fortawesome/fontawesome-svg-core@6.7.2)(vue@2.7.16)':
     dependencies:
-      '@fortawesome/fontawesome-svg-core': 6.1.1
+      '@fortawesome/fontawesome-svg-core': 6.7.2
       vue: 2.7.16
 
   '@hapi/address@2.1.4': {}
