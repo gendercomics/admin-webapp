@@ -2,7 +2,7 @@
 FROM node:lts-alpine as build-stage
 WORKDIR /app
 RUN apk add --no-cache python3 make g++
-RUN npm install -g pnpm@9
+RUN npm install -g pnpm@11
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 COPY . .
