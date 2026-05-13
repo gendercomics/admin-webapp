@@ -3,7 +3,7 @@ FROM node:lts-alpine as build-stage
 WORKDIR /app
 RUN apk add --no-cache python3 make g++
 RUN npm install -g pnpm@11
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile
 COPY . .
 ENV NODE_OPTIONS=--openssl-legacy-provider
