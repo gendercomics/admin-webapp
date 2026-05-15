@@ -11,11 +11,7 @@
             </template>
 
             <!-- source (out) -->
-            <b-input
-                disabled
-                v-model="this.label"
-                v-if="this.direction === 'out'"
-            />
+            <b-input disabled :value="label" v-if="this.direction === 'out'" />
 
             <!-- source (in) -->
             <searchable-dropdown
@@ -41,11 +37,7 @@
             />
 
             <!-- target (in) -->
-            <b-input
-                disabled
-                v-model="this.label"
-                v-if="this.direction === 'in'"
-            />
+            <b-input disabled :value="label" v-if="this.direction === 'in'" />
 
             <template v-slot:append v-if="removable">
                 <b-button @click="deleteValue">
