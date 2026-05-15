@@ -206,12 +206,12 @@ export default {
         httpClient
             .get('/persons')
             .then(
-                response => (
+                (response) => (
                     (this.persons = response.data),
                     (this.totalRows = this.persons.length)
                 )
             )
-            .catch(error => {
+            .catch((error) => {
                 console.log(error);
                 this.errored = true;
             })
@@ -226,7 +226,7 @@ export default {
             console.log('delete item: ' + item.id);
             httpClient
                 .delete('/persons/' + item.id, item)
-                .catch(error => {
+                .catch((error) => {
                     console.log(error);
                     this.errored = true;
                 })
@@ -246,7 +246,7 @@ export default {
             return nameObj.firstName + ' ' + nameObj.lastName;
         },
         showDeleteModal(item) {
-            this.$bvModal.msgBoxConfirm('sure???').then(confirmed => {
+            this.$bvModal.msgBoxConfirm('sure???').then((confirmed) => {
                 this.$log.debug('delete id:' + item.id + ': ' + confirmed);
                 if (confirmed) {
                     this.deletePerson(item);

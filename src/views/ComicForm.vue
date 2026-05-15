@@ -181,8 +181,8 @@
                                     disabled
                                     v-if="
                                         !this.hasCover &&
-                                            !this.dnbCheckFinished &&
-                                            this.hasIsbn13
+                                        !this.dnbCheckFinished &&
+                                        this.hasIsbn13
                                     "
                                 >
                                     <b-spinner small />
@@ -246,7 +246,10 @@
                             <b-form-select
                                 :options="this.types"
                                 v-model="comic.type"
-                                style="background-color: #E4E7EB; max-width: 15%"
+                                style="
+                                    background-color: #e4e7eb;
+                                    max-width: 15%;
+                                "
                             >
                             </b-form-select>
 
@@ -779,12 +782,12 @@ export default {
                 httpClient
                     .post('/comics/', this.comic)
                     .then(
-                        response => (
+                        (response) => (
                             (this.comic = response.data),
                             (this.saveSuccessful = true)
                         )
                     )
-                    .catch(error => {
+                    .catch((error) => {
                         console.log(error);
                         this.errored = true;
                     })
@@ -793,12 +796,12 @@ export default {
                 httpClient
                     .put('/comics/' + this.comic.id, this.comic)
                     .then(
-                        response => (
+                        (response) => (
                             (this.comic = response.data),
                             (this.saveSuccessful = true)
                         )
                     )
-                    .catch(error => {
+                    .catch((error) => {
                         console.log(error);
                         this.errored = true;
                     })
@@ -908,10 +911,10 @@ export default {
             }
             this.comic.comments.push({ value: null });
         },
-        verifyTitle: _.debounce(function(val) {
+        verifyTitle: _.debounce(function (val) {
             this.$log.debug('verifyTitle=' + val);
             let vm = this;
-            this.titleExists(val).then(function(response) {
+            this.titleExists(val).then(function (response) {
                 vm.$log.debug('titleExits=' + response);
                 vm.$data.duplicateTitle = response;
             });
@@ -922,16 +925,15 @@ export default {
         },
         initPublisherOverrides() {
             if (this.comic.publisherOverrides != null) {
-                this.comic.publishers.forEach(publisher => {
+                this.comic.publishers.forEach((publisher) => {
                     this.$log.debug(
                         'publisher-override: publisherId=' +
                             publisher.id +
                             ', locationOverride: ' +
                             this.comic.publisherOverrides[publisher.id]
                     );
-                    publisher.locationOverride = this.comic.publisherOverrides[
-                        publisher.id
-                    ];
+                    publisher.locationOverride =
+                        this.comic.publisherOverrides[publisher.id];
                 });
             }
         },
@@ -951,7 +953,7 @@ export default {
             this.$log.debug('loading comic ...');
             await httpClient
                 .get(this.$route.path)
-                .then(response => {
+                .then((response) => {
                     this.comic = response.data;
                     if (this.comic.metaData.status === null) {
                         this.comic.metaData.status = 'DRAFT';
@@ -960,7 +962,7 @@ export default {
                         this.initPublisherOverrides();
                     });
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.log(error);
                     this.errored = true;
                 })
@@ -985,8 +987,8 @@ export default {
         // get publishers
         httpClient
             .get('/publishers')
-            .then(response => (this.publishers = response.data))
-            .catch(error => {
+            .then((response) => (this.publishers = response.data))
+            .catch((error) => {
                 console.log(error);
                 this.errored = true;
             })

@@ -1,22 +1,22 @@
 import { httpClient } from '@/services/httpclient';
 
 export default {
-    data: function() {
+    data: function () {
         return {
             roleOptions: [],
             loading: false,
         };
     },
-    created: function() {},
+    created: function () {},
     methods: {
         loadRoles() {
             this.loading = true;
             httpClient
                 .get('/roles')
-                .then(response =>
-                    response.data.forEach(role => this.addRoleOption(role))
+                .then((response) =>
+                    response.data.forEach((role) => this.addRoleOption(role))
                 )
-                .catch(error => {
+                .catch((error) => {
                     this.$log.error(error);
                 })
                 .finally(() => (this.loading = false));

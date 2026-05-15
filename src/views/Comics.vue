@@ -26,8 +26,8 @@ export default {
     mounted() {
         httpClient
             .get('/comics/count')
-            .then(response => (this.comicCount = response.data))
-            .catch(error => {
+            .then((response) => (this.comicCount = response.data))
+            .catch((error) => {
                 console.log(error);
                 this.errored = true;
             })

@@ -6,7 +6,6 @@ RUN npm install -g pnpm@11
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile
 COPY . .
-ENV NODE_OPTIONS=--openssl-legacy-provider
 RUN pnpm run build
 
 # production stage

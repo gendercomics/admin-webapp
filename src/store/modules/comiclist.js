@@ -11,7 +11,7 @@ const getters = {
 const actions = {};
 
 const mutations = {
-    searchTerm: val => {
+    searchTerm: (val) => {
         state.searchTerm = val;
     },
 };

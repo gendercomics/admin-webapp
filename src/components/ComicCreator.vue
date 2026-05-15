@@ -11,7 +11,7 @@
                         v-model="localValue.roles[idx]"
                         :options="roleOptions"
                         text-field="value.name"
-                        style="background-color: #E4E7EB;"
+                        style="background-color: #e4e7eb"
                     >
                     </b-form-select>
                 </div>
@@ -36,7 +36,7 @@
                 >
                     <b-dropdown-form @submit.stop.prevent="() => {}">
                         <b-form-group
-                            style="min-width: 15em;"
+                            style="min-width: 15em"
                             class="mb-0"
                             :description="searchDesc"
                         >
@@ -100,7 +100,7 @@ export default {
             default: false,
         },
     },
-    data: function() {
+    data: function () {
         return {
             roleOptions: [],
             names: [],
@@ -130,10 +130,8 @@ export default {
             if (criteria) {
                 this.$log.debug('criteria=' + criteria);
                 return this.names.filter(
-                    opt =>
-                        this.fullName(opt)
-                            .toLowerCase()
-                            .indexOf(criteria) > -1
+                    (opt) =>
+                        this.fullName(opt).toLowerCase().indexOf(criteria) > -1
                 );
             }
             // Show all options available

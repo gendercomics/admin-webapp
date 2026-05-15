@@ -165,7 +165,7 @@
                             <b-link
                                 :to="
                                     '/comics/' +
-                                        seriesComicId(row.item, 'comic_series')
+                                    seriesComicId(row.item, 'comic_series')
                                 "
                             >
                                 {{
@@ -210,10 +210,10 @@
                                 <b-link
                                     :to="
                                         '/comics/' +
-                                            seriesComicId(
-                                                row.item,
-                                                'publishing_series'
-                                            )
+                                        seriesComicId(
+                                            row.item,
+                                            'publishing_series'
+                                        )
                                     "
                                 >
                                     {{
@@ -388,12 +388,12 @@ export default {
             httpClient
                 .get('/comicsList')
                 .then(
-                    response => (
+                    (response) => (
                         (this.comics = response.data),
                         (this.totalRows = this.comics.length)
                     )
                 )
-                .catch(error => {
+                .catch((error) => {
                     console.log(error);
                     this.errored = true;
                 })
@@ -435,7 +435,7 @@ export default {
         filterCreators(row, filter) {
             let filterCreator = false;
             if (row.creators !== null) {
-                row.creators.forEach(function(creator) {
+                row.creators.forEach(function (creator) {
                     let filterName = '';
                     if (creator.name != null) {
                         if (creator.name.name !== null) {
@@ -523,7 +523,7 @@ export default {
             console.log('delete comic: ' + item.title);
             httpClient
                 .delete('/comics/' + item.id, item)
-                .catch(error => {
+                .catch((error) => {
                     console.log(error);
                     this.errored = true;
                 })
@@ -549,7 +549,7 @@ export default {
             }
         },
         showDeleteModal(item) {
-            this.$bvModal.msgBoxConfirm('sure???').then(confirmed => {
+            this.$bvModal.msgBoxConfirm('sure???').then((confirmed) => {
                 this.$log.debug('delete id:' + item.id + ': ' + confirmed);
                 if (confirmed) {
                     this.deleteComic(item);
@@ -559,7 +559,7 @@ export default {
         seriesComicId(item, seriesType) {
             let id = '';
             if (item.seriesList != null) {
-                item.seriesList.forEach(series => {
+                item.seriesList.forEach((series) => {
                     if (series.comic.type === seriesType) {
                         id = series.comic.id;
                     }
@@ -570,7 +570,7 @@ export default {
         seriesTitleAndSubtitle(item, seriesType) {
             if (item.seriesList != null) {
                 let text = '';
-                item.seriesList.forEach(series => {
+                item.seriesList.forEach((series) => {
                     if (series.comic.type === seriesType) {
                         text += series.comic.title;
                         if (series.comic.subTitle != null) {
@@ -585,7 +585,7 @@ export default {
         seriesVolume(item, seriesType) {
             if (item.seriesList != null) {
                 let text = '';
-                item.seriesList.forEach(series => {
+                item.seriesList.forEach((series) => {
                     if (series.comic.type === seriesType) {
                         if (series.volume != null) {
                             text += ' ' + series.volume;
@@ -596,12 +596,12 @@ export default {
             }
             return '';
         },
-        searchComics: _.debounce(function(val) {
+        searchComics: _.debounce(function (val) {
             if (val.length > 0) {
                 this.loading = true;
                 this.$log.debug('search=' + val);
                 let vm = this;
-                this.search(val).then(function(response) {
+                this.search(val).then(function (response) {
                     vm.$data.comics = response;
                 });
             }
@@ -612,7 +612,7 @@ export default {
         },
     },
     computed: {
-        filter: function() {
+        filter: function () {
             if (this.textFilter === null && this.statusFilter === null) {
                 return null;
             }

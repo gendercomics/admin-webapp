@@ -196,8 +196,8 @@ export default {
     mounted() {
         httpClient
             .get('/roles')
-            .then(response => (this.roles = response.data))
-            .catch(error => {
+            .then((response) => (this.roles = response.data))
+            .catch((error) => {
                 console.log(error);
                 this.errored = true;
             })
@@ -212,7 +212,7 @@ export default {
             console.log('delete role: ' + item.name);
             httpClient
                 .delete('/roles/' + item.id, item)
-                .catch(error => {
+                .catch((error) => {
                     console.log(error);
                     this.errored = true;
                 })
@@ -225,7 +225,7 @@ export default {
             this.currentPage = 1;
         },
         showDeleteModal(item) {
-            this.$bvModal.msgBoxConfirm('sure???').then(confirmed => {
+            this.$bvModal.msgBoxConfirm('sure???').then((confirmed) => {
                 this.$log.debug('delete id:' + item.id + ': ' + confirmed);
                 if (confirmed) {
                     this.deleteRole(item);

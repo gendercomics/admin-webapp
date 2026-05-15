@@ -15,7 +15,7 @@ const httpClient = axios.create(config);
 const authService = new AuthService();
 
 /** Auth token interceptors */
-const requestInterceptor = config => {
+const requestInterceptor = (config) => {
     Vue.prototype.keycloak
         .updateToken(30)
         .success(() => {
@@ -38,8 +38,8 @@ const requestInterceptor = config => {
 
 /** response interceptpr */
 const responseInterceptor = httpClient.interceptors.response.use(
-    response => response,
-    error => {
+    (response) => response,
+    (error) => {
         Vue.$log.debug('response-status=', error.response.status);
 
         if (error.response.status !== 401) {
@@ -70,7 +70,7 @@ const responseInterceptor = httpClient.interceptors.response.use(
 );
 
 /** logger interceptors */
-const loggerInterceptor = config => {
+const loggerInterceptor = (config) => {
     /** TODO */
     return config;
 };

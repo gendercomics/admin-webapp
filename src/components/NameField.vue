@@ -32,7 +32,7 @@
                 switch
                 v-b-tooltip.hover
                 title="pseudonym"
-                v-model="localValue.pseudonym"/>
+                v-model="localValue.pseudonym" />
             <font-awesome-icon icon="user-secret"
         /></b-input-group-append>
 
@@ -41,7 +41,7 @@
                 switch
                 v-b-tooltip.hover
                 title="searchable"
-                v-model="localValue.searchable"/>
+                v-model="localValue.searchable" />
             <font-awesome-icon icon="search"
         /></b-input-group-append>
 

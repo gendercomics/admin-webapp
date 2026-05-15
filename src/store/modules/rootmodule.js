@@ -11,7 +11,7 @@ const getters = {
 const actions = {};
 
 const mutations = {
-    language: val => {
+    language: (val) => {
         state.language = val;
     },
 };

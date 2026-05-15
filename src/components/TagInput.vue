@@ -127,7 +127,7 @@ export default {
             default: () => 'content',
         },
     },
-    data: function() {
+    data: function () {
         return {
             tagNames: [],
             options: [],
@@ -144,13 +144,13 @@ export default {
             const criteria = this.criteria;
             // Filter out already selected options
             const options = this.options.filter(
-                opt =>
+                (opt) =>
                     this.tagNames.indexOf(opt.values[this.language].name) === -1
             );
             if (criteria) {
                 // Show only options that match criteria
                 return options.filter(
-                    opt =>
+                    (opt) =>
                         opt.values[this.language].name
                             .toLowerCase()
                             .indexOf(criteria) > -1
@@ -173,8 +173,8 @@ export default {
                 this.$emit('input', this.mappedTags);
             },
         },
-        mappedTags: function() {
-            return this.options.filter(option =>
+        mappedTags: function () {
+            return this.options.filter((option) =>
                 this.tagNames.includes(option.values[this.language].name)
             );
         },
@@ -206,21 +206,21 @@ export default {
         loadOptions() {
             httpClient
                 .get('/keywords?type=' + this.type)
-                .then(response => (this.options = response.data))
-                .catch(error => {
+                .then((response) => (this.options = response.data))
+                .catch((error) => {
                     console.log(error);
                     this.errored = true;
                 })
                 .finally(() => (this.loading = false));
         },
         initTagNames() {
-            this.value.forEach(value => {
+            this.value.forEach((value) => {
                 this.tagNames.push(value.values[this.language].name);
             });
         },
     },
     watch: {
-        language: function() {
+        language: function () {
             this.$log.debug('language changed:' + this.language);
             this.tagNames = [];
             this.initTagNames();

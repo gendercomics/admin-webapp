@@ -69,8 +69,8 @@ export default {
     mounted() {
         httpClient
             .get('/count')
-            .then(response => (this.count = response.data))
-            .catch(error => {
+            .then((response) => (this.count = response.data))
+            .catch((error) => {
                 console.log(error);
                 this.errored = true;
             })

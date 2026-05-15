@@ -31,13 +31,13 @@ export const getters = {
 };
 
 export const mutations = {
-    setFilter: val => (state.filter = val),
-    setStatusFilter: val => (state.filter.statusFilter = val),
-    setTextFilter: val => (state.textFilter = val),
-    setTypeFilter: val => (state.filter.typeFilter = val),
-    setLanguage: val => (state.language = val),
-    setSearchTerm: val => (state.searchTerm = val),
-    setPage: val => (state.page = val),
-    setPerPage: val => (state.perPage = val),
-    setBrowseMode: val => (state.browseMode = val),
+    setFilter: (val) => (state.filter = val),
+    setStatusFilter: (val) => (state.filter.statusFilter = val),
+    setTextFilter: (val) => (state.textFilter = val),
+    setTypeFilter: (val) => (state.filter.typeFilter = val),
+    setLanguage: (val) => (state.language = val),
+    setSearchTerm: (val) => (state.searchTerm = val),
+    setPage: (val) => (state.page = val),
+    setPerPage: (val) => (state.perPage = val),
+    setBrowseMode: (val) => (state.browseMode = val),
 };

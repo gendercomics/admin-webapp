@@ -137,10 +137,10 @@ export default {
         if (!this.$route.path.endsWith('new')) {
             httpClient
                 .get(this.$route.path)
-                .then(response => {
+                .then((response) => {
                     this.role = response.data;
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.log(error);
                     this.errored = true;
                 });
@@ -162,12 +162,12 @@ export default {
                 httpClient
                     .post('/roles/', this.role)
                     .then(
-                        response => (
+                        (response) => (
                             (this.role = response.data),
                             this.$router.push('/roles')
                         )
                     )
-                    .catch(error => {
+                    .catch((error) => {
                         console.log(error);
                         this.errored = true;
                     });
@@ -175,12 +175,12 @@ export default {
                 httpClient
                     .put('/roles/' + this.role.id, this.role)
                     .then(
-                        response => (
+                        (response) => (
                             (this.role = response.data),
                             this.$router.push('/roles')
                         )
                     )
-                    .catch(error => {
+                    .catch((error) => {
                         console.log(error);
                         this.errored = true;
                     });
