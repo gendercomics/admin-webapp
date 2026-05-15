@@ -5,7 +5,7 @@ import * as Keycloak from 'keycloak-js';
 import VueLogger from 'vuejs-logger';
 import BootstrapVue from 'bootstrap-vue';
 import './styles/styles.scss';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import {
@@ -85,7 +85,7 @@ let initOptions = {
 };
 
 Vue.prototype.keycloak = Keycloak(initOptions);
-Vue.prototype.moment = moment;
+Vue.prototype.moment = dayjs;
 Vue.prototype.$statusOptions = ['DRAFT', 'CLARIFICATION', 'REVIEW', 'FINAL'];
 Vue.prototype.$typeOptions = [
     { text: 'A', value: 'anthology' },
