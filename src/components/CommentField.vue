@@ -94,7 +94,7 @@ export default {
             default: false,
         },
     },
-    data: function() {
+    data: function () {
         return {
             text: {
                 id: null,
@@ -120,7 +120,7 @@ export default {
             }
             return ' by ' + userName;
         },
-        editable: function() {
+        editable: function () {
             if (this.$data.text.metadata == null) {
                 return true;
             } else {
@@ -129,12 +129,12 @@ export default {
         },
     },
     watch: {
-        '$data.text': function(newValue) {
+        '$data.text': function (newValue) {
             this.localValue = newValue;
         },
     },
     methods: {
-        saveComment: _.debounce(function(val) {
+        saveComment: _.debounce(function (val) {
             this.$log.debug('comment-value=' + val);
             this.$data.text.value = val;
             this.saveText();

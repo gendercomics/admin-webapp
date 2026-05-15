@@ -1,12 +1,12 @@
 import { httpClient } from '@/services/httpclient';
 
 export default {
-    data: function() {
+    data: function () {
         return {
             errored: false,
         };
     },
-    created: function() {},
+    created: function () {},
     methods: {
         checkDnbCover(isbn) {
             this.$log.debug('checking DNB cover for isbn: ' + isbn);
@@ -14,12 +14,12 @@ export default {
                 httpClient
                     .get('/files/dnb/cover/available/' + isbn)
                     .then(
-                        response => (
+                        (response) => (
                             (this.dnbHasCover = response.data),
                             (this.dnbCheckFinished = true)
                         )
                     )
-                    .catch(error => {
+                    .catch((error) => {
                         console.log(error);
                         this.errored = true;
                     })
@@ -36,10 +36,10 @@ export default {
 
             await httpClient
                 .post('/files/dnb/cover/download', formData)
-                .then(response => {
+                .then((response) => {
                     this.comic.cover = response.data;
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.log(error);
                     this.errored = true;
                 })

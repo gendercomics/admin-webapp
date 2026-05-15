@@ -153,10 +153,10 @@ export default {
         if (!this.$route.path.endsWith('new')) {
             httpClient
                 .get(this.$route.path)
-                .then(response => {
+                .then((response) => {
                     this.publisher = response.data;
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.log(error);
                     this.errored = true;
                 });
@@ -185,12 +185,12 @@ export default {
                 httpClient
                     .post('/publishers/', this.publisher)
                     .then(
-                        response => (
+                        (response) => (
                             (this.publisher = response.data),
                             this.$router.push('/publishers')
                         )
                     )
-                    .catch(error => {
+                    .catch((error) => {
                         console.log(error);
                         this.errored = true;
                     });
@@ -198,12 +198,12 @@ export default {
                 httpClient
                     .put('/publishers/' + this.publisher.id, this.publisher)
                     .then(
-                        response => (
+                        (response) => (
                             (this.publisher = response.data),
                             this.$router.push('/publishers')
                         )
                     )
-                    .catch(error => {
+                    .catch((error) => {
                         console.log(error);
                         this.errored = true;
                     });

@@ -100,7 +100,7 @@ Vue.use(BootstrapVue);
 
 Vue.prototype.keycloak
     .init({ onLoad: initOptions.onLoad })
-    .success(auth => {
+    .success((auth) => {
         if (!auth) {
             window.location.reload();
         } else {
@@ -109,7 +109,7 @@ Vue.prototype.keycloak
 
         new Vue({
             router,
-            render: h => h(App),
+            render: (h) => h(App),
         }).$mount('#app');
 
         authService.storeTokens(

@@ -1,12 +1,12 @@
 import { httpClient } from '@/services/httpclient';
 
 export default {
-    data: function() {
+    data: function () {
         return {
             errored: false,
         };
     },
-    created: function() {},
+    created: function () {},
     methods: {
         async titleExists(title) {
             try {

@@ -236,7 +236,7 @@ export default {
         this.loadPredicates();
     },
     computed: {
-        addBtnDisabled: function() {
+        addBtnDisabled: function () {
             return (
                 this.newPredicate.de === null ||
                 this.newPredicate.en === null ||
@@ -246,7 +246,7 @@ export default {
         },
     },
     watch: {
-        predicates: function() {
+        predicates: function () {
             this.$log.debug('predicates changed');
             this.$refs.table.refresh();
         },
@@ -280,7 +280,7 @@ export default {
             this.predicates.splice(this.predicates.indexOf(item), 1);
         },
         showDeleteModal(item) {
-            this.$bvModal.msgBoxConfirm('sure???').then(confirmed => {
+            this.$bvModal.msgBoxConfirm('sure???').then((confirmed) => {
                 this.$log.debug('delete id:' + item.id + ': ' + confirmed);
                 if (confirmed) {
                     this.removePredicate(item);
@@ -288,7 +288,7 @@ export default {
             });
         },
         inputHandler(index, id) {
-            let changed = this.predicates.filter(predicate => {
+            let changed = this.predicates.filter((predicate) => {
                 return predicate.id === id;
             });
             this.updatedPredicate = changed[0];
@@ -304,7 +304,7 @@ export default {
             this.$set(this.predicates, index, this.updatedPredicate);
             this.$emit('input', this.predicates);
         },
-        inputHandlerDebounce: _.debounce(function(index, id) {
+        inputHandlerDebounce: _.debounce(function (index, id) {
             this.inputHandler(index, id);
         }, 500),
     },

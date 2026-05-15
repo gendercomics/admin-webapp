@@ -201,12 +201,12 @@ export default {
         httpClient
             .get('/keywords')
             .then(
-                response => (
+                (response) => (
                     (this.keywords = response.data),
                     (this.totalRows = this.keywords.length)
                 )
             )
-            .catch(error => {
+            .catch((error) => {
                 console.log(error);
                 this.errored = true;
             })
@@ -226,7 +226,7 @@ export default {
             // TODO display warning modal?
             httpClient
                 .delete('/keywords/' + item.id, item)
-                .catch(error => {
+                .catch((error) => {
                     console.log(error);
                     this.errored = true;
                 })
@@ -234,7 +234,7 @@ export default {
             this.keywords.splice(this.keywords.indexOf(item), 1);
         },
         showDeleteModal(item) {
-            this.$bvModal.msgBoxConfirm('sure???').then(confirmed => {
+            this.$bvModal.msgBoxConfirm('sure???').then((confirmed) => {
                 this.$log.debug('delete id:' + item.id + ': ' + confirmed);
                 if (confirmed) {
                     this.deleteKeyword(item);

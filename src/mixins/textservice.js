@@ -1,7 +1,7 @@
 import { httpClient } from '@/services/httpclient';
 
 export default {
-    data: function() {
+    data: function () {
         return {
             text: {
                 id: null,
@@ -11,14 +11,14 @@ export default {
             errored: false,
         };
     },
-    created: function() {},
+    created: function () {},
     methods: {
         saveText() {
             if (this.text.id === null) {
                 httpClient
                     .post('/texts/', this.text)
-                    .then(response => (this.text = response.data))
-                    .catch(error => {
+                    .then((response) => (this.text = response.data))
+                    .catch((error) => {
                         console.log(error);
                         this.errored = true;
                     })
@@ -26,8 +26,8 @@ export default {
             } else {
                 httpClient
                     .put('/texts/' + this.text.id, this.text)
-                    .then(response => (this.text = response.data))
-                    .catch(error => {
+                    .then((response) => (this.text = response.data))
+                    .catch((error) => {
                         console.log(error);
                         this.errored = true;
                     })
@@ -36,7 +36,7 @@ export default {
         },
         deleteText(id) {
             this.$log.debug('delete text: id=' + id);
-            httpClient.delete('/texts/' + id).catch(error => {
+            httpClient.delete('/texts/' + id).catch((error) => {
                 console.log(error);
                 this.errored = true;
             });

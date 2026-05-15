@@ -330,12 +330,12 @@ export default {
                 httpClient
                     .post('/keywords/', this.keyword)
                     .then(
-                        response => (
+                        (response) => (
                             (this.comic = response.data),
                             (this.saveSuccessful = true)
                         )
                     )
-                    .catch(error => {
+                    .catch((error) => {
                         this.$log.error(error);
                         this.errored = true;
                     })
@@ -344,10 +344,10 @@ export default {
                 httpClient
                     .put('/keywords/' + this.keyword.id, this.keyword)
                     .then(
-                        response => (this.keyword = response.data),
+                        (response) => (this.keyword = response.data),
                         (this.saveSuccessful = true)
                     )
-                    .catch(error => {
+                    .catch((error) => {
                         this.$log.error(error);
                         this.errored = true;
                     })
@@ -412,13 +412,13 @@ export default {
         if (!this.$route.path.endsWith('new')) {
             httpClient
                 .get(this.$route.path)
-                .then(response => {
+                .then((response) => {
                     this.keyword = response.data;
                     if (this.keyword.metaData.status === null) {
                         this.keyword.metaData.status = 'DRAFT';
                     }
                 })
-                .catch(error => {
+                .catch((error) => {
                     this.$log.error(error);
                     this.errored = true;
                 })

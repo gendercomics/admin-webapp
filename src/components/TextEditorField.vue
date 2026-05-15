@@ -40,7 +40,7 @@ export default {
             default: false,
         },
     },
-    data: function() {
+    data: function () {
         return {
             content: '',
         };
@@ -56,7 +56,7 @@ export default {
         },
     },
     watch: {
-        '$data.content': function(newValue) {
+        '$data.content': function (newValue) {
             this.localValue = newValue;
         },
     },

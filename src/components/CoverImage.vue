@@ -99,7 +99,7 @@ export default {
 
             await httpClient
                 .post('/files/upload/', formData)
-                .catch(error => {
+                .catch((error) => {
                     console.log(error);
                     this.errored = true;
                 })
@@ -111,7 +111,7 @@ export default {
             this.$log.debug('delete file: ' + this.localValue);
             httpClient
                 .delete('/files/' + this.comicId + '/' + this.localValue)
-                .catch(error => {
+                .catch((error) => {
                     console.log(error);
                     this.errored = true;
                 })
@@ -121,8 +121,8 @@ export default {
             let responseStatus;
             await httpClient
                 .head(this.imageUrl)
-                .then(response => (responseStatus = response.status))
-                .catch(error => {
+                .then((response) => (responseStatus = response.status))
+                .catch((error) => {
                     console.log(error);
                     this.errored = true;
                 })

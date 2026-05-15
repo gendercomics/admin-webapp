@@ -11,14 +11,14 @@
                     v-if="hasOverride"
                     :value="localValue.location"
                     readonly
-                    style="max-width: 15%; text-decoration: line-through;"
+                    style="max-width: 15%; text-decoration: line-through"
                 />
 
                 <b-form-input
                     v-else-if="localValue.location"
                     :value="localValue.location"
                     readonly
-                    style="max-width: 15%;"
+                    style="max-width: 15%"
                 />
 
                 <b-button

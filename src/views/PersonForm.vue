@@ -149,10 +149,10 @@ export default {
         if (!this.$route.path.endsWith('new')) {
             httpClient
                 .get(this.$route.path)
-                .then(response => {
+                .then((response) => {
                     this.person = response.data;
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.log(error);
                     this.errored = true;
                 });
@@ -162,7 +162,7 @@ export default {
         personNames() {
             let personName = '';
             if (this.person.names !== null) {
-                this.person.names.forEach(function(item) {
+                this.person.names.forEach(function (item) {
                     personName.length > 0
                         ? (personName += ', ')
                         : (personName += '');
@@ -200,12 +200,12 @@ export default {
                 httpClient
                     .post('/persons/', this.person)
                     .then(
-                        response => (
+                        (response) => (
                             (this.person = response.data),
                             this.$router.push('/persons')
                         )
                     )
-                    .catch(error => {
+                    .catch((error) => {
                         console.log(error);
                         this.errored = true;
                     });
@@ -213,12 +213,12 @@ export default {
                 httpClient
                     .put('/persons/' + this.person.id, this.person)
                     .then(
-                        response => (
+                        (response) => (
                             (this.person = response.data),
                             this.$router.push('/persons')
                         )
                     )
-                    .catch(error => {
+                    .catch((error) => {
                         console.log(error);
                         this.errored = true;
                     });
