@@ -87,23 +87,6 @@
                     @filtered="onFiltered"
                     :busy="this.loading"
                 >
-                    <template v-slot:cell(actions)="row">
-                        <!-- delete button -->
-                        <b-button
-                            v-show="row.item.metaData.status === 'DRAFT'"
-                            variant="light"
-                            size="sm"
-                            class="mr-1"
-                            @click="deletePublisher(row.item)"
-                        >
-                            <font-awesome-icon
-                                icon="trash-alt"
-                                v-b-tooltip
-                                title="delete"
-                            />
-                        </b-button>
-                    </template>
-
                     <!-- state -->
                     <template v-slot:cell(metaData.status)="row">
                         <span v-if="row.item.metaData.status === 'DRAFT'"
@@ -215,8 +198,8 @@ export default {
     mounted() {
         httpClient
             .get('/publishers')
-            .then(response => (this.publishers = response.data))
-            .catch(error => {
+            .then((response) => (this.publishers = response.data))
+            .catch((error) => {
                 console.log(error);
                 this.errored = true;
             })
@@ -236,7 +219,7 @@ export default {
             console.log('delete publisher: ' + item.name);
             httpClient
                 .delete('/publishers/' + item.id, item)
-                .catch(error => {
+                .catch((error) => {
                     console.log(error);
                     this.errored = true;
                 })
@@ -244,7 +227,7 @@ export default {
             this.publishers.splice(this.publishers.indexOf(item), 1);
         },
         showDeleteModal(item) {
-            this.$bvModal.msgBoxConfirm('sure???').then(confirmed => {
+            this.$bvModal.msgBoxConfirm('sure???').then((confirmed) => {
                 this.$log.debug('delete id:' + item.id + ': ' + confirmed);
                 if (confirmed) {
                     this.deletePublisher(item);
