@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
-import * as Keycloak from 'keycloak-js';
+import Keycloak from 'keycloak-js';
 import VueLogger from 'vuejs-logger';
 import BootstrapVue from 'bootstrap-vue';
 import './styles/styles.scss';
@@ -84,7 +84,7 @@ let initOptions = {
     onLoad: 'login-required',
 };
 
-Vue.prototype.keycloak = Keycloak(initOptions);
+Vue.prototype.keycloak = new Keycloak(initOptions);
 Vue.prototype.moment = dayjs;
 Vue.prototype.$statusOptions = ['DRAFT', 'CLARIFICATION', 'REVIEW', 'FINAL'];
 Vue.prototype.$typeOptions = [
@@ -100,7 +100,7 @@ Vue.use(BootstrapVue);
 
 Vue.prototype.keycloak
     .init({ onLoad: initOptions.onLoad })
-    .success((auth) => {
+    .then((auth) => {
         if (!auth) {
             window.location.reload();
         } else {
@@ -117,6 +117,6 @@ Vue.prototype.keycloak
             Vue.prototype.keycloak.refreshToken
         );
     })
-    .error(() => {
+    .catch(() => {
         Vue.$log.error('Authentication failed!');
     });
