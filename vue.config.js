@@ -5,4 +5,13 @@ module.exports = {
     publicPath: process.env.NODE_ENV === 'production' ? '/admin/' : '/',
     runtimeCompiler: true,
     lintOnSave: false,
+    css: {
+        loaderOptions: {
+            sass: {
+                sassOptions: {
+                    quietDeps: true,
+                },
+            },
+        },
+    },
 };

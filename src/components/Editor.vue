@@ -287,6 +287,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import './src/styles/tiptap/variables';
-@import './src/styles/tiptap/menububble';
+@import '../styles/tiptap/variables';
+@import '../styles/tiptap/menububble';
 </style>
