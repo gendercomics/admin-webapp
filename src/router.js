@@ -16,7 +16,6 @@ import Predicates from './views/Predicates';
 
 Vue.use(Router);
 
-let authServerUrl = process.env.VUE_APP_KEYCLOAK_BASE_URL;
 let redirectURI = process.env.VUE_APP_KEYCLOAK_REDIRECT_URL;
 
 const authService = new AuthService();
@@ -132,11 +131,8 @@ export default new Router({
         {
             path: '/logout',
             beforeEnter() {
-                location.href =
-                    authServerUrl +
-                    'auth/realms/gendercomics/protocol/openid-connect/logout?redirect_uri=' +
-                    redirectURI;
                 authService.clear();
+                Vue.prototype.keycloak.logout({ redirectUri: redirectURI });
             },
         },
     ],

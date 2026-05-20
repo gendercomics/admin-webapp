@@ -18,14 +18,14 @@ const authService = new AuthService();
 const requestInterceptor = (config) => {
     Vue.prototype.keycloak
         .updateToken(30)
-        .success(() => {
+        .then(() => {
             Vue.$log.debug('successfully got new token');
             authService.storeTokens(
                 Vue.prototype.keycloak.token,
                 Vue.prototype.keycloak.refreshToken
             );
         })
-        .error(() => {
+        .catch(() => {
             Vue.$log.error('updateToken error');
         });
 
@@ -49,9 +49,9 @@ const responseInterceptor = httpClient.interceptors.response.use(
 
         Vue.$log.debug('response-interceptor: trying token refresh');
 
-        Vue.prototype.keycloak
+        return Vue.prototype.keycloak
             .updateToken(30)
-            .success(() => {
+            .then(() => {
                 authService.storeTokens(
                     Vue.prototype.keycloak.token,
                     Vue.prototype.keycloak.refreshToken
@@ -61,7 +61,7 @@ const responseInterceptor = httpClient.interceptors.response.use(
                     'Bearer ' + authService.getAccessToken();
                 return httpClient(error.response.config);
             })
-            .error(() => {
+            .catch(() => {
                 Vue.$log.error('token refresh failed');
                 authService.clear();
                 return Promise.reject(error);
