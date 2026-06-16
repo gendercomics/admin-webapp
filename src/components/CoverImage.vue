@@ -70,7 +70,7 @@ export default {
         imageUrl() {
             if (this.localValue != null && this.localValue.length > 0) {
                 return (
-                    process.env.VUE_APP_API_URL +
+                    import.meta.env.VITE_API_URL +
                     'images/' +
                     this.comicId +
                     '/' +
