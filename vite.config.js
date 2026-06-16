@@ -9,6 +9,7 @@ export default defineConfig(({ command }) => ({
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url)),
         },
+        extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
     },
     test: {
         environment: 'jsdom',

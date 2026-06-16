@@ -163,7 +163,7 @@
                     </template>
                 </b-table>
             </b-row>
-                </b-container>
+        </b-container>
 
         <b-modal v-model="showDeleteModal" title="Confirm" @ok="confirmDelete">
             Are you sure you want to delete this item?

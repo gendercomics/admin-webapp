@@ -86,7 +86,9 @@
                 variant="light"
                 size="sm"
                 :pressed="editor.isActive('heading', { level: 1 })"
-                @click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
+                @click="
+                    editor.chain().focus().toggleHeading({ level: 1 }).run()
+                "
             >
                 <b>H1</b>
             </b-button>
@@ -96,7 +98,9 @@
                 variant="light"
                 size="sm"
                 :pressed="editor.isActive('heading', { level: 2 })"
-                @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
+                @click="
+                    editor.chain().focus().toggleHeading({ level: 2 }).run()
+                "
             >
                 <b>H2</b>
             </b-button>
@@ -106,7 +110,9 @@
                 variant="light"
                 size="sm"
                 :pressed="editor.isActive('heading', { level: 3 })"
-                @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
+                @click="
+                    editor.chain().focus().toggleHeading({ level: 3 }).run()
+                "
             >
                 <b>H3</b>
             </b-button>

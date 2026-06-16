@@ -34,7 +34,8 @@
                     switch
                     v-b-tooltip.hover
                     title="pseudonym"
-                    v-model="localValue.pseudonym" />
+                    v-model="localValue.pseudonym"
+                />
                 <font-awesome-icon icon="user-secret" />
             </b-input-group-text>
             <b-input-group-text>
@@ -42,7 +43,8 @@
                     switch
                     v-b-tooltip.hover
                     title="searchable"
-                    v-model="localValue.searchable" />
+                    v-model="localValue.searchable"
+                />
                 <font-awesome-icon icon="search" />
             </b-input-group-text>
             <b-button v-if="removable" @click="deleteValue"

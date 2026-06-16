@@ -40,7 +40,7 @@
                             >
                             <b-button
                                 variant="outline-dark"
-                                :pressed.sync="showJson"
+                                v-model:pressed="showJson"
                                 >JSON</b-button
                             >
                         </b-button-group>
