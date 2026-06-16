@@ -112,10 +112,13 @@
 
 <script>
 import { httpClient } from '../services/httpclient';
-import { getters } from '../services/store';
+import { useComicListStore } from '../stores/comicListStore';
 
 export default {
     name: 'TagInput',
+    setup() {
+        return { store: useComicListStore() };
+    },
     props: {
         label: null,
         value: {
@@ -179,7 +182,7 @@ export default {
             );
         },
         language() {
-            return getters.language();
+            return this.store.language;
         },
     },
     methods: {

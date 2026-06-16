@@ -1,32 +1,23 @@
 import axios from 'axios';
 import AuthService from './authservice';
-import Vue from 'vue';
+import keycloak from './keycloak';
+import logger from './logger';
 
-let apiUrl = process.env.VUE_APP_API_URL;
-
-/** Default config for axios instance */
-let config = {
-    baseURL: apiUrl,
-};
-
-/** Creating the instance for axios */
-const httpClient = axios.create(config);
+const httpClient = axios.create({
+    baseURL: import.meta.env.VITE_API_URL,
+});
 
 const authService = new AuthService();
 
-/** Auth token interceptors */
 const requestInterceptor = (config) => {
-    Vue.prototype.keycloak
+    keycloak
         .updateToken(30)
         .then(() => {
-            Vue.$log.debug('successfully got new token');
-            authService.storeTokens(
-                Vue.prototype.keycloak.token,
-                Vue.prototype.keycloak.refreshToken
-            );
+            logger.debug('successfully got new token');
+            authService.storeTokens(keycloak.token, keycloak.refreshToken);
         })
         .catch(() => {
-            Vue.$log.error('updateToken error');
+            logger.error('updateToken error');
         });
 
     const token = authService.getAccessToken();
@@ -36,46 +27,40 @@ const requestInterceptor = (config) => {
     return config;
 };
 
-/** response interceptpr */
 const responseInterceptor = httpClient.interceptors.response.use(
     (response) => response,
     (error) => {
-        Vue.$log.debug('response-status=', error.response.status);
+        logger.debug('response-status=', error.response.status);
 
         if (error.response.status !== 401) {
             return Promise.reject(error);
         }
         httpClient.interceptors.response.eject(responseInterceptor);
 
-        Vue.$log.debug('response-interceptor: trying token refresh');
+        logger.debug('response-interceptor: trying token refresh');
 
-        return Vue.prototype.keycloak
+        return keycloak
             .updateToken(30)
             .then(() => {
-                authService.storeTokens(
-                    Vue.prototype.keycloak.token,
-                    Vue.prototype.keycloak.refreshToken
-                );
-                Vue.$log.debug('response-interceptor: token refreshed');
+                authService.storeTokens(keycloak.token, keycloak.refreshToken);
+                logger.debug('response-interceptor: token refreshed');
                 error.config.headers['Authorization'] =
                     'Bearer ' + authService.getAccessToken();
                 return httpClient(error.response.config);
             })
             .catch(() => {
-                Vue.$log.error('token refresh failed');
+                logger.error('token refresh failed');
                 authService.clear();
                 return Promise.reject(error);
             });
     }
 );
 
-/** logger interceptors */
 const loggerInterceptor = (config) => {
     /** TODO */
     return config;
 };
 
-/** Adding the request interceptors */
 httpClient.interceptors.request.use(requestInterceptor);
 httpClient.interceptors.request.use(loggerInterceptor);
 

@@ -321,10 +321,13 @@
 import { httpClient } from '@/services/httpclient';
 import _ from 'lodash';
 import ComicService from '@/mixins/comicservice';
-import { getters, mutations } from '@/services/store';
+import { useComicListStore } from '@/stores/comicListStore';
 export default {
     name: 'ComicList',
     mixins: [ComicService],
+    setup() {
+        return { store: useComicListStore() };
+    },
 
     data() {
         return {
@@ -627,58 +630,58 @@ export default {
         },
         searchTerm: {
             get() {
-                return getters.searchTerm();
+                return this.store.searchTerm;
             },
             set(val) {
-                mutations.setSearchTerm(val);
+                this.store.searchTerm = val;
             },
         },
         textFilter: {
             get() {
-                return getters.textFilter();
+                return this.store.textFilter;
             },
             set(val) {
-                mutations.setTextFilter(val);
+                this.store.textFilter = val;
             },
         },
         browseMode: {
             get() {
-                return getters.browseMode();
+                return this.store.browseMode;
             },
             set(val) {
-                mutations.setBrowseMode(val);
+                this.store.browseMode = val;
             },
         },
         currentPage: {
             get() {
-                return getters.page();
+                return this.store.page;
             },
             set(val) {
-                mutations.setPage(val);
+                this.store.page = val;
             },
         },
         perPage: {
             get() {
-                return getters.perPage();
+                return this.store.perPage;
             },
             set(val) {
-                mutations.setPerPage(val);
+                this.store.perPage = val;
             },
         },
         typeFilter: {
             get() {
-                return getters.filter().typeFilter;
+                return this.store.filter.typeFilter;
             },
             set(val) {
-                mutations.setTypeFilter(val);
+                this.store.filter.typeFilter = val;
             },
         },
         statusFilter: {
             get() {
-                return getters.filter().statusFilter;
+                return this.store.filter.statusFilter;
             },
             set(val) {
-                mutations.setStatusFilter(val);
+                this.store.filter.statusFilter = val;
             },
         },
     },

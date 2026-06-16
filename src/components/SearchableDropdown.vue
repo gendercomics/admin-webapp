@@ -42,7 +42,7 @@
 
 <script>
 import { httpClient } from '@/services/httpclient';
-import { getters, mutations } from '@/services/store';
+import { useComicListStore } from '@/stores/comicListStore';
 
 export default {
     name: 'SearchableDropdown',
@@ -50,6 +50,9 @@ export default {
         value: null,
         optionsPath: null,
         displayProperty: null,
+    },
+    setup() {
+        return { store: useComicListStore() };
     },
     data: function () {
         return {
@@ -67,13 +70,8 @@ export default {
                 this.$emit('input', val);
             },
         },
-        language: {
-            get() {
-                return getters.language();
-            },
-            set(val) {
-                mutations.setLanguage(val);
-            },
+        language() {
+            return this.store.language;
         },
         criteria() {
             // Compute the search criteria

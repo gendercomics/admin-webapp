@@ -49,23 +49,21 @@
 </template>
 
 <script>
-import { getters, mutations } from '../services/store';
+import { useComicListStore } from '../stores/comicListStore';
 
 export default {
     name: 'Header',
+    setup() {
+        return { store: useComicListStore() };
+    },
     computed: {
         language: {
             get() {
-                return getters.language();
+                return this.store.language;
             },
             set(val) {
-                mutations.setLanguage(val);
+                this.store.language = val;
             },
-        },
-    },
-    methods: {
-        changeLanguage(lang) {
-            mutations.setLanguage(lang);
         },
     },
 };
