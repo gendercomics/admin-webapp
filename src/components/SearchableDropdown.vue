@@ -11,9 +11,11 @@
                 :description="searchDesc"
             >
                 <b-input-group>
-                    <b-input-group-prepend is-text>
-                        <font-awesome-icon icon="search" />
-                    </b-input-group-prepend>
+                    <template #prepend>
+                        <b-input-group-text>
+                            <font-awesome-icon icon="search" />
+                        </b-input-group-text>
+                    </template>
 
                     <b-form-input
                         v-model="search"
@@ -47,7 +49,7 @@ import { useComicListStore } from '@/stores/comicListStore';
 export default {
     name: 'SearchableDropdown',
     props: {
-        value: null,
+        modelValue: null,
         optionsPath: null,
         displayProperty: null,
     },
@@ -64,10 +66,10 @@ export default {
     computed: {
         localValue: {
             get() {
-                return this.value;
+                return this.modelValue;
             },
             set(val) {
-                this.$emit('input', val);
+                this.$emit('update:modelValue', val);
             },
         },
         language() {

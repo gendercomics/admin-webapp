@@ -1,9 +1,9 @@
-<template>
+﻿<template>
     <div>
         <div class="mt-4">
             <b-card no-body>
                 <template #header>
-                    <div class="float-left">
+                    <div class="float-start">
                         <span
                             ><font-awesome-icon :icon="['far', 'comment']"
                         /></span>
@@ -24,10 +24,10 @@
                             }}</span>
                         </span>
                     </div>
-                    <div class="float-right">
+                    <div class="float-end">
                         <!--
                         <b-button
-                            class="mr-1"
+                            class="me-1"
                             disabled
                             variant="warning"
                             v-if="dirty"
@@ -35,7 +35,7 @@
                             <font-awesome-icon icon="exclamation-triangle" />
                         </b-button>
                         <b-button
-                            class="mr-1"
+                            class="me-1"
                             disabled
                             variant="success"
                             v-else
@@ -50,15 +50,15 @@
                 </template>
                 <editor
                     v-model="text.value"
-                    @input="saveComment"
+                    @update:modelValue="saveComment"
                     editable="editable"
                 />
             </b-card>
         </div>
 
         <!--
-        <b-container fluid class="mt-4 ml-4 mr-4">
-            <b-row class="mt-4 mr-4">
+        <b-container fluid class="mt-4 ms-4 me-4">
+            <b-row class="mt-4 me-4">
                 <b-col id="json-text">
                     <b-card header="localvalue">
                         <pre class="mt-0">{{ localValue }}</pre>
@@ -84,7 +84,7 @@ export default {
         Editor,
     },
     props: {
-        value: {
+        modelValue: {
             id: null,
             value: null,
             metaData: null,
@@ -107,10 +107,10 @@ export default {
     computed: {
         localValue: {
             get() {
-                return this.value;
+                return this.modelValue;
             },
             set(val) {
-                this.$emit('input', val);
+                this.$emit('update:modelValue', val);
             },
         },
         headerText() {

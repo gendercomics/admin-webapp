@@ -1,53 +1,51 @@
 <template>
-    <b-input-group :prepend="this.label" :size="this.size">
-        <b-input-group-prepend>
+    <b-input-group :size="size">
+        <template #prepend>
+            <b-input-group-text>{{ label }}</b-input-group-text>
             <b-form-select v-model="nameType" style="background-color: #e9ecef">
                 <b-form-select-option value="firstLastName"
                     >firstname/lastname</b-form-select-option
                 >
                 <b-form-select-option value="name">name</b-form-select-option>
             </b-form-select>
-        </b-input-group-prepend>
+        </template>
 
         <b-form-input
             v-if="!isPersonName"
             v-model="localValue.name"
-            :disabled="this.disabled"
+            :disabled="disabled"
         />
 
         <b-form-input
             v-if="isPersonName"
             v-model="localValue.firstName"
-            :disabled="this.disabled"
+            :disabled="disabled"
         />
 
         <b-form-input
             v-if="isPersonName"
             v-model="localValue.lastName"
-            :disabled="this.disabled"
+            :disabled="disabled"
         />
 
-        <b-input-group-append is-text>
-            <b-form-checkbox
-                switch
-                v-b-tooltip.hover
-                title="pseudonym"
-                v-model="localValue.pseudonym" />
-            <font-awesome-icon icon="user-secret"
-        /></b-input-group-append>
-
-        <b-input-group-append is-text>
-            <b-form-checkbox
-                switch
-                v-b-tooltip.hover
-                title="searchable"
-                v-model="localValue.searchable" />
-            <font-awesome-icon icon="search"
-        /></b-input-group-append>
-
-        <!-- remove button -->
-        <template v-slot:append v-if="removable">
-            <b-button @click="deleteValue"
+        <template #append>
+            <b-input-group-text>
+                <b-form-checkbox
+                    switch
+                    v-b-tooltip.hover
+                    title="pseudonym"
+                    v-model="localValue.pseudonym" />
+                <font-awesome-icon icon="user-secret" />
+            </b-input-group-text>
+            <b-input-group-text>
+                <b-form-checkbox
+                    switch
+                    v-b-tooltip.hover
+                    title="searchable"
+                    v-model="localValue.searchable" />
+                <font-awesome-icon icon="search" />
+            </b-input-group-text>
+            <b-button v-if="removable" @click="deleteValue"
                 ><font-awesome-icon icon="times-circle"
             /></b-button>
         </template>
@@ -59,7 +57,7 @@ export default {
     name: 'NameField',
     props: {
         label: null,
-        value: {
+        modelValue: {
             name: null,
             firstName: null,
             lastName: null,
@@ -87,10 +85,10 @@ export default {
     computed: {
         localValue: {
             get() {
-                return this.value;
+                return this.modelValue;
             },
             set(val) {
-                this.$emit('input', val);
+                this.$emit('update:modelValue', val);
             },
         },
         isPersonName() {

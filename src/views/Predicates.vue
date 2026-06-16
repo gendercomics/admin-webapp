@@ -1,5 +1,5 @@
-<template>
-    <div class="text-left">
+﻿<template>
+    <div class="text-start">
         <Header />
         <PredicateList />
     </div>

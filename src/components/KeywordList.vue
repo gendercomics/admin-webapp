@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <div>
         <b-container fluid class="mt-4">
             <b-row>
@@ -18,13 +18,13 @@
                                 id="filterInput"
                                 placeholder="Type to Search"
                             ></b-form-input>
-                            <b-input-group-append>
+                            <template #append>
                                 <b-button
                                     :disabled="!filter"
                                     @click="filter = ''"
                                     >Clear
                                 </b-button>
-                            </b-input-group-append>
+                            </template>
                         </b-input-group>
                     </b-form-group>
                 </b-col>
@@ -68,7 +68,7 @@
             </b-row>
         </b-container>
 
-        <b-container fluid class="mt-4 pl-4 pr-4">
+        <b-container fluid class="mt-4 ps-4 pe-4">
             <b-row>
                 <b-table
                     class="mt-4"
@@ -143,8 +143,8 @@
                             v-show="row.item.metaData.status === 'DRAFT'"
                             variant="light"
                             size="sm"
-                            class="mr-1"
-                            @click="showDeleteModal(row.item)"
+                            class="me-1"
+                            @click="promptDelete(row.item)"
                         >
                             <font-awesome-icon
                                 icon="trash-alt"
@@ -163,7 +163,11 @@
                     </template>
                 </b-table>
             </b-row>
-        </b-container>
+                </b-container>
+
+        <b-modal v-model="showDeleteModal" title="Confirm" @ok="confirmDelete">
+            Are you sure you want to delete this item?
+        </b-modal>
     </div>
 </template>
 
@@ -189,6 +193,8 @@ export default {
             keywords: null,
             loading: true,
             errored: false,
+            showDeleteModal: false,
+            itemToDelete: null,
             filter: null,
             filterOn: ['values'],
             totalRows: 1,
@@ -233,13 +239,12 @@ export default {
                 .finally(() => (this.loading = false));
             this.keywords.splice(this.keywords.indexOf(item), 1);
         },
-        showDeleteModal(item) {
-            this.$bvModal.msgBoxConfirm('sure???').then((confirmed) => {
-                this.$log.debug('delete id:' + item.id + ': ' + confirmed);
-                if (confirmed) {
-                    this.deleteKeyword(item);
-                }
-            });
+        promptDelete(item) {
+            this.itemToDelete = item;
+            this.showDeleteModal = true;
+        },
+        confirmDelete() {
+            this.deleteKeyword(this.itemToDelete);
         },
     },
 };

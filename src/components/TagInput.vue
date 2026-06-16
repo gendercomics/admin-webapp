@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <div class="mt-2">
         <b-form-group class="mb-0">
             <b-input-group>
@@ -27,11 +27,13 @@
                                             :disabled="disabled"
                                         >
                                             <b-input-group>
-                                                <b-input-group-prepend is-text>
-                                                    <font-awesome-icon
-                                                        icon="search"
-                                                    />
-                                                </b-input-group-prepend>
+                                                <template #prepend>
+                                                    <b-input-group-text>
+                                                        <font-awesome-icon
+                                                            icon="search"
+                                                        />
+                                                    </b-input-group-text>
+                                                </template>
 
                                                 <b-form-input
                                                     v-model="search"
@@ -64,10 +66,10 @@
                                 </b-dropdown>
                             </b-col>
 
-                            <b-col class="pl-0 pb-0">
+                            <b-col class="ps-0 pb-0">
                                 <ul
                                     v-if="tags.length > 0"
-                                    class="list-inline d-inline-block ml-1 mb-0"
+                                    class="list-inline d-inline-block ms-1 mb-0"
                                 >
                                     <li
                                         v-for="tag in tagNames"
@@ -121,7 +123,7 @@ export default {
     },
     props: {
         label: null,
-        value: {
+        modelValue: {
             type: Array,
             default: () => [],
         },
@@ -173,7 +175,7 @@ export default {
                 return this.mappedTags;
             },
             set() {
-                this.$emit('input', this.mappedTags);
+                this.$emit('update:modelValue', this.mappedTags);
             },
         },
         mappedTags: function () {
@@ -200,11 +202,11 @@ export default {
         onTagRemoved({ tag, removeTag }) {
             removeTag(tag);
             this.tagNames.splice(this.tagNames.indexOf(tag), 1);
-            this.$emit('input', this.mappedTags);
+            this.$emit('update:modelValue', this.mappedTags);
         },
         deleteValue() {
             this.$log.debug('delete ' + this.label);
-            this.$emit('input', null);
+            this.$emit('update:modelValue', null);
         },
         loadOptions() {
             httpClient
@@ -217,7 +219,7 @@ export default {
                 .finally(() => (this.loading = false));
         },
         initTagNames() {
-            this.value.forEach((value) => {
+            this.modelValue.forEach((value) => {
                 this.tagNames.push(value.values[this.language].name);
             });
         },

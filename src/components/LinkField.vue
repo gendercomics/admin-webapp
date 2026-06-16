@@ -8,17 +8,14 @@
         />
         <b-form-datepicker v-model="localValue.lastAccess" start-weekday="1" />
 
-        <b-input-group-append>
+        <template #append>
             <b-button
                 @click="openLink"
                 variant="dark-outline"
                 style="background-color: #e9ecef"
                 ><font-awesome-icon icon="external-link-alt"
             /></b-button>
-        </b-input-group-append>
-
-        <template v-slot:append v-if="removable">
-            <b-button @click="deleteValue"
+            <b-button v-if="removable" @click="deleteValue"
                 ><font-awesome-icon icon="times-circle"
             /></b-button>
         </template>
@@ -30,7 +27,7 @@ export default {
     name: 'LinkField',
     props: {
         label: null,
-        value: {
+        modelValue: {
             url: null,
             lastAccess: null,
         },
@@ -50,10 +47,10 @@ export default {
     computed: {
         localValue: {
             get() {
-                return this.value;
+                return this.modelValue;
             },
             set(val) {
-                this.$emit('input', val);
+                this.$emit('update:modelValue', val);
             },
         },
     },

@@ -18,7 +18,7 @@ export default {
     name: 'InputField',
     props: {
         label: null,
-        value: null,
+        modelValue: null,
         rows: {
             type: Number,
             default: 2,
@@ -39,10 +39,10 @@ export default {
     computed: {
         localValue: {
             get() {
-                return this.value;
+                return this.modelValue;
             },
             set(val) {
-                this.$emit('input', val);
+                this.$emit('update:modelValue', val);
             },
         },
     },

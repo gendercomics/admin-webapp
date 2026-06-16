@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <div>
         <b-container fluid class="mt-4">
             <b-row>
@@ -18,13 +18,13 @@
                                 id="filterInput"
                                 placeholder="Type to Filter"
                             ></b-form-input>
-                            <b-input-group-append>
+                            <template #append>
                                 <b-button
                                     :disabled="!filter"
                                     @click="filter = ''"
                                     >Clear
                                 </b-button>
-                            </b-input-group-append>
+                            </template>
                         </b-input-group>
                     </b-form-group>
                 </b-col>
@@ -81,7 +81,7 @@
             </b-row>
         </b-container>
 
-        <b-container fluid class="mt-4 pl-4 pr-4">
+        <b-container fluid class="mt-4 ps-4 pe-4">
             <b-row>
                 <b-table
                     class="mt-4"
@@ -164,8 +164,8 @@
                             v-show="row.item.metaData.status === 'DRAFT'"
                             variant="light"
                             size="sm"
-                            class="mr-1"
-                            @click="showDeleteModal(row.item)"
+                            class="me-1"
+                            @click="promptDelete(row.item)"
                         >
                             <font-awesome-icon
                                 icon="trash-alt"
@@ -187,8 +187,8 @@
         </b-container>
 
         <!--
-        <b-container fluid class="mt-4 ml-4 mr-4">
-            <b-row class="mt-4 mr-4" v-if="true">
+        <b-container fluid class="mt-4 ms-4 me-4">
+            <b-row class="mt-4 me-4" v-if="true">
                 <b-col id="json-predicates">
                     <b-card header="predicates">
                         <pre class="mt-0">{{ $data.predicates }}</pre>
@@ -197,6 +197,10 @@
             </b-row>
         </b-container>
         -->
+
+        <b-modal v-model="showDeleteModal" title="Confirm" @ok="confirmDelete">
+            Are you sure you want to delete this item?
+        </b-modal>
     </div>
 </template>
 
@@ -220,6 +224,8 @@ export default {
             predicates: null,
             loading: true,
             errored: false,
+            showDeleteModal: false,
+            itemToDelete: null,
             filter: null,
             filterOn: ['values'],
             totalRows: 1,
@@ -279,13 +285,12 @@ export default {
             this.deletePredicate(item.id);
             this.predicates.splice(this.predicates.indexOf(item), 1);
         },
-        showDeleteModal(item) {
-            this.$bvModal.msgBoxConfirm('sure???').then((confirmed) => {
-                this.$log.debug('delete id:' + item.id + ': ' + confirmed);
-                if (confirmed) {
-                    this.removePredicate(item);
-                }
-            });
+        promptDelete(item) {
+            this.itemToDelete = item;
+            this.showDeleteModal = true;
+        },
+        confirmDelete() {
+            this.removePredicate(this.itemToDelete);
         },
         inputHandler(index, id) {
             let changed = this.predicates.filter((predicate) => {
@@ -301,8 +306,8 @@ export default {
                 this.updatedPredicate.values.de,
                 this.updatedPredicate.values.en
             );
-            this.$set(this.predicates, index, this.updatedPredicate);
-            this.$emit('input', this.predicates);
+            this.predicates[index] = this.updatedPredicate;
+            this.$emit('update', this.predicates);
         },
         inputHandlerDebounce: _.debounce(function (index, id) {
             this.inputHandler(index, id);

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <div>
         <b-container fluid class="mt-4">
             <b-row>
@@ -33,11 +33,11 @@
                                 @input="searchComics"
                             />
 
-                            <b-input-group-append>
+                            <template #append>
                                 <b-button @click="clearSearchTermAndFilter"
                                     >Clear
                                 </b-button>
-                            </b-input-group-append>
+                            </template>
                         </b-input-group>
                     </b-form-group>
                 </b-col>
@@ -108,7 +108,7 @@
             </b-collapse>
         </b-container>
 
-        <b-container fluid class="mt-1 pl-4 pr-4">
+        <b-container fluid class="mt-1 ps-4 pe-4">
             <b-row>
                 <b-table
                     id="comic-list-table"
@@ -293,8 +293,8 @@
                             v-show="row.item.metaData.status === 'DRAFT'"
                             variant="light"
                             size="sm"
-                            class="mr-1"
-                            @click="showDeleteModal(row.item)"
+                            class="me-1"
+                            @click="promptDelete(row.item)"
                         >
                             <font-awesome-icon
                                 icon="trash-alt"
@@ -314,6 +314,10 @@
                 </b-table>
             </b-row>
         </b-container>
+
+        <b-modal v-model="showDeleteModal" title="Confirm" @ok="confirmDelete">
+            Are you sure you want to delete this item?
+        </b-modal>
     </div>
 </template>
 
@@ -348,6 +352,8 @@ export default {
             filterOn: [],
             totalRows: 1,
             pageOptions: [10, 20, 50, 100],
+            showDeleteModal: false,
+            itemToDelete: null,
         };
     },
     mounted() {
@@ -551,13 +557,12 @@ export default {
                     return '';
             }
         },
-        showDeleteModal(item) {
-            this.$bvModal.msgBoxConfirm('sure???').then((confirmed) => {
-                this.$log.debug('delete id:' + item.id + ': ' + confirmed);
-                if (confirmed) {
-                    this.deleteComic(item);
-                }
-            });
+        promptDelete(item) {
+            this.itemToDelete = item;
+            this.showDeleteModal = true;
+        },
+        confirmDelete() {
+            this.deleteComic(this.itemToDelete);
         },
         seriesComicId(item, seriesType) {
             let id = '';

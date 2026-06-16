@@ -3,13 +3,12 @@
         <Header />
 
         <div>
-            <b-jumbotron header-level="5">
-                <template v-slot:header>GenderComics Admin</template>
-
-                <template v-slot:lead>
+            <div class="p-5 mb-4 bg-light rounded-3">
+                <h1 class="display-5">GenderComics Admin</h1>
+                <p class="lead">
                     Welcome. This is the starting place for editing content in
                     the GenderComics database.
-                </template>
+                </p>
 
                 <hr class="my-4" />
 
@@ -37,7 +36,7 @@
                         >edit keywords</b-button
                     >
                 </b-button-group>
-            </b-jumbotron>
+            </div>
         </div>
     </div>
 </template>

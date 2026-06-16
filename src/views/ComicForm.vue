@@ -1,29 +1,29 @@
-<template>
-    <div class="text-left">
+﻿<template>
+    <div class="text-start">
         <Header />
 
-        <div class="mt-3 ml-3 mr-3">
+        <div class="mt-3 ms-3 me-3">
             <b-alert variant="success" dismissible v-model="saveSuccessful"
                 >comic saved!
             </b-alert>
         </div>
 
-        <div class="mt-3 ml-3 mr-3">
+        <div class="mt-3 ms-3 me-3">
             <b-alert variant="danger" dismissible v-model="errored"
                 >error!
             </b-alert>
         </div>
 
-        <div class="mt-3 ml-3 mr-3">
+        <div class="mt-3 ms-3 me-3">
             <b-alert variant="warning" dismissible v-model="duplicateTitle">
                 <font-awesome-icon icon="exclamation-triangle" />
-                <span class="ml-2">{{ comic.title }} already exists!</span>
+                <span class="ms-2">{{ comic.title }} already exists!</span>
             </b-alert>
         </div>
 
         <b-form @submit="onSubmit">
             <b-container class="mt-2" fluid>
-                <b-row class="ml-0">
+                <b-row class="ms-0">
                     <div id="button-col" class="mt-2 mb-2">
                         <b-button-group vertical>
                             <!-- title -->
@@ -235,7 +235,7 @@
                         </b-button-group>
                     </div>
 
-                    <b-col id="form-col" class="mt-2 mr-2">
+                    <b-col id="form-col" class="mt-2 me-2">
                         <!-- title -->
                         <b-input-group
                             id="input-group-title"
@@ -262,7 +262,7 @@
                                 @input="verifyTitle"
                             />
 
-                            <div class="ml-1 float-right">
+                            <div class="ms-1 float-end">
                                 <!-- status -->
                                 <b-form-group class="m-0">
                                     <!-- action buttons -->
@@ -304,7 +304,7 @@
                         />
 
                         <!-- issue -->
-                        <b-form-row>
+                        <b-row>
                             <b-col cols="3">
                                 <input-field
                                     label="issue"
@@ -322,10 +322,10 @@
                                     v-if="showIssueTitle"
                                     type="text"
                                     removable
-                                    class="mt-2 float-left"
+                                    class="mt-2 float-start"
                                 />
                             </b-col>
-                        </b-form-row>
+                        </b-row>
 
                         <!-- creators -->
                         <div
@@ -414,7 +414,7 @@
                         </div>
 
                         <!-- in (part of publication) -->
-                        <b-form-row>
+                        <b-row>
                             <b-col>
                                 <b-input-group
                                     id="input-group-in"
@@ -448,7 +448,7 @@
                                     class="mt-2"
                                 />
                             </b-col>
-                        </b-form-row>
+                        </b-row>
 
                         <!-- keywords (genres) -->
                         <TagInput
@@ -494,8 +494,8 @@
             </b-container>
         </b-form>
 
-        <b-container fluid class="mt-4 ml-4 mr-4">
-            <b-row class="mt-4 mr-4" v-if="showJson">
+        <b-container fluid class="mt-4 ms-4 me-4">
+            <b-row class="mt-4 me-4" v-if="showJson">
                 <b-col id="json-comic">
                     <b-card header="comic">
                         <pre class="mt-0">{{ $data.comic }}</pre>

@@ -50,16 +50,19 @@
 
 <script>
 import SearchableDropdown from '@/components/SearchableDropdown';
-import { getters, mutations } from '@/services/store';
+import { useComicListStore } from '@/stores/comicListStore';
 
 export default {
     name: 'Relation',
     components: {
         SearchableDropdown,
     },
+    setup() {
+        return { store: useComicListStore() };
+    },
     props: {
         label: null,
-        value: {
+        modelValue: {
             source: null,
             predicate: null,
             target: null,
@@ -85,18 +88,18 @@ export default {
     computed: {
         localValue: {
             get() {
-                return this.value;
+                return this.modelValue;
             },
             set(val) {
-                this.$emit('input', val);
+                this.$emit('update:modelValue', val);
             },
         },
         language: {
             get() {
-                return getters.language();
+                return this.store.language;
             },
             set(val) {
-                mutations.setLanguage(val);
+                this.store.language = val;
             },
         },
     },

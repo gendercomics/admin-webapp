@@ -1,5 +1,5 @@
-<template>
-    <b-navbar toggleable="lg" type="dark" variant="dark" sticky>
+﻿<template>
+    <b-navbar toggleable="lg" type="dark" variant="dark" sticky="top">
         <b-navbar-brand to="/">GenderComics</b-navbar-brand>
 
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -29,7 +29,7 @@
             </b-navbar-nav>
 
             <!-- Right aligned nav items -->
-            <b-navbar-nav class="ml-auto">
+            <b-navbar-nav class="ms-auto">
                 <b-form-select v-model="language">
                     <b-form-select-option value="de">de</b-form-select-option>
                     <b-form-select-option value="en">en</b-form-select-option>
