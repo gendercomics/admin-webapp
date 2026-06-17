@@ -11,6 +11,16 @@ export default defineConfig(({ command }) => ({
         },
         extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
     },
+    css: {
+        preprocessorOptions: {
+            scss: {
+                api: 'modern-compiler',
+            },
+        },
+    },
+    server: {
+        port: 8080,
+    },
     test: {
         environment: 'jsdom',
         globals: true,

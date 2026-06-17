@@ -261,7 +261,3 @@ export default {
     },
 };
 </script>
-
-<style lang="scss">
-@import '../styles/styles.scss';
-</style>
