@@ -12,10 +12,12 @@ export default {
         return 'gendercomics.net';
     },
     watch: {
-        $route(to) {
-            document.title = to.meta.title || 'gendercomics.net';
+        $route: {
+            handler(to) {
+                document.title = to.meta.title || 'gendercomics.net';
+            },
+            immediate: true,
         },
-        immediate: true,
     },
 };
 </script>

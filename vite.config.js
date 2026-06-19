@@ -1,9 +1,16 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
+import Components from 'unplugin-vue-components/vite';
+import { BootstrapVueNextResolver } from 'bootstrap-vue-next';
 import { fileURLToPath, URL } from 'node:url';
 
 export default defineConfig(({ command }) => ({
-    plugins: [vue()],
+    plugins: [
+        vue(),
+        Components({
+            resolvers: [BootstrapVueNextResolver()],
+        }),
+    ],
     base: command === 'build' ? '/admin/' : '/',
     resolve: {
         alias: {
