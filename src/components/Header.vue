@@ -1,5 +1,5 @@
 ﻿<template>
-    <b-navbar toggleable="lg" type="dark" variant="dark" sticky="top">
+    <b-navbar toggleable="lg" data-bs-theme="dark" variant="dark" sticky="top">
         <b-navbar-brand to="/">GenderComics</b-navbar-brand>
 
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
