@@ -346,7 +346,7 @@ export default {
                 { key: 'metaData.changedBy', label: 'by' },
                 { key: 'actions', label: '' },
             ],
-            comics: null,
+            comics: [],
             loading: true,
             errored: false,
             filterOn: [],

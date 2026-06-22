@@ -41,7 +41,7 @@
                         <font-awesome-icon icon="user-circle" size="lg" />
                     </template>
                     <b-dropdown-item href="#" disabled>profile</b-dropdown-item>
-                    <b-dropdown-item to="logout">logout</b-dropdown-item>
+                    <b-dropdown-item to="/logout">logout</b-dropdown-item>
                 </b-nav-item-dropdown>
             </b-navbar-nav>
         </b-collapse>

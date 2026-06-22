@@ -195,7 +195,7 @@ export default {
                 { key: 'metaData.changedBy', label: 'by' },
                 { key: 'actions', label: 'actions' },
             ],
-            persons: null,
+            persons: [],
             loading: true,
             errored: false,
             showDeleteModal: false,

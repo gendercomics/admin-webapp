@@ -188,7 +188,7 @@ export default {
                 { key: 'metaData.changedBy', label: 'by' },
                 { key: 'actions', label: '' },
             ],
-            publishers: null,
+            publishers: [],
             loading: true,
             errored: false,
             showDeleteModal: false,
