@@ -9,14 +9,14 @@
 
                 <b-form-input
                     v-if="hasOverride"
-                    :value="localValue.location"
+                    :model-value="localValue.location"
                     readonly
                     style="max-width: 15%; text-decoration: line-through"
                 />
 
                 <b-form-input
                     v-else-if="localValue.location"
-                    :value="localValue.location"
+                    :model-value="localValue.location"
                     readonly
                     style="max-width: 15%"
                 />

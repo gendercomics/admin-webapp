@@ -77,7 +77,7 @@
                             <b-input-group>
                                 <input-field
                                     label="keyword"
-                                    :value="displayNames"
+                                    :model-value="displayNames"
                                     size="md"
                                     style="max-width: 71%"
                                     disabled

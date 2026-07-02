@@ -20,7 +20,7 @@
                 <div class="m-2">
                     <input-field
                         label="person"
-                        :value="personNames"
+                        :model-value="personNames"
                         size="lg"
                         disabled
                     />

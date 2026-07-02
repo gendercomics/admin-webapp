@@ -11,7 +11,7 @@
             </template>
 
             <!-- source (out) -->
-            <b-input disabled :value="label" v-if="this.direction === 'out'" />
+            <span v-if="this.direction === 'out'" class="input-group-text flex-fill">{{ label }}</span>
 
             <!-- source (in) -->
             <searchable-dropdown
@@ -37,7 +37,7 @@
             />
 
             <!-- target (in) -->
-            <b-input disabled :value="label" v-if="this.direction === 'in'" />
+            <span v-if="this.direction === 'in'" class="input-group-text flex-fill">{{ label }}</span>
 
             <template v-slot:append v-if="removable">
                 <b-button @click="deleteValue">

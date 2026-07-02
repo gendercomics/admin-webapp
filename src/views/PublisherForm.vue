@@ -20,7 +20,7 @@
                 <div class="m-2">
                     <input-field
                         label="publisher"
-                        :value="publisher.name"
+                        :model-value="publisher.name"
                         size="lg"
                         disabled
                     />

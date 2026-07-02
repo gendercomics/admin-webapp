@@ -3,6 +3,7 @@
         variant="outline-secondary"
         no-flip
         :text="displayName(this.localValue)"
+        toggle-class="text-start flex-fill"
     >
         <b-dropdown-form @submit.stop.prevent="() => {}">
             <b-form-group
