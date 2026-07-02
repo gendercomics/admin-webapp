@@ -17,7 +17,7 @@
         <b-form @submit="onSubmit">
             <b-container class="mt-2" fluid>
                 <b-row class="ms-0">
-                    <div id="button-col" class="mt-2 mb-2">
+                    <div id="button-col" class="col-auto mt-2 mb-2">
                         <b-button-group vertical>
                             <!-- keyword -->
                             <b-button disabled>keyword</b-button>

@@ -17,7 +17,7 @@
         <b-form @submit="onSubmit" v-if="show">
             <b-container class="mt-2" fluid>
                 <b-row class="ms-0">
-                    <div id="button-col" class="mt-2 mb-2">
+                    <div id="button-col" class="col-auto mt-2 mb-2">
                         <b-button-group vertical>
                             <b-button disabled>role</b-button>
                             <b-button

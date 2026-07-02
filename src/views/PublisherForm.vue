@@ -27,7 +27,7 @@
                 </div>
 
                 <b-row class="ms-2">
-                    <div id="button-col" class="mt-2 mb-2">
+                    <div id="button-col" class="col-auto mt-2 mb-2">
                         <b-button-group vertical>
                             <b-button disabled>publisher</b-button>
                             <b-button
