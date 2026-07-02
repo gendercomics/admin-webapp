@@ -4,91 +4,74 @@
             <b-input-group>
                 <b-form-tags v-model="localValue" no-outer-focus>
                     <template v-slot="{ tags, disabled, addTag, removeTag }">
-                        <b-row>
-                            <b-col class="col-sm-3">
-                                <b-dropdown
-                                    size="sm"
-                                    variant="outline-secondary"
-                                    block
-                                    menu-class="w-100"
+                        <div class="d-flex align-items-center flex-wrap gap-1">
+                            <b-dropdown
+                                size="sm"
+                                variant="outline-secondary"
+                                menu-class="w-100"
+                            >
+                                <template v-slot:button-content>
+                                    <font-awesome-icon icon="tags" />
+                                    {{ label }}
+                                </template>
+
+                                <b-dropdown-form
+                                    @submit.stop.prevent="() => {}"
                                 >
-                                    <template v-slot:button-content>
-                                        <font-awesome-icon icon="tags" />
-                                        {{ label }}
-                                    </template>
-
-                                    <b-dropdown-form
-                                        @submit.stop.prevent="() => {}"
+                                    <b-form-group
+                                        style="min-width: available"
+                                        class="mb-0"
+                                        :description="searchDesc"
+                                        :disabled="disabled"
                                     >
-                                        <b-form-group
-                                            style="min-width: available"
-                                            class="mb-0"
-                                            :description="searchDesc"
-                                            :disabled="disabled"
-                                        >
-                                            <b-input-group>
-                                                <template #prepend>
-                                                    <b-input-group-text>
-                                                        <font-awesome-icon
-                                                            icon="search"
-                                                        />
-                                                    </b-input-group-text>
-                                                </template>
+                                        <b-input-group>
+                                            <template #prepend>
+                                                <b-input-group-text>
+                                                    <font-awesome-icon
+                                                        icon="search"
+                                                    />
+                                                </b-input-group-text>
+                                            </template>
 
-                                                <b-form-input
-                                                    v-model="search"
-                                                    id="tag-search-input"
-                                                    type="search"
-                                                    size="sm"
-                                                    autocomplete="off"
-                                                ></b-form-input>
-                                            </b-input-group>
-                                        </b-form-group>
-                                    </b-dropdown-form>
-                                    <b-dropdown-divider></b-dropdown-divider>
-                                    <b-dropdown-item-button
-                                        v-for="option in availableOptions"
-                                        :key="option.id"
-                                        @click="
-                                            onOptionClick({
-                                                option,
-                                                addTag,
-                                            })
-                                        "
-                                    >
-                                        {{ option.values[language].name }}
-                                    </b-dropdown-item-button>
-                                    <b-dropdown-text
-                                        v-if="availableOptions.length === 0"
-                                    >
-                                        no keywords available to select
-                                    </b-dropdown-text>
-                                </b-dropdown>
-                            </b-col>
-
-                            <b-col class="ps-0 pb-0">
-                                <ul
-                                    v-if="tags.length > 0"
-                                    class="list-inline d-inline-block ms-1 mb-0"
+                                            <b-form-input
+                                                v-model="search"
+                                                id="tag-search-input"
+                                                type="search"
+                                                size="sm"
+                                                autocomplete="off"
+                                            ></b-form-input>
+                                        </b-input-group>
+                                    </b-form-group>
+                                </b-dropdown-form>
+                                <b-dropdown-divider></b-dropdown-divider>
+                                <b-dropdown-item-button
+                                    v-for="option in availableOptions"
+                                    :key="option.id"
+                                    @click="
+                                        onOptionClick({
+                                            option,
+                                            addTag,
+                                        })
+                                    "
                                 >
-                                    <li
-                                        v-for="tag in tagNames"
-                                        :key="tag"
-                                        class="list-inline-item"
-                                    >
-                                        <b-form-tag
-                                            @remove="
-                                                onTagRemoved({ tag, removeTag })
-                                            "
-                                            :title="tag.name"
-                                            :disabled="disabled"
-                                            variant="secondary"
-                                            >{{ tag }}</b-form-tag
-                                        >
-                                    </li>
-                                </ul>
-                            </b-col>
-                        </b-row>
+                                    {{ option.values[language].name }}
+                                </b-dropdown-item-button>
+                                <b-dropdown-text
+                                    v-if="availableOptions.length === 0"
+                                >
+                                    no keywords available to select
+                                </b-dropdown-text>
+                            </b-dropdown>
+
+                            <b-form-tag
+                                v-for="tag in tagNames"
+                                :key="tag"
+                                @remove="onTagRemoved({ tag, removeTag })"
+                                :title="tag.name"
+                                :disabled="disabled"
+                                variant="secondary"
+                            >{{ tag }}</b-form-tag>
+                        </div>
                     </template>
                 </b-form-tags>
 
