@@ -79,12 +79,9 @@
                     head-variant="dark"
                     bordered
                     :fields="fields"
-                    :items="keywords"
+                    :items="filteredKeywords"
                     :current-page="currentPage"
                     :per-page="perPage"
-                    :filter="filter"
-                    :filterIncludedFields="filterOn"
-                    @filtered="onFiltered"
                     :busy="loading"
                 >
                     <template v-slot:cell(metaData.status)="row">
@@ -196,12 +193,30 @@ export default {
             showDeleteModal: false,
             itemToDelete: null,
             filter: null,
-            filterOn: ['values'],
             totalRows: 1,
             currentPage: 1,
             perPage: 10,
             pageOptions: [10, 20, 50],
         };
+    },
+    computed: {
+        filteredKeywords() {
+            if (!this.filter) return this.keywords;
+            const f = this.filter.toLowerCase();
+            return this.keywords.filter(k =>
+                (k.values?.de?.name || '').toLowerCase().includes(f) ||
+                (k.values?.en?.name || '').toLowerCase().includes(f) ||
+                (k.type || '').toLowerCase().includes(f)
+            );
+        },
+        totalRows() {
+            return this.filteredKeywords.length;
+        },
+    },
+    watch: {
+        filter() {
+            this.currentPage = 1;
+        },
     },
     mounted() {
         httpClient
@@ -221,11 +236,6 @@ export default {
     methods: {
         edit(item) {
             this.$router.push('/keywords/' + item.id);
-        },
-        onFiltered(filteredItems) {
-            // Trigger pagination to update the number of buttons/pages due to filtering
-            this.totalRows = filteredItems.length;
-            this.currentPage = 1;
         },
         deleteKeyword(item) {
             console.log('delete item: ' + item.id);

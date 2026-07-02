@@ -79,13 +79,10 @@
                     head-variant="dark"
                     bordered
                     :fields="fields"
-                    :items="persons"
+                    :items="filteredPersons"
                     :current-page="currentPage"
                     :per-page="perPage"
-                    :filter="filter"
-                    :filterIncludedFields="filterOn"
-                    @filtered="onFiltered"
-                    :busy="this.loading"
+                    :busy="loading"
                 >
                     <template v-slot:cell(metaData.status)="row">
                         <span v-if="row.item.metaData.status === 'DRAFT'"
@@ -201,12 +198,31 @@ export default {
             showDeleteModal: false,
             itemToDelete: null,
             filter: null,
-            filterOn: [],
             totalRows: 1,
             currentPage: 1,
             perPage: 10,
             pageOptions: [10, 20, 50, 100],
         };
+    },
+    computed: {
+        filteredPersons() {
+            if (!this.filter) return this.persons;
+            const f = this.filter.toLowerCase();
+            return this.persons.filter(p => {
+                const nameMatch = (p.names || []).some(n =>
+                    this.fullName(n).toLowerCase().includes(f)
+                );
+                return nameMatch || (p.wikiData || '').toLowerCase().includes(f);
+            });
+        },
+        totalRows() {
+            return this.filteredPersons.length;
+        },
+    },
+    watch: {
+        filter() {
+            this.currentPage = 1;
+        },
     },
     mounted() {
         httpClient
@@ -238,11 +254,6 @@ export default {
                 })
                 .finally(() => (this.loading = false));
             this.persons.splice(this.persons.indexOf(item), 1);
-        },
-        onFiltered(filteredItems) {
-            // Trigger pagination to update the number of buttons/pages due to filtering
-            this.totalRows = filteredItems.length;
-            this.currentPage = 1;
         },
         wikiDataLink(wikidata) {
             return 'https://www.wikidata.org/wiki/' + wikidata;

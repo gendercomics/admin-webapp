@@ -91,15 +91,11 @@
                     hover
                     head-variant="dark"
                     bordered
-                    :items="predicates"
+                    :items="filteredPredicates"
                     :fields="fields"
                     :current-page="currentPage"
                     :per-page="perPage"
-                    :filter="filter"
-                    :filterIncludedFields="filterOn"
-                    @filtered="onFiltered"
                     :busy="loading"
-                    ref="table"
                 >
                     <template v-slot:cell(metaData.status)="data">
                         <b-form-select
@@ -227,7 +223,6 @@ export default {
             showDeleteModal: false,
             itemToDelete: null,
             filter: null,
-            filterOn: ['values'],
             totalRows: 1,
             currentPage: 1,
             perPage: 10,
@@ -242,6 +237,17 @@ export default {
         this.loadPredicates();
     },
     computed: {
+        filteredPredicates() {
+            if (!this.filter) return this.predicates;
+            const f = this.filter.toLowerCase();
+            return this.predicates.filter(p =>
+                (p.values?.de || '').toLowerCase().includes(f) ||
+                (p.values?.en || '').toLowerCase().includes(f)
+            );
+        },
+        totalRows() {
+            return this.filteredPredicates.length;
+        },
         addBtnDisabled: function () {
             return (
                 this.newPredicate.de === null ||
@@ -252,17 +258,11 @@ export default {
         },
     },
     watch: {
-        predicates: function () {
-            this.$log.debug('predicates changed');
-            this.$refs.table.refresh();
+        filter() {
+            this.currentPage = 1;
         },
     },
     methods: {
-        onFiltered(filteredItems) {
-            // Trigger pagination to update the number of buttons/pages due to filtering
-            this.totalRows = filteredItems.length;
-            this.currentPage = 1;
-        },
         addPredicate() {
             this.$log.debug(
                 'add predicate: [de]=' +

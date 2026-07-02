@@ -30,7 +30,6 @@
                                 type="search"
                                 id="searchInput"
                                 placeholder="type to search"
-                                @input="searchComics"
                             />
 
                             <template #append>
@@ -119,12 +118,9 @@
                     head-variant="dark"
                     bordered
                     :fields="fields"
-                    :items="comics"
+                    :items="filteredComics"
                     :current-page="currentPage"
                     :per-page="perPage"
-                    :filter="filter"
-                    :filter-function="customFilter"
-                    @filtered="onFiltered"
                     :busy="this.loading"
                 >
                     <!-- status -->
@@ -384,6 +380,9 @@ export default {
                 this.loadComicList();
             }
         },
+        searchTerm(newVal) {
+            this.searchComics(newVal);
+        },
         currentPage(newVal) {
             this.$log.debug('watch: currentPage(' + newVal + ')');
         },
@@ -625,6 +624,11 @@ export default {
                 return null;
             }
             return [this.textFilter, this.statusFilter];
+        },
+        filteredComics() {
+            return this.comics.filter((item) =>
+                this.customFilter(item, [this.textFilter, this.statusFilter])
+            );
         },
         isFilter() {
             return this.statusFilter.length < 4 || this.typeFilter.length < 6;

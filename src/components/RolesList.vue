@@ -79,12 +79,9 @@
                     head-variant="dark"
                     bordered
                     :fields="fields"
-                    :items="roles"
+                    :items="filteredRoles"
                     :current-page="currentPage"
                     :per-page="perPage"
-                    :filter="filter"
-                    :filterIncludedFields="filterOn"
-                    @filtered="onFiltered"
                     :busy="loading"
                 >
                     <!-- state -->
@@ -192,12 +189,26 @@ export default {
             showDeleteModal: false,
             itemToDelete: null,
             filter: null,
-            filterOn: [],
             totalRows: 1,
             currentPage: 1,
             perPage: 10,
             pageOptions: [10, 20, 50],
         };
+    },
+    computed: {
+        filteredRoles() {
+            if (!this.filter) return this.roles;
+            const f = this.filter.toLowerCase();
+            return this.roles.filter(r => (r.name || '').toLowerCase().includes(f));
+        },
+        totalRows() {
+            return this.filteredRoles.length;
+        },
+    },
+    watch: {
+        filter() {
+            this.currentPage = 1;
+        },
     },
     mounted() {
         httpClient
@@ -224,11 +235,6 @@ export default {
                 })
                 .finally(() => (this.loading = false));
             this.roles.splice(this.roles.indexOf(item), 1);
-        },
-        onFiltered(filteredItems) {
-            // Trigger pagination to update the number of buttons/pages due to filtering
-            this.totalRows = filteredItems.length;
-            this.currentPage = 1;
         },
         promptDelete(item) {
             this.itemToDelete = item;

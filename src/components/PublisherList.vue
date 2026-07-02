@@ -79,13 +79,10 @@
                     head-variant="dark"
                     bordered
                     :fields="fields"
-                    :items="publishers"
+                    :items="filteredPublishers"
                     :current-page="currentPage"
                     :per-page="perPage"
-                    :filter="filter"
-                    :filterIncludedFields="filterOn"
-                    @filtered="onFiltered"
-                    :busy="this.loading"
+                    :busy="loading"
                 >
                     <!-- state -->
                     <template v-slot:cell(metaData.status)="row">
@@ -194,12 +191,30 @@ export default {
             showDeleteModal: false,
             itemToDelete: null,
             filter: null,
-            filterOn: [],
             totalRows: 1,
             currentPage: 1,
             perPage: 10,
             pageOptions: [10, 20, 50, 100],
         };
+    },
+    computed: {
+        filteredPublishers() {
+            if (!this.filter) return this.publishers;
+            const f = this.filter.toLowerCase();
+            return this.publishers.filter(p =>
+                (p.name || '').toLowerCase().includes(f) ||
+                (p.location || '').toLowerCase().includes(f) ||
+                (p.url || '').toLowerCase().includes(f)
+            );
+        },
+        totalRows() {
+            return this.filteredPublishers.length;
+        },
+    },
+    watch: {
+        filter() {
+            this.currentPage = 1;
+        },
     },
     mounted() {
         httpClient
@@ -215,11 +230,6 @@ export default {
         edit(item) {
             console.log('edit item: ' + item.id);
             this.$router.push('/publishers/' + item.id);
-        },
-        onFiltered(filteredItems) {
-            // Trigger pagination to update the number of buttons/pages due to filtering
-            this.totalRows = filteredItems.length;
-            this.currentPage = 1;
         },
         deletePublisher(item) {
             console.log('delete publisher: ' + item.name);
