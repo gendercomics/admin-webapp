@@ -1,5 +1,5 @@
-<template>
-    <b-form-row>
+﻿<template>
+    <b-row>
         <b-col>
             <b-input-group
                 id="input-group-series"
@@ -34,7 +34,7 @@
                 </template>
             </b-input-group>
         </b-col>
-    </b-form-row>
+    </b-row>
 </template>
 
 <script>
@@ -45,15 +45,15 @@ export default {
         SearchableDropdown,
     },
     props: {
-        value: {},
+        modelValue: {},
     },
     computed: {
         localValue: {
             get() {
-                return this.value;
+                return this.modelValue;
             },
             set(val) {
-                this.$emit('input', val);
+                this.$emit('update:modelValue', val);
             },
         },
         hasVolume() {

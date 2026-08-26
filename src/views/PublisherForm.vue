@@ -1,14 +1,14 @@
-<template>
-    <div class="text-left">
+﻿<template>
+    <div class="text-start">
         <Header />
 
-        <div class="mt-3 ml-3 mr-3">
+        <div class="mt-3 ms-3 me-3">
             <b-alert variant="success" dismissible v-model="saveSuccessful"
                 >publisher saved!
             </b-alert>
         </div>
 
-        <div class="mt-3 ml-3 mr-3">
+        <div class="mt-3 ms-3 me-3">
             <b-alert variant="danger" dismissible v-model="errored"
                 >error!
             </b-alert>
@@ -20,14 +20,14 @@
                 <div class="m-2">
                     <input-field
                         label="publisher"
-                        :value="publisher.name"
+                        :model-value="publisher.name"
                         size="lg"
                         disabled
                     />
                 </div>
 
-                <b-row class="ml-2">
-                    <div id="button-col" class="mt-2 mb-2">
+                <b-row class="ms-2">
+                    <div id="button-col" class="col-auto mt-2 mb-2">
                         <b-button-group vertical>
                             <b-button disabled>publisher</b-button>
                             <b-button
@@ -45,7 +45,7 @@
                         </b-button-group>
                     </div>
 
-                    <b-col id="form-col" class="pl-0 mr-3">
+                    <b-col id="form-col" class="ps-0 me-3">
                         <!-- name -->
                         <input-field
                             label="name"
@@ -77,7 +77,7 @@
 
                         <!-- action buttons -->
                         <b-form-group>
-                            <b-button-group class="mt-3 float-right">
+                            <b-button-group class="mt-3 float-end">
                                 <!-- editing status -->
                                 <b-form-select
                                     :options="statusOptions"
@@ -101,9 +101,9 @@
         </b-form>
 
         <!--
-        <b-container fluid class="mt-4 ml-4 mr-4">
+        <b-container fluid class="mt-4 ms-4 me-4">
             <div v-if="showJson">
-                <b-row class="mt-4 mr-4">
+                <b-row class="mt-4 me-4">
                     <b-col id="json-person">
                         <b-card header="person">
                             <pre class="mt-0">{{ $data.publisher }}</pre>

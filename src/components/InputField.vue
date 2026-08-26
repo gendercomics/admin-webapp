@@ -6,17 +6,15 @@
             :disabled="this.disabled"
         />
 
-        <b-input-group-append v-if="isUrl">
+        <template #append>
             <b-button
+                v-if="isUrl"
                 @click="openLink"
                 variant="dark-outline"
                 style="background-color: #e9ecef"
                 ><font-awesome-icon icon="external-link-alt"
             /></b-button>
-        </b-input-group-append>
-
-        <template v-slot:append v-if="removable">
-            <b-button @click="deleteValue"
+            <b-button v-if="removable" @click="deleteValue"
                 ><font-awesome-icon icon="times-circle"
             /></b-button>
         </template>
@@ -28,7 +26,7 @@ export default {
     name: 'InputField',
     props: {
         label: null,
-        value: null,
+        modelValue: null,
         type: null,
         removable: {
             type: Boolean,
@@ -46,10 +44,10 @@ export default {
     computed: {
         localValue: {
             get() {
-                return this.value;
+                return this.modelValue;
             },
             set(val) {
-                this.$emit('input', val);
+                this.$emit('update:modelValue', val);
             },
         },
         isUrl() {

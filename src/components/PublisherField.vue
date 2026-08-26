@@ -1,6 +1,6 @@
-<template>
-    <div class="pl-1">
-        <b-form-row>
+﻿<template>
+    <div class="ps-1">
+        <b-row>
             <b-input-group class="pt-2" prepend="publisher">
                 <searchable-dropdown
                     v-model="localValue"
@@ -9,14 +9,14 @@
 
                 <b-form-input
                     v-if="hasOverride"
-                    :value="localValue.location"
+                    :model-value="localValue.location"
                     readonly
                     style="max-width: 15%; text-decoration: line-through"
                 />
 
                 <b-form-input
                     v-else-if="localValue.location"
-                    :value="localValue.location"
+                    :model-value="localValue.location"
                     readonly
                     style="max-width: 15%"
                 />
@@ -44,7 +44,7 @@
                     </b-button>
                 </template>
             </b-input-group>
-        </b-form-row>
+        </b-row>
     </div>
 </template>
 
@@ -56,15 +56,15 @@ export default {
         SearchableDropdown,
     },
     props: {
-        value: null,
+        modelValue: null,
     },
     computed: {
         localValue: {
             get() {
-                return this.value;
+                return this.modelValue;
             },
             set(val) {
-                this.$emit('input', val);
+                this.$emit('update:modelValue', val);
             },
         },
         hasOverride() {

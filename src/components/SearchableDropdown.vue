@@ -3,6 +3,7 @@
         variant="outline-secondary"
         no-flip
         :text="displayName(this.localValue)"
+        toggle-class="text-start flex-fill"
     >
         <b-dropdown-form @submit.stop.prevent="() => {}">
             <b-form-group
@@ -11,9 +12,11 @@
                 :description="searchDesc"
             >
                 <b-input-group>
-                    <b-input-group-prepend is-text>
-                        <font-awesome-icon icon="search" />
-                    </b-input-group-prepend>
+                    <template #prepend>
+                        <b-input-group-text>
+                            <font-awesome-icon icon="search" />
+                        </b-input-group-text>
+                    </template>
 
                     <b-form-input
                         v-model="search"
@@ -42,14 +45,17 @@
 
 <script>
 import { httpClient } from '@/services/httpclient';
-import { getters, mutations } from '@/services/store';
+import { useComicListStore } from '@/stores/comicListStore';
 
 export default {
     name: 'SearchableDropdown',
     props: {
-        value: null,
+        modelValue: null,
         optionsPath: null,
         displayProperty: null,
+    },
+    setup() {
+        return { store: useComicListStore() };
     },
     data: function () {
         return {
@@ -61,19 +67,14 @@ export default {
     computed: {
         localValue: {
             get() {
-                return this.value;
+                return this.modelValue;
             },
             set(val) {
-                this.$emit('input', val);
+                this.$emit('update:modelValue', val);
             },
         },
-        language: {
-            get() {
-                return getters.language();
-            },
-            set(val) {
-                mutations.setLanguage(val);
-            },
+        language() {
+            return this.store.language;
         },
         criteria() {
             // Compute the search criteria

@@ -11,7 +11,7 @@
             </template>
 
             <!-- source (out) -->
-            <b-input disabled :value="label" v-if="this.direction === 'out'" />
+            <span v-if="this.direction === 'out'" class="input-group-text flex-fill">{{ label }}</span>
 
             <!-- source (in) -->
             <searchable-dropdown
@@ -37,7 +37,7 @@
             />
 
             <!-- target (in) -->
-            <b-input disabled :value="label" v-if="this.direction === 'in'" />
+            <span v-if="this.direction === 'in'" class="input-group-text flex-fill">{{ label }}</span>
 
             <template v-slot:append v-if="removable">
                 <b-button @click="deleteValue">
@@ -50,16 +50,19 @@
 
 <script>
 import SearchableDropdown from '@/components/SearchableDropdown';
-import { getters, mutations } from '@/services/store';
+import { useComicListStore } from '@/stores/comicListStore';
 
 export default {
     name: 'Relation',
     components: {
         SearchableDropdown,
     },
+    setup() {
+        return { store: useComicListStore() };
+    },
     props: {
         label: null,
-        value: {
+        modelValue: {
             source: null,
             predicate: null,
             target: null,
@@ -85,18 +88,18 @@ export default {
     computed: {
         localValue: {
             get() {
-                return this.value;
+                return this.modelValue;
             },
             set(val) {
-                this.$emit('input', val);
+                this.$emit('update:modelValue', val);
             },
         },
         language: {
             get() {
-                return getters.language();
+                return this.store.language;
             },
             set(val) {
-                mutations.setLanguage(val);
+                this.store.language = val;
             },
         },
     },

@@ -1,14 +1,14 @@
-<template>
-    <div class="text-left">
+﻿<template>
+    <div class="text-start">
         <Header />
 
-        <div class="mt-3 ml-3 mr-3">
+        <div class="mt-3 ms-3 me-3">
             <b-alert variant="success" dismissible v-model="saveSuccessful"
                 >publisher saved!
             </b-alert>
         </div>
 
-        <div class="mt-3 ml-3 mr-3">
+        <div class="mt-3 ms-3 me-3">
             <b-alert variant="danger" dismissible v-model="errored"
                 >error!
             </b-alert>
@@ -16,8 +16,8 @@
 
         <b-form @submit="onSubmit" v-if="show">
             <b-container class="mt-2" fluid>
-                <b-row class="ml-0">
-                    <div id="button-col" class="mt-2 mb-2">
+                <b-row class="ms-0">
+                    <div id="button-col" class="col-auto mt-2 mb-2">
                         <b-button-group vertical>
                             <b-button disabled>role</b-button>
                             <b-button
@@ -29,7 +29,7 @@
                             <!-- toggle JSON view -->
                             <b-button
                                 variant="outline-dark"
-                                :pressed.sync="showJson"
+                                v-model:pressed="showJson"
                                 >JSON
                             </b-button>
                         </b-button-group>
@@ -45,7 +45,7 @@
                                 style="max-width: 70%"
                             />
 
-                            <div class="ml-2 float-right">
+                            <div class="ms-2 float-end">
                                 <!-- status -->
                                 <b-form-group class="m-0">
                                     <!-- action buttons -->
@@ -86,8 +86,8 @@
             </b-container>
         </b-form>
 
-        <b-container fluid class="mt-4 ml-4 mr-4">
-            <b-row class="mt-4 mr-4" v-if="showJson">
+        <b-container fluid class="mt-4 ms-4 me-4">
+            <b-row class="mt-4 me-4" v-if="showJson">
                 <b-col id="json-role">
                     <b-card header="role">
                         <pre class="mt-0">{{ $data.role }}</pre>

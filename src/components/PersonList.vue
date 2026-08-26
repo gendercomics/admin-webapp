@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <div>
         <b-container fluid class="mt-4">
             <b-row>
@@ -18,13 +18,13 @@
                                 id="filterInput"
                                 placeholder="Type to Search"
                             ></b-form-input>
-                            <b-input-group-append>
+                            <template #append>
                                 <b-button
                                     :disabled="!filter"
                                     @click="filter = ''"
                                     >Clear
                                 </b-button>
-                            </b-input-group-append>
+                            </template>
                         </b-input-group>
                     </b-form-group>
                 </b-col>
@@ -68,7 +68,7 @@
             </b-row>
         </b-container>
 
-        <b-container fluid class="mt-4 pl-4 pr-4">
+        <b-container fluid class="mt-4 ps-4 pe-4">
             <b-row>
                 <b-table
                     class="mt-4"
@@ -79,13 +79,10 @@
                     head-variant="dark"
                     bordered
                     :fields="fields"
-                    :items="persons"
+                    :items="filteredPersons"
                     :current-page="currentPage"
                     :per-page="perPage"
-                    :filter="filter"
-                    :filterIncludedFields="filterOn"
-                    @filtered="onFiltered"
-                    :busy="this.loading"
+                    :busy="loading"
                 >
                     <template v-slot:cell(metaData.status)="row">
                         <span v-if="row.item.metaData.status === 'DRAFT'"
@@ -151,8 +148,8 @@
                             v-show="row.item.metaData.status === 'DRAFT'"
                             variant="light"
                             size="sm"
-                            class="mr-1"
-                            @click="showDeleteModal(row.item)"
+                            class="me-1"
+                            @click="promptDelete(row.item)"
                         >
                             <font-awesome-icon
                                 icon="trash-alt"
@@ -172,6 +169,10 @@
                 </b-table>
             </b-row>
         </b-container>
+
+        <b-modal v-model="showDeleteModal" title="Confirm" @ok="confirmDelete">
+            Are you sure you want to delete this item?
+        </b-modal>
     </div>
 </template>
 
@@ -191,16 +192,37 @@ export default {
                 { key: 'metaData.changedBy', label: 'by' },
                 { key: 'actions', label: 'actions' },
             ],
-            persons: null,
+            persons: [],
             loading: true,
             errored: false,
+            showDeleteModal: false,
+            itemToDelete: null,
             filter: null,
-            filterOn: [],
             totalRows: 1,
             currentPage: 1,
             perPage: 10,
             pageOptions: [10, 20, 50, 100],
         };
+    },
+    computed: {
+        filteredPersons() {
+            if (!this.filter) return this.persons;
+            const f = this.filter.toLowerCase();
+            return this.persons.filter(p => {
+                const nameMatch = (p.names || []).some(n =>
+                    this.fullName(n).toLowerCase().includes(f)
+                );
+                return nameMatch || (p.wikiData || '').toLowerCase().includes(f);
+            });
+        },
+        totalRows() {
+            return this.filteredPersons.length;
+        },
+    },
+    watch: {
+        filter() {
+            this.currentPage = 1;
+        },
     },
     mounted() {
         httpClient
@@ -233,11 +255,6 @@ export default {
                 .finally(() => (this.loading = false));
             this.persons.splice(this.persons.indexOf(item), 1);
         },
-        onFiltered(filteredItems) {
-            // Trigger pagination to update the number of buttons/pages due to filtering
-            this.totalRows = filteredItems.length;
-            this.currentPage = 1;
-        },
         wikiDataLink(wikidata) {
             return 'https://www.wikidata.org/wiki/' + wikidata;
         },
@@ -245,18 +262,13 @@ export default {
             if (nameObj.name !== null) return nameObj.name;
             return nameObj.firstName + ' ' + nameObj.lastName;
         },
-        showDeleteModal(item) {
-            this.$bvModal.msgBoxConfirm('sure???').then((confirmed) => {
-                this.$log.debug('delete id:' + item.id + ': ' + confirmed);
-                if (confirmed) {
-                    this.deletePerson(item);
-                }
-            });
+        promptDelete(item) {
+            this.itemToDelete = item;
+            this.showDeleteModal = true;
+        },
+        confirmDelete() {
+            this.deletePerson(this.itemToDelete);
         },
     },
 };
 </script>
-
-<style lang="scss">
-@import '../styles/styles.scss';
-</style>

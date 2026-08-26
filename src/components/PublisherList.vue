@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <div>
         <b-container fluid class="mt-4">
             <b-row>
@@ -18,13 +18,13 @@
                                 id="filterInput"
                                 placeholder="Type to Search"
                             ></b-form-input>
-                            <b-input-group-append>
+                            <template #append>
                                 <b-button
                                     :disabled="!filter"
                                     @click="filter = ''"
                                     >Clear
                                 </b-button>
-                            </b-input-group-append>
+                            </template>
                         </b-input-group>
                     </b-form-group>
                 </b-col>
@@ -68,7 +68,7 @@
             </b-row>
         </b-container>
 
-        <b-container fluid class="pl-4 pr-4">
+        <b-container fluid class="ps-4 pe-4">
             <b-row>
                 <b-table
                     class="mt-4"
@@ -79,13 +79,10 @@
                     head-variant="dark"
                     bordered
                     :fields="fields"
-                    :items="publishers"
+                    :items="filteredPublishers"
                     :current-page="currentPage"
                     :per-page="perPage"
-                    :filter="filter"
-                    :filterIncludedFields="filterOn"
-                    @filtered="onFiltered"
-                    :busy="this.loading"
+                    :busy="loading"
                 >
                     <!-- state -->
                     <template v-slot:cell(metaData.status)="row">
@@ -144,8 +141,8 @@
                             v-show="row.item.metaData.status === 'DRAFT'"
                             variant="light"
                             size="sm"
-                            class="mr-1"
-                            @click="showDeleteModal(row.item)"
+                            class="me-1"
+                            @click="promptDelete(row.item)"
                         >
                             <font-awesome-icon
                                 icon="trash-alt"
@@ -165,6 +162,10 @@
                 </b-table>
             </b-row>
         </b-container>
+
+        <b-modal v-model="showDeleteModal" title="Confirm" @ok="confirmDelete">
+            Are you sure you want to delete this item?
+        </b-modal>
     </div>
 </template>
 
@@ -184,16 +185,36 @@ export default {
                 { key: 'metaData.changedBy', label: 'by' },
                 { key: 'actions', label: '' },
             ],
-            publishers: null,
+            publishers: [],
             loading: true,
             errored: false,
+            showDeleteModal: false,
+            itemToDelete: null,
             filter: null,
-            filterOn: [],
             totalRows: 1,
             currentPage: 1,
             perPage: 10,
             pageOptions: [10, 20, 50, 100],
         };
+    },
+    computed: {
+        filteredPublishers() {
+            if (!this.filter) return this.publishers;
+            const f = this.filter.toLowerCase();
+            return this.publishers.filter(p =>
+                (p.name || '').toLowerCase().includes(f) ||
+                (p.location || '').toLowerCase().includes(f) ||
+                (p.url || '').toLowerCase().includes(f)
+            );
+        },
+        totalRows() {
+            return this.filteredPublishers.length;
+        },
+    },
+    watch: {
+        filter() {
+            this.currentPage = 1;
+        },
     },
     mounted() {
         httpClient
@@ -210,11 +231,6 @@ export default {
             console.log('edit item: ' + item.id);
             this.$router.push('/publishers/' + item.id);
         },
-        onFiltered(filteredItems) {
-            // Trigger pagination to update the number of buttons/pages due to filtering
-            this.totalRows = filteredItems.length;
-            this.currentPage = 1;
-        },
         deletePublisher(item) {
             console.log('delete publisher: ' + item.name);
             httpClient
@@ -226,18 +242,13 @@ export default {
                 .finally(() => (this.loading = false));
             this.publishers.splice(this.publishers.indexOf(item), 1);
         },
-        showDeleteModal(item) {
-            this.$bvModal.msgBoxConfirm('sure???').then((confirmed) => {
-                this.$log.debug('delete id:' + item.id + ': ' + confirmed);
-                if (confirmed) {
-                    this.deletePublisher(item);
-                }
-            });
+        promptDelete(item) {
+            this.itemToDelete = item;
+            this.showDeleteModal = true;
+        },
+        confirmDelete() {
+            this.deletePublisher(this.itemToDelete);
         },
     },
 };
 </script>
-
-<style lang="scss">
-@import '../styles/styles.scss';
-</style>

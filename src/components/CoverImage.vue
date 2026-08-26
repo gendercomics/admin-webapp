@@ -16,7 +16,7 @@
                         placeholder="image..."
                         drop-placeholder="drop image here..."
                         accept="image/*"
-                        @input="uploadFile"
+                        @change="uploadFile"
                         size="sm"
                     ></b-form-file>
 
@@ -47,7 +47,7 @@ export default {
     name: 'CoverImage',
     props: {
         comicId: null,
-        value: null,
+        modelValue: null,
     },
     data() {
         return {
@@ -61,16 +61,16 @@ export default {
     computed: {
         localValue: {
             get() {
-                return this.value;
+                return this.modelValue;
             },
             set(val) {
-                this.$emit('input', val);
+                this.$emit('update:modelValue', val);
             },
         },
         imageUrl() {
             if (this.localValue != null && this.localValue.length > 0) {
                 return (
-                    process.env.VUE_APP_API_URL +
+                    import.meta.env.VITE_API_URL +
                     'images/' +
                     this.comicId +
                     '/' +
@@ -140,7 +140,7 @@ export default {
         },
     },
     mounted() {
-        this.localValue = this.value;
+        this.localValue = this.modelValue;
     },
 };
 </script>

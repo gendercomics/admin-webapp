@@ -1,6 +1,6 @@
-<template>
+﻿<template>
     <div>
-        <b-form-row class="pl-1 pr-1 w-100">
+        <b-row class="ps-1 pe-1 w-100">
             <b-input-group class="pt-2">
                 <!-- role -->
                 <div
@@ -41,9 +41,11 @@
                             :description="searchDesc"
                         >
                             <b-input-group>
-                                <b-input-group-prepend is-text>
-                                    <font-awesome-icon icon="search" />
-                                </b-input-group-prepend>
+                                <template #prepend>
+                                    <b-input-group-text>
+                                        <font-awesome-icon icon="search" />
+                                    </b-input-group-text>
+                                </template>
 
                                 <b-form-input
                                     v-model="search"
@@ -76,7 +78,7 @@
                     /></b-button>
                 </template>
             </b-input-group>
-        </b-form-row>
+        </b-row>
     </div>
 </template>
 
@@ -88,7 +90,7 @@ export default {
     name: 'ComicCreator',
     mixins: [PersonService, RoleService],
     props: {
-        value: {
+        modelValue: {
             name: {},
             role: {
                 id: null,
@@ -115,10 +117,10 @@ export default {
     computed: {
         localValue: {
             get() {
-                return this.value;
+                return this.modelValue;
             },
             set(val) {
-                this.$emit('input', val);
+                this.$emit('update:modelValue', val);
             },
         },
         criteria() {
@@ -176,7 +178,3 @@ export default {
     },
 };
 </script>
-
-<style lang="scss">
-@import '../styles/styles.scss';
-</style>

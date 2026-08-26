@@ -1,12 +1,12 @@
-<template>
+﻿<template>
     <div>
         <div>
             <b-card no-body>
                 <template #header>
-                    <div class="float-left">
+                    <div class="float-start">
                         <span> {{ headerText }} </span>
                     </div>
-                    <div class="float-right">
+                    <div class="float-end">
                         <b-button
                             @click="removeDescription"
                             v-if="removable"
@@ -30,7 +30,7 @@ export default {
         Editor,
     },
     props: {
-        value: {},
+        modelValue: {},
         headerText: {
             type: String,
             default: '',
@@ -48,10 +48,10 @@ export default {
     computed: {
         localValue: {
             get() {
-                return this.value;
+                return this.modelValue;
             },
             set(val) {
-                this.$emit('input', val);
+                this.$emit('update:modelValue', val);
             },
         },
     },

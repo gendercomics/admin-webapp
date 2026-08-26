@@ -27,7 +27,7 @@ export default {
                 formData.append('searchTerm', searchTerm);
 
                 const { data: response } = await httpClient.post(
-                    '/search/',
+                    '/search',
                     formData
                 );
                 if (this.isComicListEmpty(response)) {

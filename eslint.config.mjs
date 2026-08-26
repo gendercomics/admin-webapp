@@ -1,7 +1,6 @@
 import pluginVue from 'eslint-plugin-vue';
 import vueParser from 'vue-eslint-parser';
 import prettierConfig from '@vue/eslint-config-prettier';
-import babelParser from '@babel/eslint-parser';
 import globals from 'globals';
 
 export default [
@@ -10,23 +9,12 @@ export default [
         languageOptions: {
             parser: vueParser,
             parserOptions: {
-                parser: babelParser,
-                requireConfigFile: false,
                 sourceType: 'module',
             },
         },
     },
-    ...pluginVue.configs['flat/vue2-essential'],
+    ...pluginVue.configs['flat/essential'],
     prettierConfig,
-    {
-        files: ['**/*.js'],
-        languageOptions: {
-            parser: babelParser,
-            parserOptions: {
-                requireConfigFile: false,
-            },
-        },
-    },
     {
         languageOptions: {
             globals: {
@@ -42,9 +30,9 @@ export default [
         },
     },
     {
-        files: ['**/__tests__/*.{j,t}s?(x)'],
+        files: ['**/__tests__/*.{j,t}s?(x)', '**/*.spec.{j,t}s?(x)'],
         languageOptions: {
-            globals: globals.jest,
+            globals: globals.node,
         },
     },
 ];

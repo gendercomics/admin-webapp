@@ -1,5 +1,5 @@
-<template>
-    <b-navbar toggleable="lg" type="dark" variant="dark" sticky>
+﻿<template>
+    <b-navbar toggleable="lg" data-bs-theme="dark" variant="dark" sticky="top">
         <b-navbar-brand to="/">GenderComics</b-navbar-brand>
 
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -29,7 +29,7 @@
             </b-navbar-nav>
 
             <!-- Right aligned nav items -->
-            <b-navbar-nav class="ml-auto">
+            <b-navbar-nav class="ms-auto">
                 <b-form-select v-model="language">
                     <b-form-select-option value="de">de</b-form-select-option>
                     <b-form-select-option value="en">en</b-form-select-option>
@@ -41,7 +41,7 @@
                         <font-awesome-icon icon="user-circle" size="lg" />
                     </template>
                     <b-dropdown-item href="#" disabled>profile</b-dropdown-item>
-                    <b-dropdown-item to="logout">logout</b-dropdown-item>
+                    <b-dropdown-item to="/logout">logout</b-dropdown-item>
                 </b-nav-item-dropdown>
             </b-navbar-nav>
         </b-collapse>
@@ -49,28 +49,22 @@
 </template>
 
 <script>
-import { getters, mutations } from '../services/store';
+import { useComicListStore } from '../stores/comicListStore';
 
 export default {
     name: 'Header',
+    setup() {
+        return { store: useComicListStore() };
+    },
     computed: {
         language: {
             get() {
-                return getters.language();
+                return this.store.language;
             },
             set(val) {
-                mutations.setLanguage(val);
+                this.store.language = val;
             },
-        },
-    },
-    methods: {
-        changeLanguage(lang) {
-            mutations.setLanguage(lang);
         },
     },
 };
 </script>
-
-<style lang="scss">
-@import '../styles/styles.scss';
-</style>

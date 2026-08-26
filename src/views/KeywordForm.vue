@@ -1,14 +1,14 @@
-<template>
-    <div class="text-left">
+﻿<template>
+    <div class="text-start">
         <Header />
 
-        <div class="mt-3 ml-3 mr-3">
+        <div class="mt-3 ms-3 me-3">
             <b-alert variant="success" dismissible v-model="saveSuccessful"
                 >keyword saved!
             </b-alert>
         </div>
 
-        <div class="mt-3 ml-3 mr-3">
+        <div class="mt-3 ms-3 me-3">
             <b-alert variant="danger" dismissible v-model="errored"
                 >error!
             </b-alert>
@@ -16,8 +16,8 @@
 
         <b-form @submit="onSubmit">
             <b-container class="mt-2" fluid>
-                <b-row class="ml-0">
-                    <div id="button-col" class="mt-2 mb-2">
+                <b-row class="ms-0">
+                    <div id="button-col" class="col-auto mt-2 mb-2">
                         <b-button-group vertical>
                             <!-- keyword -->
                             <b-button disabled>keyword</b-button>
@@ -66,24 +66,24 @@
                             <!-- toggle JSON view -->
                             <b-button
                                 variant="outline-dark"
-                                :pressed.sync="showJson"
+                                v-model:pressed="showJson"
                                 >JSON
                             </b-button>
                         </b-button-group>
                     </div>
-                    <b-col id="form-col" class="mt-2 mr-2">
+                    <b-col id="form-col" class="mt-2 me-2">
                         <!-- form "header" and action buttons -->
                         <div>
                             <b-input-group>
                                 <input-field
                                     label="keyword"
-                                    :value="displayNames"
+                                    :model-value="displayNames"
                                     size="md"
                                     style="max-width: 71%"
                                     disabled
                                 />
                                 <!-- action buttons -->
-                                <div class="ml-1 float-right">
+                                <div class="ms-1 float-end">
                                     <!-- status -->
                                     <b-form-group class="m-0">
                                         <!-- action buttons -->
@@ -206,9 +206,9 @@
             </b-container>
         </b-form>
 
-        <b-container fluid class="mt-4 ml-4 mr-4">
+        <b-container fluid class="mt-4 ms-4 me-4">
             <div v-if="showJson">
-                <b-row class="mt-4 mr-4">
+                <b-row class="mt-4 me-4">
                     <b-col id="json-editor">
                         <b-card header="keyword">
                             <pre class="mt-0">{{ this.keyword }}</pre>
@@ -227,7 +227,7 @@ import SelectField from '../components/SelectField';
 import { httpClient } from '../services/httpclient';
 import Editor from '@/components/Editor';
 import Relation from '@/components/Relation';
-import { getters, mutations } from '@/services/store';
+import { useComicListStore } from '@/stores/comicListStore';
 
 export default {
     name: 'KeywordForm',
@@ -237,6 +237,9 @@ export default {
         InputField,
         SelectField,
         Header,
+    },
+    setup() {
+        return { store: useComicListStore() };
     },
     data() {
         return {
@@ -312,10 +315,10 @@ export default {
         },
         language: {
             get() {
-                return getters.language();
+                return this.store.language;
             },
             set(val) {
-                mutations.setLanguage(val);
+                this.store.language = val;
             },
         },
         labelForRelation() {

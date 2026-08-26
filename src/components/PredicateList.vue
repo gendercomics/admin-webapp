@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <div>
         <b-container fluid class="mt-4">
             <b-row>
@@ -18,13 +18,13 @@
                                 id="filterInput"
                                 placeholder="Type to Filter"
                             ></b-form-input>
-                            <b-input-group-append>
+                            <template #append>
                                 <b-button
                                     :disabled="!filter"
                                     @click="filter = ''"
                                     >Clear
                                 </b-button>
-                            </b-input-group-append>
+                            </template>
                         </b-input-group>
                     </b-form-group>
                 </b-col>
@@ -81,7 +81,7 @@
             </b-row>
         </b-container>
 
-        <b-container fluid class="mt-4 pl-4 pr-4">
+        <b-container fluid class="mt-4 ps-4 pe-4">
             <b-row>
                 <b-table
                     class="mt-4"
@@ -91,15 +91,11 @@
                     hover
                     head-variant="dark"
                     bordered
-                    :items="predicates"
+                    :items="filteredPredicates"
                     :fields="fields"
                     :current-page="currentPage"
                     :per-page="perPage"
-                    :filter="filter"
-                    :filterIncludedFields="filterOn"
-                    @filtered="onFiltered"
                     :busy="loading"
-                    ref="table"
                 >
                     <template v-slot:cell(metaData.status)="data">
                         <b-form-select
@@ -164,8 +160,8 @@
                             v-show="row.item.metaData.status === 'DRAFT'"
                             variant="light"
                             size="sm"
-                            class="mr-1"
-                            @click="showDeleteModal(row.item)"
+                            class="me-1"
+                            @click="promptDelete(row.item)"
                         >
                             <font-awesome-icon
                                 icon="trash-alt"
@@ -187,8 +183,8 @@
         </b-container>
 
         <!--
-        <b-container fluid class="mt-4 ml-4 mr-4">
-            <b-row class="mt-4 mr-4" v-if="true">
+        <b-container fluid class="mt-4 ms-4 me-4">
+            <b-row class="mt-4 me-4" v-if="true">
                 <b-col id="json-predicates">
                     <b-card header="predicates">
                         <pre class="mt-0">{{ $data.predicates }}</pre>
@@ -197,6 +193,10 @@
             </b-row>
         </b-container>
         -->
+
+        <b-modal v-model="showDeleteModal" title="Confirm" @ok="confirmDelete">
+            Are you sure you want to delete this item?
+        </b-modal>
     </div>
 </template>
 
@@ -217,11 +217,12 @@ export default {
                 { key: 'metaData.changedBy', label: 'by' },
                 { key: 'actions', label: 'actions' },
             ],
-            predicates: null,
+            predicates: [],
             loading: true,
             errored: false,
+            showDeleteModal: false,
+            itemToDelete: null,
             filter: null,
-            filterOn: ['values'],
             totalRows: 1,
             currentPage: 1,
             perPage: 10,
@@ -236,6 +237,17 @@ export default {
         this.loadPredicates();
     },
     computed: {
+        filteredPredicates() {
+            if (!this.filter) return this.predicates;
+            const f = this.filter.toLowerCase();
+            return this.predicates.filter(p =>
+                (p.values?.de || '').toLowerCase().includes(f) ||
+                (p.values?.en || '').toLowerCase().includes(f)
+            );
+        },
+        totalRows() {
+            return this.filteredPredicates.length;
+        },
         addBtnDisabled: function () {
             return (
                 this.newPredicate.de === null ||
@@ -246,17 +258,11 @@ export default {
         },
     },
     watch: {
-        predicates: function () {
-            this.$log.debug('predicates changed');
-            this.$refs.table.refresh();
+        filter() {
+            this.currentPage = 1;
         },
     },
     methods: {
-        onFiltered(filteredItems) {
-            // Trigger pagination to update the number of buttons/pages due to filtering
-            this.totalRows = filteredItems.length;
-            this.currentPage = 1;
-        },
         addPredicate() {
             this.$log.debug(
                 'add predicate: [de]=' +
@@ -279,13 +285,12 @@ export default {
             this.deletePredicate(item.id);
             this.predicates.splice(this.predicates.indexOf(item), 1);
         },
-        showDeleteModal(item) {
-            this.$bvModal.msgBoxConfirm('sure???').then((confirmed) => {
-                this.$log.debug('delete id:' + item.id + ': ' + confirmed);
-                if (confirmed) {
-                    this.removePredicate(item);
-                }
-            });
+        promptDelete(item) {
+            this.itemToDelete = item;
+            this.showDeleteModal = true;
+        },
+        confirmDelete() {
+            this.removePredicate(this.itemToDelete);
         },
         inputHandler(index, id) {
             let changed = this.predicates.filter((predicate) => {
@@ -301,8 +306,8 @@ export default {
                 this.updatedPredicate.values.de,
                 this.updatedPredicate.values.en
             );
-            this.$set(this.predicates, index, this.updatedPredicate);
-            this.$emit('input', this.predicates);
+            this.predicates[index] = this.updatedPredicate;
+            this.$emit('update', this.predicates);
         },
         inputHandlerDebounce: _.debounce(function (index, id) {
             this.inputHandler(index, id);
@@ -310,7 +315,3 @@ export default {
     },
 };
 </script>
-
-<style lang="scss">
-@import '../styles/styles.scss';
-</style>

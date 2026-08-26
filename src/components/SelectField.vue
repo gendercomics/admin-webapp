@@ -19,6 +19,7 @@ export default {
     name: 'SelectField',
     props: {
         label: null,
+        modelValue: null,
         options: null,
         selected: null,
         removable: {
@@ -29,10 +30,10 @@ export default {
     computed: {
         localValue: {
             get() {
-                return this.value;
+                return this.modelValue;
             },
             set(val) {
-                this.$emit('input', val);
+                this.$emit('update:modelValue', val);
             },
         },
     },
@@ -44,7 +45,7 @@ export default {
     },
     created() {
         if (this.selected !== null) {
-            this.value = this.selected;
+            this.$emit('update:modelValue', this.selected);
         }
     },
 };

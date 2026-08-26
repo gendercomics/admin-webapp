@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <div>
         <b-container fluid class="mt-4">
             <b-row>
@@ -30,14 +30,13 @@
                                 type="search"
                                 id="searchInput"
                                 placeholder="type to search"
-                                @input="searchComics"
                             />
 
-                            <b-input-group-append>
+                            <template #append>
                                 <b-button @click="clearSearchTermAndFilter"
                                     >Clear
                                 </b-button>
-                            </b-input-group-append>
+                            </template>
                         </b-input-group>
                     </b-form-group>
                 </b-col>
@@ -108,7 +107,7 @@
             </b-collapse>
         </b-container>
 
-        <b-container fluid class="mt-1 pl-4 pr-4">
+        <b-container fluid class="mt-1 ps-4 pe-4">
             <b-row>
                 <b-table
                     id="comic-list-table"
@@ -119,12 +118,9 @@
                     head-variant="dark"
                     bordered
                     :fields="fields"
-                    :items="comics"
+                    :items="filteredComics"
                     :current-page="currentPage"
                     :per-page="perPage"
-                    :filter="filter"
-                    :filter-function="customFilter"
-                    @filtered="onFiltered"
                     :busy="this.loading"
                 >
                     <!-- status -->
@@ -293,8 +289,8 @@
                             v-show="row.item.metaData.status === 'DRAFT'"
                             variant="light"
                             size="sm"
-                            class="mr-1"
-                            @click="showDeleteModal(row.item)"
+                            class="me-1"
+                            @click="promptDelete(row.item)"
                         >
                             <font-awesome-icon
                                 icon="trash-alt"
@@ -314,6 +310,10 @@
                 </b-table>
             </b-row>
         </b-container>
+
+        <b-modal v-model="showDeleteModal" title="Confirm" @ok="confirmDelete">
+            Are you sure you want to delete this item?
+        </b-modal>
     </div>
 </template>
 
@@ -321,10 +321,13 @@
 import { httpClient } from '@/services/httpclient';
 import _ from 'lodash';
 import ComicService from '@/mixins/comicservice';
-import { getters, mutations } from '@/services/store';
+import { useComicListStore } from '@/stores/comicListStore';
 export default {
     name: 'ComicList',
     mixins: [ComicService],
+    setup() {
+        return { store: useComicListStore() };
+    },
 
     data() {
         return {
@@ -339,12 +342,14 @@ export default {
                 { key: 'metaData.changedBy', label: 'by' },
                 { key: 'actions', label: '' },
             ],
-            comics: null,
+            comics: [],
             loading: true,
             errored: false,
             filterOn: [],
             totalRows: 1,
             pageOptions: [10, 20, 50, 100],
+            showDeleteModal: false,
+            itemToDelete: null,
         };
     },
     mounted() {
@@ -374,6 +379,9 @@ export default {
             if (newVal) {
                 this.loadComicList();
             }
+        },
+        searchTerm(newVal) {
+            this.searchComics(newVal);
         },
         currentPage(newVal) {
             this.$log.debug('watch: currentPage(' + newVal + ')');
@@ -548,13 +556,12 @@ export default {
                     return '';
             }
         },
-        showDeleteModal(item) {
-            this.$bvModal.msgBoxConfirm('sure???').then((confirmed) => {
-                this.$log.debug('delete id:' + item.id + ': ' + confirmed);
-                if (confirmed) {
-                    this.deleteComic(item);
-                }
-            });
+        promptDelete(item) {
+            this.itemToDelete = item;
+            this.showDeleteModal = true;
+        },
+        confirmDelete() {
+            this.deleteComic(this.itemToDelete);
         },
         seriesComicId(item, seriesType) {
             let id = '';
@@ -618,6 +625,11 @@ export default {
             }
             return [this.textFilter, this.statusFilter];
         },
+        filteredComics() {
+            return this.comics.filter((item) =>
+                this.customFilter(item, [this.textFilter, this.statusFilter])
+            );
+        },
         isFilter() {
             return this.statusFilter.length < 4 || this.typeFilter.length < 6;
         },
@@ -627,64 +639,60 @@ export default {
         },
         searchTerm: {
             get() {
-                return getters.searchTerm();
+                return this.store.searchTerm;
             },
             set(val) {
-                mutations.setSearchTerm(val);
+                this.store.searchTerm = val;
             },
         },
         textFilter: {
             get() {
-                return getters.textFilter();
+                return this.store.textFilter;
             },
             set(val) {
-                mutations.setTextFilter(val);
+                this.store.textFilter = val;
             },
         },
         browseMode: {
             get() {
-                return getters.browseMode();
+                return this.store.browseMode;
             },
             set(val) {
-                mutations.setBrowseMode(val);
+                this.store.browseMode = val;
             },
         },
         currentPage: {
             get() {
-                return getters.page();
+                return this.store.page;
             },
             set(val) {
-                mutations.setPage(val);
+                this.store.page = val;
             },
         },
         perPage: {
             get() {
-                return getters.perPage();
+                return this.store.perPage;
             },
             set(val) {
-                mutations.setPerPage(val);
+                this.store.perPage = val;
             },
         },
         typeFilter: {
             get() {
-                return getters.filter().typeFilter;
+                return this.store.filter.typeFilter;
             },
             set(val) {
-                mutations.setTypeFilter(val);
+                this.store.filter.typeFilter = val;
             },
         },
         statusFilter: {
             get() {
-                return getters.filter().statusFilter;
+                return this.store.filter.statusFilter;
             },
             set(val) {
-                mutations.setStatusFilter(val);
+                this.store.filter.statusFilter = val;
             },
         },
     },
 };
 </script>
-
-<style lang="scss">
-@import '../styles/styles.scss';
-</style>
