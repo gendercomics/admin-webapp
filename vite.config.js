@@ -31,5 +31,6 @@ export default defineConfig(({ command }) => ({
     test: {
         environment: 'jsdom',
         globals: true,
+        setupFiles: ['./tests/unit/setup.js'],
     },
 }));
