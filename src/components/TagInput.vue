@@ -3,7 +3,7 @@
         <b-form-group class="mb-0">
             <b-input-group>
                 <b-form-tags v-model="localValue" no-outer-focus>
-                    <template v-slot="{ tags, disabled, addTag, removeTag }">
+                    <template v-slot="{ disabled, addTag, removeTag }">
                         <div class="d-flex align-items-center flex-wrap gap-1">
                             <b-dropdown
                                 size="sm"
