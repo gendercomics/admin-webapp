@@ -8,6 +8,9 @@ jobs:
     push_to_registry:
         name: push docker image to docker hub
         runs-on: ubuntu-latest
+        # Dependabot-triggered runs don't get repo secrets (GitHub restriction),
+        # so login would fail anyway; skip until the bump is merged by a human.
+        if: github.actor != 'dependabot[bot]'
         steps:
             - name: check out the repo
               uses: actions/checkout@v3
