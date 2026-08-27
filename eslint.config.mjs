@@ -32,7 +32,7 @@ export default [
     {
         files: ['**/__tests__/*.{j,t}s?(x)', '**/*.spec.{j,t}s?(x)'],
         languageOptions: {
-            globals: globals.node,
+            globals: { ...globals.node, ...globals.vitest },
         },
     },
 ];

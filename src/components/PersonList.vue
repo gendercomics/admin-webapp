@@ -198,7 +198,6 @@ export default {
             showDeleteModal: false,
             itemToDelete: null,
             filter: null,
-            totalRows: 1,
             currentPage: 1,
             perPage: 10,
             pageOptions: [10, 20, 50, 100],
