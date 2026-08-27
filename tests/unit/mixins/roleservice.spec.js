@@ -14,20 +14,15 @@ describe('roleservice mixin', () => {
     });
 
     describe('addRoleOption', () => {
-        it('sets value to the role, but text to the global `name` - not role.name (existing bug, locked in)', () => {
-            // addRoleOption does `roleOption.text = name;` with a bare
-            // `name` reference instead of `role.name`. In a browser/jsdom
-            // global scope `name` resolves to `window.name`, not the role's
-            // own name field, so `text` never reflects the actual role.
+        it('sets value to the role and text to the role name', () => {
             const wrapper = mountMixin(RoleService);
             const role = { id: 1, name: 'Writer' };
 
             wrapper.vm.addRoleOption(role);
 
             expect(wrapper.vm.roleOptions).toEqual([
-                { value: role, text: globalThis.name },
+                { value: role, text: 'Writer' },
             ]);
-            expect(wrapper.vm.roleOptions[0].text).not.toBe('Writer');
         });
     });
 

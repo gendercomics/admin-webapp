@@ -7,20 +7,12 @@ const options = [
     { id: 2, name: 'Two' },
 ];
 
-// `selected` is passed explicitly as null in most cases below to avoid the
-// created() quirk covered by its own test further down.
-
 describe('SelectField.vue', () => {
     it('renders the label and options', () => {
         const wrapper = mount(
             SelectField,
             mountOptions({
-                props: {
-                    label: 'Pick one',
-                    modelValue: null,
-                    options,
-                    selected: null,
-                },
+                props: { label: 'Pick one', modelValue: null, options },
             })
         );
 
@@ -32,12 +24,7 @@ describe('SelectField.vue', () => {
         const wrapper = mount(
             SelectField,
             mountOptions({
-                props: {
-                    label: 'Pick one',
-                    modelValue: null,
-                    options,
-                    selected: null,
-                },
+                props: { label: 'Pick one', modelValue: null, options },
             })
         );
 
@@ -62,13 +49,7 @@ describe('SelectField.vue', () => {
         expect(wrapper.emitted('update:modelValue')[0]).toEqual([1]);
     });
 
-    it('emits update:modelValue with undefined on creation when selected is omitted entirely', () => {
-        // Real quirk: the `selected` prop has no default, so an omitted
-        // `selected` resolves to `undefined`, and created()'s
-        // `this.selected !== null` check is then always true - firing an
-        // unconditional emit on every mount that doesn't explicitly pass
-        // `selected: null`. Locking this in so a future fix is a deliberate
-        // change, not a silent regression.
+    it('does not emit on creation when selected is omitted', () => {
         const wrapper = mount(
             SelectField,
             mountOptions({
@@ -76,7 +57,7 @@ describe('SelectField.vue', () => {
             })
         );
 
-        expect(wrapper.emitted('update:modelValue')[0]).toEqual([undefined]);
+        expect(wrapper.emitted('update:modelValue')).toBeUndefined();
     });
 
     it('shows the delete button only when removable', () => {
@@ -87,7 +68,6 @@ describe('SelectField.vue', () => {
                     label: 'Pick one',
                     modelValue: null,
                     options,
-                    selected: null,
                     removable: true,
                 },
             })
@@ -95,12 +75,7 @@ describe('SelectField.vue', () => {
         const notRemovable = mount(
             SelectField,
             mountOptions({
-                props: {
-                    label: 'Pick one',
-                    modelValue: null,
-                    options,
-                    selected: null,
-                },
+                props: { label: 'Pick one', modelValue: null, options },
             })
         );
 
@@ -116,7 +91,6 @@ describe('SelectField.vue', () => {
                     label: 'Pick one',
                     modelValue: 1,
                     options,
-                    selected: null,
                     removable: true,
                 },
             })

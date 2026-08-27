@@ -24,7 +24,7 @@ export default {
         addRoleOption(role) {
             let roleOption = { value: null, text: null };
             roleOption.value = role;
-            roleOption.text = name;
+            roleOption.text = role.name;
             this.roleOptions.push(roleOption);
         },
     },

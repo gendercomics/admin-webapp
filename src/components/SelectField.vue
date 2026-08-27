@@ -21,7 +21,9 @@ export default {
         label: null,
         modelValue: null,
         options: null,
-        selected: null,
+        selected: {
+            default: null,
+        },
         removable: {
             type: Boolean,
             default: false,
