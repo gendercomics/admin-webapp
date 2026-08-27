@@ -1,10 +1,31 @@
 import { mount } from '@vue/test-utils';
+import dayjs from 'dayjs';
 import logger from '@/services/logger';
+
+// Mirrors the globalProperties registered in main.js (outside of what a
+// component's own imports/props already cover), so components that read
+// `this.$statusOptions`/`this.$typeOptions`/`moment` don't need one-off
+// mocks wired up per test.
+const STATUS_OPTIONS = ['DRAFT', 'CLARIFICATION', 'REVIEW', 'FINAL'];
+const TYPE_OPTIONS = [
+    { text: 'A', value: 'anthology' },
+    { text: 'C', value: 'comic' },
+    { text: 'S', value: 'comic_series' },
+    { text: 'M', value: 'magazine' },
+    { text: 'R', value: 'publishing_series' },
+    { text: 'W', value: 'webcomic' },
+];
 
 export function mountOptions(overrides = {}) {
     return {
         global: {
-            mocks: { $log: logger },
+            mocks: {
+                $log: logger,
+                $statusOptions: STATUS_OPTIONS,
+                $typeOptions: TYPE_OPTIONS,
+                moment: dayjs,
+                $router: { push: vi.fn() },
+            },
             stubs: { FontAwesomeIcon: true, BFormDatepicker: true },
         },
         ...overrides,
